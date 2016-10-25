@@ -1,0 +1,2150 @@
+\chapter{Basic Probability Models}
+\label{probcalc}
+
+This chapter will introduce the general notions of probability.  Most of
+it will seem intuitive to you, but pay careful attention to the general
+principles which are developed; in more complex settings intuition may
+not be enough, and the tools discussed here will be very useful.
+
+\section{ALOHA Network Example}
+\label{aloha}
+
+Throughout this book, we will be discussing both ``classical''
+probability examples involving coins, cards and dice, and also examples
+involving applications to computer science.  The latter will involve
+diverse fields such as data mining, machine learning, computer networks,
+software engineering and bioinformatics.  
+
+In this section, an example from computer networks is presented which
+will be used at a number of points in this chapter.  Probability analysis
+is used extensively in the development of new, faster types of networks.
+
+Today's Ethernet evolved from an experimental network developed at the
+University of Hawaii, called ALOHA.  A number of network nodes would
+occasionally try to use the same radio channel to communicate with a
+central computer.  The nodes couldn't hear each other, due to the
+obstruction of mountains between them.  If only one of them made an
+attempt to send, it would be successful, and it would receive an
+acknowledgement message in response from the central computer.  But if
+more than one node were to transmit, a {\bf collision} would occur,
+garbling all the messages.  The sending nodes would timeout after
+waiting for an acknowledgement which never came, and try sending again
+later.  To avoid having too many collisions, nodes would engage in
+random {\bf backoff}, meaning that they would refrain from sending for a
+while even though they had something to send.
+
+One variation is {\bf slotted} ALOHA, which divides time into intervals
+which I will call ``epochs.''  Each epoch will have duration 1.0, so
+epoch 1 extends from time 0.0 to 1.0, epoch 2 extends from 1.0 to 2.0
+and so on.  In the version we will consider here, in each epoch, if a
+node is {\bf active}, i.e. has a message to send, it will either send or
+refrain from sending, with probability p and 1-p.  The value of p is set
+by the designer of the network.  (Real Ethernet hardware does something
+like this, using a random number generator inside the chip.) 
+
+The other parameter q in our model is the probability that a node which
+had been inactive generates a message during an epoch, i.e. the
+probability that the user hits a key, and thus becomes ``active.''
+Think of what happens when you are at a computer.  You are not typing
+constantly, and when you are not typing, the time until you hit a key
+again will be random.  Our parameter q models that randomness.
+
+Let n be the number of nodes, which we'll assume for simplicity is two.
+Assume also for simplicity that the timing is as follows.  Arrival of a
+new message happens in the middle of an epoch, and the decision as to
+whether to send versus back off is made near the end of an epoch, say
+90\% into the epoch.
+
+For example, say that at the beginning of the epoch which extends from
+time 15.0 to 16.0, node A has something to send but node B does not.  At
+time 15.5, node B will either generate a message to send or not, with
+probability q and 1-q, respectively.  Suppose B does generate a new
+message.  At time 15.9, node A will either try to send or refrain, with
+probability p and 1-p, and node B will do the same.  Suppose A refrains
+but B sends.  Then B's transmission will be successful, and at the start
+of epoch 16 B will be inactive, while node A will still be active.  On
+the other hand, suppose both A and B try to send at time 15.9; both will
+fail, and thus both will be active at time 16.0, and so on.
+
+Be sure to keep in mind that in our simple model here, during the time a
+node is active, it won't generate any additional new messages.
+
+(Note:  The definition of this ALOHA model is summarized concisely on
+page \pageref{basicprobcomp}.)
+
+Let's observe the network for two epochs, epoch 1 and epoch 2.  Assume
+that the network consists of just two nodes, called node 1 and node 2,
+both of which start out active.  Let $X_1$ and $X_2$ denote the numbers
+of active nodes at the {\it very end} of epochs 1 and 2, {\it after possible
+transmissions}.  We'll take p to be 0.4 and q to be 0.8 in this example.
+
+Let's find $P(X_1 = 2)$, the probability that $X_1 = 2$, and then get to
+the main point, which is to ask what we really mean by this probability.
+
+How could $X_1 = 2$ occur?  There are two possibilities:
+
+\begin{itemize}
+
+\item both nodes try to send; this has probability $p^2$
+
+\item neither node tries to send; this has probability $(1-p)^2$
+
+\end{itemize}
+
+Thus
+
+\begin{equation}
+\label{x12}
+P(X_1 = 2) = p^2 + (1-p)^2 = 0.52
+\end{equation}
+
+\section{The Crucial Notion of a Repeatable Experiment}
+\label{repeatexpt}
+
+It's crucial to understand what that 0.52 figure really means in a
+practical sense.  To this end, let's put the ALOHA example aside for a
+moment, and consider the ``experiment'' consisting of rolling two dice,
+say a blue one and a yellow one.  Let X and Y denote the number of dots
+we get on the blue and yellow dice, respectively, and consider the
+meaning of $P(X+Y = 6) = \frac{5}{36}$.
+
+\begin{table}
+\begin{center}
+\vskip 0.5in
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+1,1 & 1,2 & 1,3 & 1,4 & 1,5 & 1,6 \\
+\hline
+2,1 & 2,2 & 2,3 & 2,4 & 2,5 & 2,6 \\
+\hline
+3,1 & 3,2 & 3,3 & 3,4 & 3,5 & 3,6 \\
+\hline
+4,1 & 4,2 & 4,3 & 4,4 & 4,5 & 4,6 \\
+\hline
+5,1 & 5,2 & 5,3 & 5,4 & 5,5 & 5,6 \\
+\hline
+6,1 & 6,2 & 6,3 & 6,4 & 6,5 & 6,6 \\
+\hline
+\end{tabular}
+
+\end{center}
+\caption{Sample Space for the Dice Example}
+\label{dicesamplespace}
+\end{table}
+
+In the mathematical theory of probability, we talk of a {\bf sample
+space}, which (in simple cases) consists of the possible outcomes
+$(X,Y)$, seen in Table \ref{dicesamplespace}.  In a theoretical
+treatment, we place weights of 1/36 on each of the points in the space,
+reflecting the fact that each of the 36 points is equally likely, and
+then say, ``What we mean by $P(X+Y = 6) = \frac{5}{36}$ is that the
+outcomes (1,5), (2,4), (3,3), (4,2), (5,1) have total weight 5/36.''
+
+Unfortunately, the notion of sample space becomes mathematically tricky
+when developed for more complex probability models.  Indeed, it requires
+graduate-level math, called {\bf measure theory}.  
+
+And much worse, under the sample space approach, one loses all the
+intuition.  In particular, {\bf there is no good way using set theory to
+convey the intuition underlying conditional probability} (to be
+introduced in Section \ref{probdefs}).  The same is true for expected
+value, a central topic to be introduced in Section \ref{expval}.
+
+In any case, most probability computations do not rely on explicitly
+writing down a sample space.  In this particular example it is useful
+for us as a vehicle for explaining the concepts, but we will NOT use it
+much.  Those who wish to get a more theoretical grounding can get a
+start in Section \ref{reconcil}.
+
+But the intuitive notion---which is FAR more important---of what $P(X+Y
+= 6) = \frac{5}{36}$ means is the following.  Imagine doing the
+experiment many, many times, recording the results in a large notebook:
+
+\begin{itemize}
+
+\item Roll the dice the first time, and write the outcome on the first
+line of the notebook.
+
+\item Roll the dice the second time, and write the outcome on the second
+line of the notebook.
+
+\item Roll the dice the third time, and write the outcome on the third
+line of the notebook.
+
+\item Roll the dice the fourth time, and write the outcome on the fourth
+line of the notebook.
+
+\item Imagine you keep doing this, thousands of times, filling
+thousands of lines in the notebook.
+
+\end{itemize} 
+
+\begin{table}
+\begin{center}
+\vskip 0.5in
+
+\begin{tabular}{|l|l|l|}
+\hline
+notebook line & outcome & blue+yellow = 6?  \\ \hline 
+\hline
+1 & blue 2, yellow 6 & No \\ \hline 
+2 & blue 3, yellow 1 & No \\ \hline 
+3 & blue 1, yellow 1 & No \\ \hline 
+4 & blue 4, yellow 2 & Yes \\ \hline 
+5 & blue 1, yellow 1 & No \\ \hline 
+6 & blue 3, yellow 4 & No \\ \hline 
+7 & blue 5, yellow 1 & Yes \\ \hline 
+8 & blue 3, yellow 6 & No \\ \hline 
+9 & blue 2, yellow 5 & No \\ \hline 
+\end{tabular}
+
+\end{center}
+\caption{Notebook for the Dice Problem}
+\label{dicenotebook} 
+\end{table}
+
+The first 9 lines of the notebook might look like Table
+\ref{dicenotebook}.  Here 2/9 of these lines say Yes.  But after many,
+many repetitions, approximately 5/36 of the lines will say Yes.  For
+example, after doing the experiment 720 times, approximately
+$\frac{5}{36} \times 720 = 100$ lines will say Yes.
+
+This is what probability really is:  In what fraction of the lines does
+the event of interest happen?  {\bf It sounds simple, but if you always
+think about this ``lines in the notebook'' idea, probability problems
+are a lot easier to solve.}  And it is the fundamental basis of computer
+simulation.
+
+\section{Our Definitions}
+\label{probdefs}
+
+These definitions are intuitive, rather than rigorous math, but 
+intuition is what we need.  Keep in mind that we are making
+\underline{definitions} below, not listing properties.
+
+\begin{itemize}
+
+\item We assume an ``experiment'' which is (at least in concept)
+repeatable.  The experiment of rolling two dice is repeatable, and even
+the ALOHA experiment is so.  (We simply watch the network for a long
+time, collecting data on pairs of consecutive epochs in which there are
+two active stations at the beginning.)  On the other hand, the
+econometricians, in forecasting 2009, cannot ``repeat'' 2008.  Yet all
+of the econometricians' tools assume that events in 2008 were affected
+by various sorts of randomness, and we think of repeating the experiment
+in a conceptual sense.
+
+\item We imagine performing the experiment a large number of times,
+recording the result of each repetition on a separate line in a
+notebook.
+
+\item We say A is an {\bf event} for this experiment if it is a possible
+boolean (i.e. yes-or-no) outcome of the experiment.  In the above
+example, here are some events:
+
+\begin{itemize}
+
+\item[*]  X+Y = 6
+
+\item[*] X = 1
+
+\item[*] Y = 3
+
+\item[*] X-Y = 4
+
+\end{itemize}
+
+\item A {\bf random variable} is a numerical outcome of the experiment,
+such as X and Y here, as well as X+Y, 2XY and even sin(XY).
+
+\item For any event of interest A, imagine a column on A in the
+notebook.  The $k^{th}$ line in the notebook, k = 1,2,3,..., will
+say Yes or No, depending on whether A occurred or not during the
+$k^{th}$ repetition of the experiment.  For instance, we have such a
+column in our table above, for the event \{A = blue+yellow = 6\}.
+
+\item For any event of interest A, we define P(A) to be the long-run
+fraction of lines with Yes entries.
+
+\item For any events A, B, imagine a new column in our notebook,
+labeled ``A and B.''  In each line, this column will say Yes if and
+only if there are Yes entries for both A and B.  P(A and B) is
+then the long-run fraction of lines with Yes entries in the
+new column labeled ``A and B.''\footnote{In most textbooks, what we call
+``A and B'' here is written A$\cap$B, indicating the intersection of two
+sets in the sample space.  But again, we do not take a sample space
+point of view here.}
+
+\item For any events A, B, imagine a new column in our notebook,
+labeled ``A or B.''  In each line, this column will say Yes if and
+only if at least one of the entries for A and B says Yes.\footnote{In
+the sample space approach, this is written A $\cup$ B.}
+
+\item For any events A, B, imagine a new column in our notebook, labeled
+``A $|$ B'' and pronounced ``A given B.''  In each line: 
+
+\begin{itemize}
+
+\item[*] This new column will say ``NA'' (``not applicable'') if the B
+entry is No.
+
+\item[*] If it is a line in which the B column says Yes, then this
+new column will say Yes or No, depending on whether the A column
+says Yes or No.
+
+\end{itemize}
+
+\end{itemize}
+
+Think of probabilities in this ``notebook'' context:
+
+\begin{itemize}
+
+\item P(A) means the long-run fraction of lines in the notebook in
+which the A column says Yes.
+
+\item P(A or B) means the long-run fraction of lines in the notebook in
+which the A-or-B column says Yes.
+
+\item P(A and B) means the long-run fraction of lines in the notebook in
+which the A-and-B column says Yes.
+
+\item P(A $|$ B) means the long-run fraction of lines in the notebook in
+which the A $|$ B column says Yes---{\bf \Large among the lines which do
+NOT say NA.}
+
+\end{itemize}
+
+{\bf A hugely common mistake is to confuse P(A and B) and P(A $|$ B).}
+This is where the notebook view becomes so important.  Compare the
+quantities $P(X = 1 {\rm ~and~} S = 6) = \frac{1}{36}$ and $P(X = 1 | S
+= 6) = \frac{1}{5}$, where S = X+Y:\footnote{Think of adding an S column
+to the notebook too}
+
+\begin{itemize}
+
+\item After a large number of repetitions of the experiment,
+approximately 1/36 of the lines of the notebook will have the property
+that both X = 1 and S = 6 (since X = 1 and S = 6 is equivalent to X = 1
+and Y = 5).
+
+\item After a large number of repetitions of the experiment, if {\bf we
+look only at the lines in which S = 6}, then {\bf among those lines},
+approximately 1/5 of {\bf those lines} will show X = 1.
+
+\end{itemize}
+
+The quantity P(A$|$B) is called the {\bf conditional probability of A,
+given B}.
+
+Note that {\it and} has higher logical precedence than {\it or}.  For
+example, P(A and B or C) means P[(A and B) or C].  Also, {\it not} has
+higher precedence than {\it and}.
+
+Here are some more very important definitions and properties:
+
+\begin{itemize}
+
+\item 
+\begin{definition}
+Suppose A and B are events such that it is impossible for them to
+occur in the same line of the notebook.  They are said to be {\bf
+disjoint} events.  
+\end{definition}
+
+\item If A and B are disjoint events, then 
+
+\begin{equation}
+\label{disjointor}
+P(A \textrm{ or } B) = P(A) + P(B)
+\end{equation}
+
+Again, this terminology {\it disjoint} stems from the set-theoretic
+sample space approach, where it means that A $\cap$ B = $\phi$.  That
+mathematical terminology works fine for our dice example, but in my
+experience people have major difficulty applying it correctly in more
+complicated problems.  This is another illustration of why I put so much
+emphasis on the ``notebook'' framework.
+
+By writing 
+
+\begin{equation}
+\{ A \textrm{ or } B \textrm{ or } C \} =
+\{ A \textrm{ or } [B \textrm{ or } C ] \} =
+\end{equation}
+
+(\ref{disjointor}) can be iterated, e.g.
+
+\begin{equation}
+P(A \textrm{ or } B \textrm{ or } C) = P(A) + P(B) + P(C)
+\end{equation}
+
+\item If A and B are not disjoint, then
+
+\begin{equation}
+\label{genor}
+P(A \textrm{ or } B) = P(A) + P(B) - P(A \textrm{ and } B)
+\end{equation}
+
+In the disjoint case, that subtracted term is 0, so (\ref{genor})
+reduces to (\ref{disjointor}).
+
+\item 
+\begin{definition}
+Events A and B are said to be {\bf stochastically independent},
+usually just stated as {\bf independent},\footnote{The term {\it
+stochastic} is just a fancy synonym for {\it random}.} if 
+\end{definition}
+
+\begin{equation}
+\label{indepand}
+P(A \textrm{ and } B) = P(A) \cdot P(B)
+\end{equation}
+
+\item In calculating an ``and'' probability, how does one know whether
+the events are independent?  The answer is that this will typically be
+clear from the problem.  If we toss the blue and yellow dice, for
+instance, it is clear that one die has no impact on the other, so events
+involving the blue die are independent of events involving the yellow
+die.  On the other hand, in the ALOHA example, it's clear that events
+involving $X_1$ are NOT independent of those involving $X_2$.
+
+\item If A and B are not independent, the equation (\ref{indepand})
+generalizes to
+
+\begin{equation}
+\label{genand}
+P(A \textrm{ and } B) = P(A) P(B|A)
+\end{equation}
+
+This should make sense to you.  Suppose 30\% of all UC Davis students
+are in engineering, and 20\% of all engineering majors are female.  That
+would imply that 0.30 x 0.20 = 0.06, i.e. 6\% of all UCD students are
+female engineers.
+
+Note that if A and B actually are independent, then $P(B|A) = P(B)$, and
+(\ref{genand}) reduces to (\ref{indepand}).
+
+Note too that (\ref{genand}) implies
+
+\begin{equation}
+\label{condba}
+P(B|A) =
+\frac
+{ P(A \textrm{ and } B) }
+{ P(A) }
+\end{equation}
+
+\end{itemize}
+
+\section{``Mailing Tubes''}
+\label{mailingtubes1}
+
+{\it If I ever need to buy some mailing tubes, I can come here}---friend
+of the author's, while browsing through an office supplies store
+
+\bigskip
+
+Examples of the above properties, e.g. (\ref{indepand}) and
+(\ref{genand}), will be given starting in Section \ref{basicprobcomp}.
+But first, a crucial strategic point in learning probability must be
+addressed.
+
+Some years ago, a friend of mine was in an office supplies store, and he
+noticed a rack of mailing tubes.  My friend made the remark shown above.
+Well, (\ref{indepand}) and \ref{genand} are ``mailing tubes''--make a
+mental note to yourself saying, ``If I ever need to find a probability
+involving {\it and}, one thing I can try is (\ref{indepand}) and
+(\ref{genand}).''  {\bf \LARGE Be ready for this!}
+
+This mailing tube metaphor will be mentioned often, such as in Section
+\ref{mailingtubes2} .
+
+\section{Example:  ALOHA Network}
+\label{basicprobcomp}
+
+Please keep in mind that the notebook idea is simply a vehicle to
+help you understand what the concepts really mean.  This is crucial for
+your intuition and your ability to apply this material in the real
+world.    But the notebook idea is NOT for the purpose of calculating
+probabilities.  Instead, we use the properties of probability, as seen
+in the following. 
+
+Let's look at all of this in the ALOHA context.  Here's a summary:
+
+\begin{itemize}
+
+\item We have n network nodes, sharing a common communications channel.
+
+\item Time is divided in epochs.  $X_k$ denotes the number of active nodes at
+the end of epoch k, which we will sometimes refer to as the {\bf state}
+of the system in epoch k.
+
+\item If two or more nodes try to send in an epoch, they collide, and
+the message doesn't get through.
+
+\item We say a node is active if it has a message to send.
+
+\item If a node is active node near the end of an epoch, it tries to
+send with probability p.  
+
+\item If a node is inactive at the beginning of an epoch, then at the
+middle of the epoch it will generate a message to send with probability
+q.
+
+\item In our examples here, we have n = 2 and $X_0 = 2$, i.e. both nodes
+start out active.
+
+\end{itemize}
+
+Now, in Equation (\ref{x12}) we found that 
+
+\begin{equation}
+P(X_1 = 2) = p^2 + (1-p)^2 = 0.52
+\end{equation}
+
+How did we get this?  Let $C_i$ denote the event that node i
+tries to send, i = 1,2.  Then using the definitions above, our steps
+would be
+
+\begin{eqnarray}
+P(X_1 = 2) 
+&=& P(\underbrace{ C_1 {\rm ~and~} C_2 } {\rm ~or~ } 
+\underbrace{ {\rm ~not~} C_1 {\rm ~and~} ~{\rm not}~ C_2 } ) \label{a1} \\ 
+&=& P(C_1 {\rm ~and~} C_2) + P(~{\rm not}~ C_1 {\rm ~and~} ~{\rm not}~ C_2) 
+\textrm{ (from (\ref{disjointor}))} \label{a2} \\ 
+&=& P(C_1) P(C_2) + P(~{\rm not}~ C_1) P(~{\rm not}~ C_2) 
+\textrm{ (from (\ref{indepand}))} \label{a3} \\ 
+&=& p^2 + (1-p)^2
+\end{eqnarray}
+
+(The underbraces in (\ref{a1}) do not represent some esoteric
+mathematical operation.  There are there simply to make the grouping
+clearer, corresponding to events G and H defined below.)
+
+Here are the reasons for these steps:
+
+\begin{itemize}
+
+\item[(\ref{a1}):]  We listed the ways in which the event $\{X_1 = 2\}$
+could occur.  
+
+\item[(\ref{a2}):]  Write $G = {C_1 {\rm ~and~} C_2}$, $H = {D_1 {\rm
+~and~} D_2}$, where $D_i = \textrm{not } C_i$, i = 1,2.  Then the events G
+and H are clearly disjoint; if in a given line of our notebook there is
+a Yes for G, then definitely there will be a No for H, and vice versa.
+
+\item[(\ref{a3}):]  The two nodes act physically independently of each
+other.  Thus the events $C_1$ and $C_2$ are stochastically independent,
+so we applied (\ref{indepand}).  Then we did the same for $D_1$ and
+$D_2$.
+
+\end{itemize}
+
+Now, what about $P(X_2 = 2)$?  Again, we break big events down into
+small events, in this case according to the value of $X_1$:
+
+\begin{eqnarray}
+\label{x2}
+P(X_2 = 2) 
+&=& P(X_1 = 0 {\rm ~and~} X_2 = 2 \textrm{ or }
+X_1 = 1 {\rm ~and~} X_2 = 2 \textrm{ or }
+X_1 = 2 {\rm ~and~} X_2 = 2) \nonumber \\
+&=& P(X_1 = 0 {\rm ~and~} X_2 = 2)  \\
+&+& P(X_1 = 1 {\rm ~and~} X_2 = 2) \nonumber \\
+&+& P(X_1 = 2 {\rm ~and~} X_2 = 2) \nonumber 
+\end{eqnarray}
+
+Since $X_1$ cannot be 0, that first term, $P(X_1 = 0 {\rm ~and~} X_2 =
+2)$ is 0.  To deal with the second term, $P(X_1 = 1 {\rm ~and~} X_2 =
+2)$, we'll use (\ref{genand}).  Due to the time-sequential nature of our
+experiment here, it is natural (but certainly not ``mandated,'' as we'll
+often see situations to the contrary) to take A and B to be $\{X_1 =
+1\}$ and $\{X_2 = 2\}$, respectively.  So, we write
+
+\begin{equation}
+\label{x1x2}
+P(X_1 = 1 {\rm ~and~} X_2 = 2) = P(X_1 = 1) P(X_2 = 2 | X_1 = 1)
+\end{equation}
+
+To calculate $P(X_1 = 1)$, we use the same kind of reasoning as in
+Equation (\ref{x12}).  For the event in question to occur, either node A
+would send and B wouldn't, or A would refrain from sending and B would
+send.  Thus
+
+\begin{equation}
+\label{px11}
+P(X_1 = 1) = 2p(1-p) = 0.48
+\end{equation}
+
+Now we need to find $P(X_2 = 2 | X_1 = 1)$.  This again involves
+breaking big events down into small ones.  If $X_1 = 1$, then $X_2 = 2$
+can occur only if {\it both} of the following occur:
+
+\begin{itemize}
+
+\item Event A:  Whichever node was the one to successfully transmit
+during epoch 1---and we are given that there indeed was one, since $X_1
+= 1$---now generates a new message.
+
+\item Event B:  During epoch 2, no successful transmission occurs, i.e.
+either they both try to send or neither tries to send.
+
+\end{itemize}
+
+Recalling the definitions of p and q in Section \ref{aloha},  
+we have that
+
+\begin{equation}
+P(X_2 = 2 | X_1 = 1) = q[p^2+(1-p)^2] = 0.41
+\end{equation}
+
+Thus $P(X_1 = 1 {\rm ~and~} X_2 = 2) = 0.48 \times 0.41 = 0.20$.
+
+We go through a similar analysis for $P(X_1 = 2 {\rm ~and~} X_2 = 2)$:
+We recall that $P(X_1 = 2) = 0.52$ from before, and find that $P(X_2 = 2
+| X_1 = 2) = 0.52$ as well.  So we find $P(X_1 = 2 {\rm ~and~} X_2 = 2)$
+to be $0.52^2 = 0.27$.  Putting all this together, we find that $P(X_2 =
+2) = 0.47$.
+
+Let's do another; let's find $P(X_1 = 1 | X_2 = 2)$.  [Pause a minute
+here to make sure you understand that this is quite different from
+$P(X_2 = 2 | X_1 = 1)$.] From (\ref{condba}), we know that 
+
+\begin{equation}
+\label{x1givx2}
+P(X_1 = 1 | X_2 = 2) = \frac
+{P(X_1 = 1 \textrm{ and } X_2 = 2)}
+{P(X_2 = 2)}
+\end{equation}
+
+We computed both numerator and denominator here before, in Equations
+(\ref{x1x2}) and (\ref{x2}), so we see that $P(X_1 = 1 | X_2 = 2) =
+0.20/0.47 = 0.43$.
+
+So, in our notebook view, if we were to look only at lines in the
+notebook for which $X_2 = 2$, a fraction 0.43 of {\it those lines} 
+would have $X_1 = 1$.
+
+You might be bothered that we are looking ``backwards in time'' in
+(\ref{x1givx2}), kind of guessing the past from the present.  There is
+nothing wrong or unnatural about that.  Jurors in court trials do it all
+the time, though presumably not with formal probability calculation.
+And evolutionary biologists do use formal probability models to guess
+the past.
+
+And one more calculation:  $P(X_1 = 2 \textrm{ or } X_2 = 2)$.  From
+(\ref{genor}), 
+
+\begin{equation}
+P(X_1 = 2 \textrm{ or } X_2 = 2) =
+P(X_1 = 2) +
+P(X_2 = 2) -
+P(X_1 = 2 \textrm{ and } X_2 = 2) 
+\end{equation}
+
+Luckily, we've already calculated all three probabilities on the
+right-hand side to be 0.52, 0.47 and 0.27, respectively.  Thus
+$P(X_1 = 2 \textrm{ or } X_2 = 2) = 0.72$. 
+
+Note by the way that events involving $X_2$ are NOT independent of those
+involving $X_1$.  For instance, we found in (\ref{x1givx2}) that
+
+\begin{equation}
+P(X_1 = 1 | X_2 = 2) = 0.43
+\end{equation}
+
+yet from (\ref{px11}) we have
+
+\begin{equation}
+P(X_1 = 1) = 0.48.
+\end{equation}
+
+\section{Bayes' Rule}
+\label{bayesthm}
+
+(This section should not be confused with Section \ref{bayesian}.  The
+latter is highly controversial, while the material in this section is
+not controversial at all.)
+
+Following (\ref{x1givx2}) above, we noted that the ingredients had
+already been computed, in (\ref{x1x2}) and (\ref{x2}).  If we go back
+to the derivations in those two equations and substitute in
+(\ref{x1givx2}), we have
+
+\begin{eqnarray}
+P(X_1 = 1 | X_2 = 2) &=& 
+\frac
+{P(X_1 = 1 \textrm{ and } X_2 = 2)}
+{P(X_2 = 2)} \\
+&=& \frac
+{P(X_1 = 1 \textrm{ and } X_2 = 2)}
+{P(X_1 = 1 \textrm{ and } X_2 = 2) + P(X_1 = 2 \textrm{ and } X_2 = 2)} \\
+&=& \frac
+{P(X_1 = 1) P(X_2 = 2 | X_1 = 1)}
+{P(X_1 = 1) P(X_2 = 2 | X_1 = 1) + P(X_1 = 2) P(X_2 = 2 | X_1 = 2)} 
+\end{eqnarray}
+
+Looking at this in more generality, for events A and B we would find
+that
+
+\begin{equation}
+\label{thisisbayes}
+P(A|B) = \frac{P(A) P(B|A)}{P(A) P(B|A) + P(\textrm{not }A)
+P(B|\textrm{not } A)}
+\end{equation}
+
+This is known as {\bf Bayes' Theorem} or {\bf Bayes' Rule}.  It can be
+extended easily to cases with several terms in the denominator, arising
+from situations that need to be broken down into several subevents
+rather than just A and not-A.
+
+\section{ALOHA in the Notebook Context}
+
+Think of doing the ALOHA ``experiment'' many, many times.
+
+\begin{itemize}
+
+\item Run the network for two epochs, starting with both nodes active,
+the first time, and write the outcome on the first
+line of the notebook.
+
+\item Run the network for two epochs, starting with both nodes active,
+the second time, and write the outcome on the second line of the
+notebook.
+
+\item Run the network for two epochs, starting with both nodes active,
+the third time, and write the outcome on the third line of the notebook.
+
+\item Run the network for two epochs, starting with both nodes active,
+the fourth time, and write the outcome on the fourth line of the
+notebook.
+
+\item Imagine you keep doing this, thousands of times, filling
+thousands of lines in the notebook.
+
+\end{itemize} 
+
+The first seven lines of the notebook might look like Table
+\ref{alohanotebook}.  We see that:
+
+\begin{table}
+\begin{center}
+\vskip 0.5in
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+notebook line & 
+$X_1 = 2$ & 
+$X_2 = 2$ & 
+$X_1 = 2$ and $X_2 = 2$ & 
+$X_2 = 2 | X_1 = 2$  \\ \hline 
+\hline
+1 & Yes & No & No & No \\ \hline 
+2 & No & No & No & NA \\ \hline 
+3 & Yes & Yes & Yes & Yes \\ \hline 
+4 & Yes & No & No & No \\ \hline 
+5 & Yes & Yes & Yes & Yes \\ \hline 
+6 & No & No & No & NA \\ \hline 
+7 & No & Yes & No & NA \\ \hline 
+\end{tabular}
+
+\end{center}
+\caption{Top of Notebook for Two-Epoch ALOHA Experiment}
+\label{alohanotebook}
+\end{table}
+
+\begin{itemize}
+
+\item Among those first seven lines in the notebook, 4/7 of them have
+$X_1 = 2$.  After many, many lines, this fraction will be
+approximately 0.52.
+
+\item Among those first seven lines in the notebook, 3/7 of them have
+$X_2 = 2$.  After many, many lines, this fraction will be
+approximately 0.47.\footnote{Don't make anything of the fact that these
+probabilities nearly add up to 1.} 
+
+\item Among those first seven lines in the notebook, 3/7 of them have
+$X_1 = 2 {\rm ~and~ } X_2 = 2$.  After many, many lines, this fraction
+will be approximately 0.27. 
+
+\item Among the first seven lines in the notebook, four of them do not
+say NA in the $X_2 = 2 | X_1 = 2$ column.  {\bf Among these four lines},
+two say Yes, a fraction of 2/4.  After many, many lines, this
+fraction will be approximately 0.52.
+
+\end{itemize}
+
+\section{A Note on Modeling}
+
+Here is a question to test your understanding of the ALOHA model---not
+the calculation of probabilities, but rather the meaning of the model
+itself.  What kinds of properties are we trying to capture in the model?
+
+So, consider this question:
+
+\begin{quote} 
+
+Consider the ALOHA network model.  Say we have two such networks, A and
+B.  In A, the network typically is used for keyboard input, such as a
+user typing e-mail or editing a file.  But in B, users tend to do a lot
+of file uploading, not just typing.  Fill in the blanks:  In B, the
+model parameter \_\_\_\_\_\_\_ is \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ than in
+A, and in order to accommodate this, we should set the parameter
+\_\_\_\_\_\_\_\_ to be relatively \_\_\_\_\_\_\_\_\_\_ in B.
+
+\end{quote}
+
+In network B we have heavy traffic.  Thus, when a node becomes idle, it
+is quite likely to have a new message to send right away.\footnote{The
+file is likely read in chunks called disk {\it sectors}, so there may be
+a slight pause between the uploading of chunks.  Our model here is too
+coarse to reflect such things.}  Thus q is large.
+
+That means we need to be especially worried about collisions, so we
+probably should set p to a low value.
+
+\section{Solution Strategies}
+
+The example in Section \ref{basicprobcomp} shows typical stategies in
+exploring solutions to probability problems, such as:
+
+\begin{itemize}
+
+\item Name what seem to be the important variables and events, in this case 
+$X_1$, $X_2$, $C_1$, $C_2$ and so on.
+
+\item Write the given probability in terms of those named variables,
+e.g.  
+
+\begin{equation}
+P(X_1 = 2) 
+= P(\underbrace{ C_1 {\rm ~and~} C_2 } {\rm ~or~ } 
+\underbrace{ {\rm ~not~} C_1 {\rm ~and~} ~{\rm not}~ C_2 } ) 
+\end{equation}
+
+above.
+
+\item Ask the famous question, ``How can it happen?''  
+Break big events down into small events; in the above case
+the event $X_1 = 2$ can happen if $C_1 
+\textrm{ and } 
+C_2 
+\textrm{ or } 
+\textrm{ not } 
+C_1 
+\textrm{ and } 
+\textrm{ not } 
+C_2$.
+
+\item But when you do break things down like this, make sure to neither
+expand or contract the scope of the probability.  Say you write
+something like
+
+\begin{equation}
+P(A) = P(B)
+\end{equation}
+
+where B might be some complicated event expression such as in the
+right-hand side of (\ref{a1}).  Make SURE that A and B are
+equivalent---meaning that in every notebook line in which A occurs, then
+B also occurs, and {\it vice versa}.
+
+\item Do not write/think nonsense.  For example: the expression ``P(A)
+or P(B)'' is nonsense---do you see why?  Probabilities are numbers, not
+boolean expressions, so ``P(A) or P(B)'' is like saying, ``0.2 or
+0.5''---meaningless!
+
+Similarly, say we have a random variable X.  The ``probability'' P(X) is
+invalid.  Say X is the number of dots we get when we roll a single die.
+Then P(X) would mean ``the probability that the number of dots,'' which
+is nonsense English!  P(X = 3) is valid, but P(X) is meaningless. 
+
+Please note that = is not like a comma, or equivalent to the English
+word {\it therefore}.  It needs a left side and a right side; ``a = b''
+makes sense, but ``= b'' doesn't.
+
+\item Similarly, don't use ``formulas'' that you didn't learn and that
+are in fact false.  For example, in an expression involving a random
+variable X, one can NOT replace X by its mean.  (How would you like it
+if your professor were to lose your exam, and then tell you, ``Well,
+I'll just assign you a score that is equal to the class mean''?)
+
+\item Adhere to convention!  Use capital letters for random variables
+and names of events.  Use P() notation, not p() (which will mean
+something else in this book).
+
+\item In the beginning of your learning probability methods,
+meticulously write down all your steps, with reasons, as in the
+computation of $P(X_1 = 2)$ in Equations (\ref{a1})ff.  After you gain
+more experience, you can start skipping steps, but not in the initial
+learning period.
+
+\item Solving probability problems---and even more so, building useful
+probability models---is like computer programming:  It's a creative
+process.
+
+One can NOT---repeat, NOT---teach someone how to write programs.  All
+one can do is show the person how the basic building blocks work, such
+as loops, if-else and arrays, then show a number of examples.  But the
+actual writing of a program is a creative act, not formula-based.  The
+programmer must creatively combined the various building blocks to
+produce the desired result.  The teacher cannot teach the student how to
+do this.
+
+The same is true for solving probability problems.  The basic building
+blocks were presented above in Section \ref{basicprobcomp}, and many
+more ``mailing tubes'' will be presented in the rest of this book.  But
+it is up to the student to try using the various building blocks in a
+way that solves the problem.  Sometimes use of one block may prove to be
+unfruitful, in which case one must try other blocks.
+
+For instance, in using probability formulas like P(A and B) = P(A)
+P(B$|$A), there is no magic rule as to how to choose A and B.  
+
+Moreover, if you need P(B$|$A), there is no magic rule on how to find
+it.  On the one hand, you might calculate it from (\ref{condba}), as we
+did in (\ref{x1givx2}), but on the other hand you may be able to reason
+out the value of P(B$|$A), as we did following (\ref{px11}).  Just try
+some cases until you find one that works, in the sense that you can
+evaluate both factors.  It's the same as trying various programming
+ideas until you find one that works.
+
+\end{itemize}
+
+\section{Example:  Divisibility of Random Integers}
+
+Suppose at step i we generate a random integer between 1 and 1000, and
+check whether it's evenly divisible by i, i = 5,4,3,2,1.  Let N denote
+the number of steps needed to reach an evenly divisible number.
+
+Let's find P(N = 2).  Let q(i) denote the fraction of numbers in
+1...,1000 that are evenly divisible by i, so that for instance q(5) =
+200/1000 = 1/5 while q(3) = 333/1000.  Let's label the steps 5,4,..., so
+that the first step is number 5.  Then since the random numbers are
+independent from step to step, we have
+
+\begin{eqnarray}
+\label{divis}
+P(N = 2) &=& P(\textrm{fail in step 5 and succeed in step 4}) ~~~~
+\textrm{(``How can it happen?'')}\\
+&=& P(\textrm{fail in step 5) ~ P(succeed in step 4 $|$ fail in step 5)} ~~~~
+((\ref{genand})) \\
+&=& [1-q(5)] q(4) \\
+&=& \frac{4}{5} \cdot \frac{1}{4} \\
+&=& \frac{1}{5}
+\end{eqnarray}
+
+But there's more.
+
+First, note that q(i) is either equal or approximately equal to 1/i.
+Then following the derivation in (\ref{divis}), you'll find that
+
+\begin{equation}
+P(N = j) \approx \frac{1}{5}
+\end{equation}
+
+for ALL j in 1,...,5.  
+
+That may seem counterintuitive.  Yet the example here is in essence the
+same as one found as an exercise in many textbooks on probability:
+
+\begin{quote}
+A man has five keys.  He knows one of them opens a given lock, but he
+doesn't know which.  So he tries the keys one at a time until he finds
+the right one.  Find P(N = j), j = 1,...,5, where N is the number of
+keys he tries until he succeeds. 
+\end{quote}
+
+Here too the answer is 1/5 for all j.  But this one makes intuitive
+sense:  Each of the keys has chance 1/5 of being the right key, so each
+of the values 1,...,5 is equally likely for N.
+
+This is then an example of the fact that sometimes we can gain insight
+into one problem by considering a mathematically equivalent problem in a
+quite different setting. 
+
+\section{Example:  A Simple Board Game} 
+\label{boardgame}
+
+Consider a board game, which for simplicity we'll assume consists of two
+squares per side, on four sides.  A player's token advances around the
+board.  The squares are numbered 0-7, and play begins at square 0.
+
+A token advances according to the roll of a single die.  If a player
+lands on square 3, he/she gets a bonus turn.  Let's find the probability
+that a player has yet to make a complete circuit of the board---i.e. has
+not yet reached or passed 0---after the first turn (including the bonus, if
+any).  Let R denote his first roll, and let B be his bonus if there is
+one, with B being set to 0 if there is no bonus.  Then (using commas as
+a shorthand notation for {\it and})
+
+\begin{eqnarray}
+P(\textrm{doesn't reach or pass 0}) &=& P(R+B \leq 7) \\ 
+&=& P(R \leq 6, R \neq 3 \textrm{ or } R = 3, B \leq 4) \\
+&=& P(R \leq 6, R \neq 3) + P(R = 3, B \leq 4) \\
+&=& P(R \leq 6, R \neq 3) + P(R = 3) ~ P(B \leq 4) \\
+&=& \frac{5}{6} + \frac{1}{6} \cdot \frac{4}{6} \\
+&=& \frac{17}{18}
+\end{eqnarray}
+
+Now, here's a shorter way (there are always multiple ways to do a
+problem):
+
+\begin{eqnarray}
+P(\textrm{don't reach or pass 0}) &=& 1 - P(\textrm{do reach or pass 0}) \\ 
+&=& 1 - P(R + B > 7) \\
+&=& 1 - P(R = 3,  B > 4) \\
+&=& 1 - \frac{1}{6} \cdot \frac{2}{6} \\
+&=& \frac{17}{18}
+\end{eqnarray}
+
+Now suppose that, according to a telephone report of the game, you hear
+that on the player's first turn, his token ended up at square 4.  Let's 
+find the probability that he got there with the aid of a bonus roll.
+
+{\bf Note that this a conditional probability}---we're finding the
+probability that the player got a bonus roll, \underline{given} that we
+know he ended up at square 4.  The word {\it given} wasn't there in the
+statement of the problem, but it was implied.
+
+A little thought reveals that we cannot end up at square 4 after making
+a complete circuit of the board, which simplifies the situation quite a
+bit.  So, write
+
+\begin{eqnarray}
+\label{condboard}
+P(B > 0 ~|~ R+B = 4) &=& \frac{P(R+B 
+= 4, B > 0)}{P(R+B=4)} \\ &=& \frac{P(R+B = 4, B > 0)}{P(R+B = 4, B > 0 \textrm{ or } R+B = 4, B = 0)} \\
+&=& \frac{P(R+B = 4, B > 0)}{P(R+B = 4, B > 0) + P(R+B = 4, B = 0)} \\
+&=& \frac{P(R = 3, B = 1)}{P(R = 3, B = 1) + P(R = 4)} \\
+&=& \frac
+{\frac{1}{6} \cdot \frac{1}{6}}
+{\frac{1}{6} \cdot \frac{1}{6} + \frac{1}{6}} \\
+&=& \frac{1}{7}
+\end{eqnarray}
+
+We could have used Bayes' Rule to shorten the derivation a little here,
+but will prefer to derive everything, at least in this introductory
+chapter.
+
+Pay special attention to that third equality above, as it is a frequent
+mode of attack in probability problems.  In considering the probability
+P(R+B = 4, B $>$ 0), we ask, what is a simpler---but still
+equivalent!---description of this event?  Well, we see that R+B = 4, B
+$>$ 0 boils down to R = 3, B = 1, so we replace the above probability
+with P(R = 3, B = 1).
+
+Again, this is a very common approach.  But be sure to take care that we
+are in an ``if and only if'' situation.  Yes, R+B = 4, B $>$ 0 implies R
+= 3, B = 1, but we must make sure that the converse is true as well.  In
+other words, we must also confirm that R = 3, B = 1 implies R+B = 4, B
+$>$ 0.  That's trivial in this case, but one can make a subtle error in
+some problems if one is not careful; otherwise we will have replaced a
+higher-probability event by a lower-probability one.
+
+\section{Example:  Bus Ridership}
+\label{busridership}
+
+Consider the following analysis of bus ridership.  (In order to keep
+things easy, it will be quite oversimplified, but the principles will be
+clear.)  Here is the model:
+
+\begin{itemize}
+
+\item At each stop, each passsenger alights from the bus, independently,
+with probability 0.2 each.  
+
+\item Either 0, 1 or 2 new passengers get on the bus, with probabilities
+0.5, 0.4 and 0.1, respectively.  Passengers at successive stops are
+independent.
+
+\item Assume the bus is so large that it never becomes full, so the new
+passengers can always get on. 
+
+\item Suppose the bus is empty when it arrives at its first stop.
+
+\end{itemize}
+
+Let $L_i$ denote the number of passengers on the bus as it {\it leaves}
+its i$^{th}$ stop, i = 1,2,3,...  
+Let $B_i$ denote the number of new passengers who board
+the bus at the i$^{th}$ stop.  
+
+First, let's find the probability that no passengers board the bus at
+the first three stops.  That's easy:
+
+\begin{equation}
+P(B_1 = 0 \textrm{ and } B_2 = 0 \textrm{ and } B_3 = 0) = 0.5^3
+\end{equation}
+
+Now let's compute $P(L_2 = 0)$.  
+
+\begin{eqnarray}
+P(L_2 = 0) &=& 
+P(B_1 = 0 \textrm{ and } L_2 = 0 \textrm{ or }
+B_1 = 1 \textrm{ and } L_2 = 0 \textrm{ or }
+B_1 = 2 \textrm{ and } L_2 = 0) \\
+&=& \sum_{i=0}^2 P(B_1 = i \textrm{ and } L_2 = 0) \\
+&=& \sum_{i=0}^2 P(B_1 = i) P(L_2 = 0 | B_1 = i) \\
+&=& 0.5^2 + (0.4) (0.2) (0.5) + (0.1) (0.2^2) (0.5) \\
+&=& 0.292 \label{eq292}
+\end{eqnarray}
+
+For instance, where did that first term, $0.5^2$, come from?
+Well, $P(B_1 = 0) = 0.5$, and what about $P(L_2 = 0 | B_1 = 0)$?
+If $B_1 = 0$, then the bus approaches the second stop empty.  For it to
+then {\it leave} that second stop empty, it must be the case that $B_2 =
+0$, which has probability 0.5.  In other words, $P(L_2 = 0 | B_1 = 0) =
+0.5$.
+
+As another example, suppose we are told that the bus arrives empty at the
+third stop.  What is the probability that exactly two people boarded the
+bus at the first stop?  
+
+Note first what is being asked for here:  $P(B_1 = 2 | L_2 = 0)$.  Then
+we have
+
+\begin{eqnarray}
+P(B_1 = 2 ~|~ L_2 = 0) &=&
+\frac{P(B_1 = 2 \textrm{ and } L_2 = 0)}{P(L_2 = 0)} \\
+&=& P(B_1 = 2) ~ P(L_2 = 0 ~|~ B_1 = 2) ~ /~  0.292 \\
+&=& 0.1 \cdot 0.2^2 \cdot 0.5 / 0.292
+\end{eqnarray}
+
+(the 0.292 had been previously calculated in (\ref{eq292})).
+
+Now let's find the probability that fewer people board at the second
+stop than at the first:
+
+\begin{eqnarray}
+P(B_2 < B_1)
+&=& P(B_1 = 1 \textrm{ and } B_2 < B_1 \textrm{ or }
+      B_1 = 2 \textrm{ and } B_2 < B_1) \\
+&=& 0.4 \cdot 0.5 +
+    0.1 \cdot (0.5 + 0.4)
+\end{eqnarray}
+
+Also:  Someone tells you that as she got off the bus at the second stop,
+she saw that the bus then left that stop empty.  Let's find the
+probability that she was the only passenger when the bus left the first
+stop:
+
+We are given that $L_2 = 0$.  But we are {\it also} given that
+$L_1 > 0$.  Then
+
+\begin{eqnarray}
+P(L_1 = 1 | L_2 = 0 \textrm{ and } L_1 > 0)&=&
+   \frac
+      {P(L_1 = 1 \textrm{ and } L_2 = 0)}
+      {P(L_2 = 0 \textrm{ and } L_1 > 0)} \\
+&=&
+   \frac{P(B_1 = 1 \textrm{ and } L_2 = 0)}
+   {P(
+      B_1 = 1 \textrm{ and } L_2 = 0 \textrm{ or }
+      B_1 = 2 \textrm{ and } L_2 = 0)} \label{l1l2} \\
+&=& \frac
+      {(0.4)(0.2)(0.5)}
+      {(0.4)(0.2)(0.5) + (0.1)(0.2)^2(0.5)}
+\end{eqnarray}
+
+Equation (\ref{l1l2}) requires some explanation.  Let's first consider
+how we got the numerator from the preceding equation.
+
+Ask the usual question:  How can it happen?  In this case, how can the
+event 
+
+\begin{equation}
+L_1 = 1 \textrm{ and } L_2 = 0
+\end{equation}
+
+occur?  Since we know a lot about
+the probabilistic behavior of the $B_i$, let's try to recast that event.
+A little thought shows that the event is equivalent to the event 
+
+\begin{equation}
+B_1 = 0 \textrm{ and } L_2 = 0
+\end{equation}
+
+So, how did the denominator in (\ref{l1l2}) come from the preceding
+equation?  In other words, how did we recast the event 
+
+\begin{equation}
+L_2 = 0 \textrm{ and } L_1 > 0
+\end{equation}
+
+in terms of the $B_i$?  Well, $L_1 > 0$ means that $B_1$ is either 1 or
+2.  Thus we broke things down accordingly in the denominator of
+(\ref{l1l2}).  
+
+The remainder of the computation is similar to what we did earlier in
+this example.
+
+\section{Random Graph Models}
+\label{randomgraph}
+A {\it graph} consists of {\it vertices} and {\it edges}.  To understand
+this, think of a social network.  Here the vertices represent people and
+the edges represent friendships.  For the time being, assume that
+friendship relations are mutual, i.e.\ if person i says he is friends
+with person j, then j will say the same about i.
+
+For any graph, its {\it adjacency matrix} consists of 1 and 0 entries,
+with a 1 in row i, column j meaning there is an edge from vertex i to
+vertex j.  For instance, say we have a simple tiny network of three
+people, with adjacency matrix
+
+\begin{equation}
+\label{graphex}
+\left (
+\begin{array}{rrr}
+0 & 1 & 1 \\
+1 & 0 & 0 \\
+1 & 0 & 0 \\
+\end{array}
+\right )
+\end{equation}
+
+Row 1 of the matrix says that Person 1 is friends with persons 2 and 3,
+but we see from the other rows that Persons 2 and 3 are not friends with
+each other.
+
+In any graph, the {\it degree} of a vertex is its number of edges.  So,
+the degree of vertex i is the number of 1s in row i.  In the little
+model above, vertex 1 has degree 2 but the other two vertices each have
+degree 1.
+
+The assumption that friendships are mutual is described in graph theory
+as having a {\it undirected} graph.  Note that that implies that the
+adjacency matrix is symmetric.  However, we might model some other
+networks as {\it directed}, with adjacency matrices that are not
+necessarily symmetric.  In a large extended family, for example, we
+could define edges in terms of being an elder sibling; there would be an
+edge from Person i to Person j if j is an older sibling of i.
+
+Graphs need not represent people.  They are used in myriad other
+settings, such as analysis of Web site relations, Internet traffic
+routing, genetics research and so on.
+
+\subsection{Example:  Preferential Attachment Graph Model}
+\label{prefattach}
+
+A famous graph model is {\it Preferential Attachment}.  Think of it
+again as an undirected social network, with each edge representing a
+``friend'' relation.  The number of vertices grows over time, one vertex
+per time step.  At time 0, we have just two vertices, $v_1$ and $v_2$,
+with a link between them.  
+
+Thus at time 0, each of the two vertices has degree 1.  Whenever a new
+vertex is added to the graph, it randomly chooses an existing vertex to
+{\it attach to}, creating a new edge with that existing vertex.  In
+making that random choice, it follows probabilities in proportion to the
+degrees of the existing edges.
+
+
+As an example of how the Preferential Attachment Model works, suppose
+that at time 2, when $v_4$ is added, the adjacency matrix for the graph
+is (\ref{graphex}).  Then there will be an edge created between $v_4$
+with $v_1$, $v_2$ or $v_3$, with probability 2/4, 1/4 and 1/4,
+respectively.  Let's find $P(v_4 \textrm{ attaches to } v_1)$
+
+Let $N_i$ denote the node that $v_i$ attaches to, i = 3,4,...
+Then, following the solution strategy ``break big event down into small
+events,'' let's break this question about $v_4$ according to what
+happens with $v_3$:
+
+\begin{eqnarray}
+P(N_4 = 1)
+&=& P(N_3 = 1 \textrm{ and } N_4 = 1) \
++ P(N_3 = 2 \textrm{ and } N_4 = 1) \\ 
+&=& (1/2) (2/4) + (1/2) (1/4) \\
+&=& 3/8
+\end{eqnarray}
+
+\section{Simulation}
+
+To simulate whether a simple event occurs or not, we typically use R
+function {\bf runif()}.  This function generates random numbers from the
+interval (0,1), with all the points inside being equally likely.  So for
+instance the probability that the function returns a value in (0,0.5) is
+0.5.  Thus here is code to simulate tossing a coin:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+if (runif(1) < 0.5) heads <- TRUE else heads <- FALSE
+\end{Verbatim}
+
+The argument 1 means we wish to generate just one random number from the
+interval (0,1).
+
+\subsection{Example:  Rolling Dice}
+
+If we roll three dice, what is the probability that their total is 8?
+We count all the possibilities, or we could get an approximate answer
+via simulation:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# roll d dice; find P(total = k)
+
+probtotk <- function(d,k,nreps) {
+   count <- 0
+   # do the experiment nreps times
+   for (rep in 1:nreps) {
+      sum <- 0
+      # roll d dice and find their sum
+      for (j in 1:d) sum <- sum + roll()
+      if (sum == k) count <- count + 1
+   }
+   return(count/nreps)
+}
+
+# simulate roll of one die; the possible return values are 1,2,3,4,5,6,
+# all equally likely
+roll <- function() return(sample(1:6,1))
+
+# example
+probtotk(3,8,1000)
+\end{Verbatim}
+
+The call to the built-in R function {\bf sample()} here says to take a
+sample of size 1 from the sequence of numbers 1,2,3,4,5,6.  That's just
+what we want to simulate the rolling of a die.  The code
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+for (j in 1:d) sum <- sum + roll()
+\end{Verbatim}
+
+then simulates the tossing of a die d times, and computing the sum.
+
+\subsection{First Improvement}
+\label{improvingsimcode}
+
+Since applications of R often use large amounts of computer time, good R
+programmers are always looking for ways to speed things up.  Here is an
+alternate version of the above program:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# roll d dice; find P(total = k)
+
+probtotk <- function(d,k,nreps) {
+   count <- 0
+   # do the experiment nreps times
+   for (rep in 1:nreps) 
+      total <- sum(sample(1:6,d,replace=TRUE))
+      if (total == k) count <- count + 1
+   }
+   return(count/nreps)
+}
+\end{Verbatim}
+
+Let's first discuss the code.
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sample(1:6,d,replace=TRUE)
+\end{Verbatim}
+
+The call to {\bf sample()} here says, ``Generate d random numbers,
+chosen randomly (i.e.\ with equal probability) from the integers 1
+through 6, with replacement.''  Well, of course, that simulates tossing
+the die d times.  So, that call returns a d-element array, and we then
+call R's built-in function {\bf sum()} to find the total of the d dice.
+
+Note the call to R's {\bf sum()} function, a nice convenience.
+
+This second version of the code here eliminates one explicit loop, which
+is the key to writing fast code in R.  But just as important, it is more
+compact and clearer in expressing what we are doing in this simulation.
+
+\subsection{Second Improvement}
+
+Further improvements are possible.  Consider this code: 
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# roll d dice; find P(total = k)
+
+# simulate roll of nd dice; the possible return values are 1,2,3,4,5,6,
+# all equally likely
+roll <- function(nd) return(sample(1:6,nd,replace=TRUE))
+
+probtotk <- function(d,k,nreps) {
+   sums <- vector(length=nreps)
+   # do the experiment nreps times
+   for (rep in 1:nreps) sums[rep] <- sum(roll(d))
+   return(mean(sums==k))
+}
+\end{Verbatim}
+
+There is quite a bit going on here.
+
+We are storing the various ``notebook lines'' in a vector {\bf sums}.
+We first call {\bf vector()} to allocate space for it.
+
+But the heart of the above code is the expression {\bf sums==k}, which
+involves the very essence of the R idiom, {\bf vectorization}.  At
+first, the expression looks odd, in that we are comparing a vector
+(remember, this is what languages like C call an {\it array}), {\bf
+sums}, to a scalar, {\bf k}.  But in R, every ``scalar'' is actually
+considered a one-element vector.  
+
+Fine, {\bf k} is a vector, but wait!  It has a different length than
+{\bf sums}, so how can we compare the two vectors?  Well, in R 
+a vector is {\bf recycled}---extended in length, by repeating its
+values---in order to conform to longer vectors it will be involved with.
+For instance:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> c(2,5) + 4:6
+[1]  6 10  8
+\end{Verbatim}
+
+Here we added the vector (2,5) to (4,5,6).  The former was first
+recycled to (2,5,2), resulting in a sum of (6,10,8).\footnote{There was
+also a warning message, not shown here.  The circumstances under which
+warnings are or are not generated are beyond our scope here, but 
+recycling is a very common R operation.}
+
+So, in evaluating the expression {\bf sums==k}, R will recycle {\bf k}
+to a vector consisting of {\bf nreps} copies of {\bf k}, thus conforming
+to the length of {\bf sums}.  The result of the comparison will then be
+a vector of length {\bf nreps}, consisting of TRUE and FALSE values.
+In numerical contexts, these are treated at 1s and 0s, respectively.
+R's {\bf mean()} function will then average those values, resulting in
+the fraction of 1s!  That's exactly what we want.
+
+\subsection{Third Improvement}
+
+Even better:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+roll <- function(nd) return(sample(1:6,nd,replace=TRUE))
+
+probtotk <- function(d,k,nreps) {
+   # do the experiment nreps times
+   sums <- replicate(nreps,sum(roll(d)))
+   return(mean(sums==k))
+}
+\end{Verbatim}
+
+R's {\bf replicate()} function does what its name implies, in this case
+executing the call {\bf sum(roll(d))}.  That produces a vector, which we
+then assign to {\bf sums}.  And note that we don't have to allocate space
+for {\bf sums}; {\bf replicate()} produces a vector, allocating space,
+and then we merely point {\bf sums} to that vector.
+
+The various improvements shown above compactify the code, and in many
+cases, make it much faster.\footnote{You can measure times using R's
+{\bf system.time()} function, e.g. via the call {\bf
+system.time(probtotk(3,7,10000))}.}  Note, though, that this comes at
+the expense of using more memory.
+
+\subsection{Simulation of Conditional Probability in Dice Problem}
+
+Suppose three fair dice are rolled.  We wish to find the approximate
+probability that the first die shows fewer than 3 dots, given that the
+total number of dots for the 3 dice is more than 8, using simulation.
+
+Here is the code:
+
+\begin{lstlisting}[numbers=left]
+dicesim <- function(nreps) {
+   count1 <- 0
+   count2 <- 0
+   for (i in 1:nreps) {
+      d <- sample(1:6,3,replace=T)
+      if (sum(d) > 8) {
+         count1 <- count1 + 1
+         if (d[1] < 3) count2 <- count2 + 1
+      }
+   }
+   return(count2 / count1)
+}
+\end{lstlisting}
+
+Note carefully that we did NOT use (\ref{condba}).  That would defeat
+the purpose of simulation, which is the model the actual process.
+
+\subsection{Simulation of the ALOHA Example}
+\label{alohasim}
+
+Following is a computation via simulation of the {\it approximate}
+values of $P(X_1 = 2)$, $P(X_2 = 2)$ and $P(X_2 = 2 | X_1 = 1)$. 
+
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# finds P(X1 = 2), P(X2 = 2) and P(X2 = 2|X1 = 1) in ALOHA example
+sim <- function(p,q,nreps) {
+   countx2eq2 <- 0
+   countx1eq1 <- 0
+   countx1eq2 <- 0
+   countx2eq2givx1eq1 <- 0
+   # simulate nreps repetitions of the experiment
+   for (i in 1:nreps) {
+      numsend <- 0  # no messages sent so far
+      # simulate A and B's decision on whether to send in epoch 1
+      for (j in 1:2)
+         if (runif(1) < p) numsend <- numsend + 1
+      if (numsend == 1)  X1 <- 1
+      else X1 <- 2
+      if (X1 == 2) countx1eq2 <- countx1eq2 + 1
+      # now simulate epoch 2
+      # if X1 = 1 then one node may generate a new message
+      numactive <- X1
+      if (X1 == 1 && runif(1) < q) numactive <- numactive + 1
+      # send?
+      if (numactive == 1) 
+         if (runif(1) < p) X2 <- 0
+         else X2 <- 1
+      else {  # numactive = 2
+         numsend <- 0
+         for (i in 1:2)
+            if (runif(1) < p) numsend <- numsend + 1
+         if (numsend == 1) X2 <- 1
+         else X2 <- 2
+      }
+      if (X2 == 2) countx2eq2 <- countx2eq2 + 1
+      if (X1 == 1) {  # do tally for the cond. prob.
+         countx1eq1 <- countx1eq1 + 1
+         if (X2 == 2) countx2eq2givx1eq1 <- countx2eq2givx1eq1 + 1
+      }
+   }
+   # print results
+   cat("P(X1 = 2):",countx1eq2/nreps,"\n")
+   cat("P(X2 = 2):",countx2eq2/nreps,"\n")
+   cat("P(X2 = 2 | X1 = 1):",countx2eq2givx1eq1/countx1eq1,"\n")
+}
+\end{Verbatim}
+
+Note that each of the {\bf nreps} iterations of the main {\bf for} loop
+is analogous to one line in our hypothetical notebook.  So, to find
+(the approximate value of) $P(X_1 = 2)$, divide the count of the number
+of times $X_1 = 2$ occurred by the number of iterations.
+
+Again, note especially that the way we calculated $P(X_2 = 2 | X_1 = 1)$
+was to count the number of times $X_2 = 2$, {\bf among those times that}
+$X_1 = 1$, just like in the notebook case.
+
+Also:  Keep in mind that we did NOT use (\ref{thisisbayes}) or any other
+formula in our simulation.  We stuck to basics, the ``notebook''
+definition of probability.  This is really important if you are using
+simulation to confirm something you derived mathematically.  On the
+other hand, if you are using simulation because you CAN'T derive
+something mathematically (the usual situation), using some of the
+mailing tubes might speed up the computation.
+
+\subsection{Example:  Bus Ridership, cont'd.}
+\label{busridershipsim}
+
+Consider the example in Section \ref{busridership}.  Let's find the
+probability that after visiting the tenth stop, the bus is empty.  This
+is too complicated to solve analytically, but can easily be simulated:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+nreps <- 10000
+nstops <- 10
+count <- 0
+for (i in 1:nreps) {
+   passengers <- 0
+   for (j in 1:nstops) {
+      if (passengers > 0) 
+         for (k in 1:passengers) 
+            if (runif(1) < 0.2) 
+               passengers <- passengers - 1
+      newpass <- sample(0:2,1,prob=c(0.5,0.4,0.1))
+      passengers <- passengers + newpass
+   }
+   if (passengers == 0) count <- count + 1
+}
+print(count/nreps)
+\end{Verbatim}
+
+Note the different usage of the {\bf sample()} function in the call
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+sample(0:2,1,prob=c(0.5,0.4,0.1))
+\end{Verbatim}
+
+Here we take a sample of size 1 from the set \{0,1,2\}, but with
+probabilities 0.5 and so on.  Since the third argument for {\bf
+sample()} is {\bf replace}, not {\bf prob}, we need to specify the
+latter in our call.
+
+\subsection{Example: Board Game con'd.}
+
+Recall the board game in Section \ref{boardgame}.  Below is simulation
+code to find the probability in (\ref{condboard}):
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+boardsim <- function(nreps) {
+   count4 <- 0
+   countbonusgiven4 <- 0
+   for (i in 1:nreps) {
+      position <- sample(1:6,1)
+      if (position == 3) {
+         bonus <- TRUE
+         position <- (position + sample(1:6,1)) %% 8
+      } else bonus <- FALSE
+      if (position == 4) {
+         count4 <- count4 + 1
+         if (bonus) countbonusgiven4 <- countbonusgiven4 + 1
+      }
+   }
+   return(countbonusgiven4/count4)
+}
+\end{Verbatim}
+
+\subsection{Example:  Broken Rod}
+\label{brokenrod}
+
+Say a glass rod drops and breaks into 5 random pieces.  Let's find the
+probability that the smallest piece has length below 0.02.  
+
+First, what does ``random'' mean here?  Let's assume that the break
+points, treating the left end as 0 and the right end as 1, can be
+modeled with {\bf runif()}.  Here then is code to do the job:
+
+\begin{lstlisting}
+# random breaks the rod in k pieces, returning the length of the
+# shortest one
+minpiece <- function(k) {
+   breakpts <- sort(runif(k-1))
+   lengths <- diff(c(0,breakpts,1))
+   min(lengths)
+}
+
+# returns the approximate probability that the smallest of k pieces will
+# have length less than q
+bkrod <- function(nreps,k,q) {
+   minpieces <- replicate(nreps,minpiece(k))
+   mean(minpieces < q) 
+}
+
+> bkrod(10000,5,0.02) 
+[1] 0.35
+\end{lstlisting}
+
+So, we generate the break points according to the model, then sort them
+in order to call R's {\bf diff()} function.  The latter finds
+differences between successvie values of its argument, which in our case
+will give us the lengths of the pieces.  We then find the minimum
+length.
+
+\subsection{How Long Should We Run the Simulation?}
+
+Clearly, the large the value of {\bf nreps} in our examples above, the
+more accurate our simulation results are likely to be.  But how large
+should this value be?  Or, more to the point, what measure is there for
+the degree of accuracy one can expect (whatever that means) for a given
+value of {\bf nreps}?  These questions will be addressed in Chapter
+\ref{chap:confints}.
+
+\section{Combinatorics-Based Probability Computation}
+\label{comb}
+
+{\it And though the holes were rather small, they had to count them
+all}---from the Beatles song, {\it A Day in the Life}
+
+\bigskip
+
+In some probability problems all the outcomes are equally likely.  The
+probability computation is then simply a matter of counting all the
+outcomes of interest and dividing by the total number of possible
+outcomes.  Of course, sometimes even such counting can be challenging,
+but it is simple in principle.  We'll discuss two examples here.
+
+\subsection{Which Is More Likely in Five Cards, One King or Two
+Hearts?}
+\label{hearts}
+
+Suppose we deal a 5-card hand from a regular 52-card deck.  Which is
+larger, P(1 king) or P(2 hearts)?  Before continuing, take a moment to
+guess which one is more likely.
+
+Now, here is how we can compute the probabilities.  {\bf The key point is
+that all possible hands are equally likely, which implies that all we
+need to do is count them.}  There are $\binom{52}{5}$ possible hands, so
+this is our denominator.  For P(1 king), our numerator will be the
+number of hands consisting of one king and four non-kings.  Since there
+are four kings in the deck, the number of ways to choose one king is
+$\binom{4}{1} = 4$.  There are 48 non-kings in the deck, so there are
+$\binom{48}{4}$ ways to choose them.  Every choice of one king can be
+combined with every choice of four non-kings, so the number of hands
+consisting of one king and four non-kings is $4 \cdot \binom{48}{4}$.
+Thus
+
+\begin{equation}
+P(1 \textrm{~ king}) = \frac{4 \cdot \binom{48}{4}}{\binom{52}{5}} = 0.299
+\end{equation}
+
+The same reasoning gives us
+
+\begin{equation}
+P(2 \textrm{~ hearts}) = \frac{\binom{13}{2} \cdot \binom{39}{3}}{\binom{52}{5}} = 0.274
+\end{equation}
+
+So, the 1-king hand is just slightly more likely.
+
+Note that an unstated assumption here was that all 5-card hands are
+equally likely.  That {\it is} a realistic assumption, but it's
+important to understand that it plays a key role here.
+
+By the way, I used the R function {\bf choose()} to evaluate these
+quantities, running R in interactive mode, e.g.:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> choose(13,2) * choose(39,3) / choose(52,5)
+[1] 0.2742797
+\end{Verbatim}
+
+R also has a very nice function {\bf combn()} which will generate all
+the $\binom{n}{k}$ combinations of k things chosen from n, and also will
+at your option call a user-specified function on each combination.  This
+allows you to save a lot of computational work.  See the examples in R's
+online documentation.
+
+Here's how we could do the 1-king problem via simulation:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# use simulation to find P(1 king) when deal a 5-card hand from a
+# standard deck
+
+# think of the 52 cards as being labeled 1-52, with the 4 kings having
+# numbers 1-4
+
+sim <- function(nreps) {
+   count1king <- 0  # count of number of hands with 1 king
+   for (rep in 1:nreps) {
+      hand <- sample(1:52,5,replace=FALSE)  # deal hand
+      kings <- intersect(1:4,hand)  # find which kings, if any, are in hand
+      if (length(kings) == 1) count1king <- count1king + 1
+   }
+   print(count1king/nreps)
+}
+\end{Verbatim}
+
+Here the {\bf intersect()} function performs set intersection, in this
+case the set {1,2,3,4} and the one in the variable {\bf hand}.  Applying
+the {\tt length()} function then gets us number of kings.
+
+\subsection{Example:  Random Groups of Students}
+
+A class has 68 students, 48 of which are CS majors.  The
+68 students will be randomly assigned to groups of 4.  Find the
+probability that a random group of 4 has exactly 2 CS majors.
+
+$$
+\frac
+{\binom{48}{2} ~ \binom{20}{2}}
+{\binom{68}{4}}
+$$
+
+
+\subsection{Example:  Lottery Tickets}
+\label{lottery}
+
+Twenty tickets are sold in a lottery, numbered 1 to 20,
+inclusive.  Five tickets are drawn for prizes.  Let's find the
+probability that two of the five winning tickets are
+even-numbered.
+
+Since there are 10 even-numbered tickets, there are $\binom{10}{2}$ sets
+of two such tickets.  Continuing along these lines, we find the desired
+probability to be.
+
+\begin{equation}
+\frac
+{\binom{10}{2} \binom{10}{3}}
+{\binom{20}{5}}
+\end{equation}
+
+Now let's find the probability that two of the five winning tickets are
+in the range 1 to 5, two are in 6 to 10, and one is in 11 to 20.  
+
+Picture yourself picking your tickets.  Again there are $\binom{20}{5}$
+ways to choose the five tickets.  How many of those ways satisfy the
+stated condition?
+
+Well, first, there are $\binom{5}{2}$ ways to choose two tickets from
+the range 1 to 5.  Once you've done that, there are $\binom{5}{2}$ ways
+to choose two tickets from the range 6 to 10, and so on.  So, The
+desired probability is then
+
+\begin{equation}
+\frac
+{\binom{5}{2} \binom{5}{2} \binom{10}{1}} 
+{\binom{20}{5}}
+\end{equation}
+
+\subsection{``Association Rules'' in Data Mining}
+\label{assocrules}
+
+The field of {\it data mining} is a branch of computer science, but it
+is largely an application of various statistical methods to really huge
+databases.
+
+One of the applications of data mining is called the {\it market basket}
+problem.  Here the data consists of records of sales transactions, say
+of books at Amazon.com.  The business' goal is exemplified by Amazon's
+suggestion to customers that ``Patrons who bought this book also tended
+to buy the following books.''\footnote{Some customers appreciate such tips,
+while others view it as insulting or an invasion of privacy, but we'll
+not address such issues here.}  The goal of the market basket problem is
+to sift through sales transaction records to produce {\it association
+rules}, patterns in which sales of some combinations of books imply
+likely sales of other related books.
+
+The notation for association rules is $A,B \Rightarrow C,D,E$, meaning
+in the book sales example that customers who bought books A and B also
+tended to buy books C, D and E.  Here A and B are called the {\bf
+antecedents} of the rule, and C, D and E are called the {\bf
+consequents}.  Let's suppose here that we are only interested in rules
+with a single consequent.  
+
+We will present some methods for finding good rules in another chapter, but
+for now, let's look at how many possible rules there are.  Obviously, it
+would be impractical to use rules with a large number of
+antecedents.\footnote{In addition, there are serious statistical
+problems that would arise, to be discussed in another chapter.}.  Suppose
+the business has a total of 20 products available for sale.  What
+percentage of potential rules have three or fewer
+antecedents?\footnote{Be sure to note that this is also a probability,
+namely the probability that a randomly chosen rule will have three or
+fewer antecedents.}
+
+For each k = 1,...,19, there are $\binom{20}{k}$ possible sets of k
+antecedents, and for each such set there are $\binom{20-k}{1}$ possible
+consequents.  The fraction of potential rules using three or fewer
+antecedents is then
+
+\begin{equation}
+\frac
+{\sum_{k=1}^{3} \binom{20}{k} \cdot \binom{20-k}{1}}
+{\sum_{k=1}^{19} \binom{20}{k} \cdot \binom{20-k}{1}}
+= \frac{23180}{10485740}
+= 0.0022
+\end{equation}
+
+So, this is just scratching the surface.  And note that with only 20
+products, there are already over ten million possible rules.  With 50
+products, this number is $2.81 \times 10^{16}$!  Imagine what happens in
+a case like Amazon, with millions of products.  These staggering numbers
+show what a tremendous challenge data miners face.
+
+
+
+
+\subsection{Multinomial Coefficients}
+\label{multnomcoeff}
+
+Question:  We have a group consisting of 6 Democrats, 5 Republicans and
+2 Independents, who will participate in a panel discussion.  They will
+be sitting at a long table.  How many seating arrangements are possible,
+with regard to political affiliation?  (So we do not care, for instance,
+about permuting the individual Democrats within the seats assigned to
+Democrats.)
+
+Well, there are $\binom{13}{6}$ ways to choose the Democratic seats.
+Once those are chosen, there are $\binom{7}{5}$ ways to choose the
+Republican seats.  The Independent seats are then already determined,
+i.e. there will be only way at that point, but let's write it as
+$\binom{2}{2}$.  Thus the total number of seating arrangements is
+
+\begin{equation}
+\frac{13!}{6!7!} \cdot
+\frac{7!}{5!2!} \cdot
+\frac{2!}{2!0!} 
+\end{equation}
+
+That reduces to
+
+\begin{equation}
+\frac{13!}{6!5!2!}
+\end{equation}
+
+The same reasoning yields the following:
+
+{\bf Multinomial Coefficients:} Suppose we have c objects and r bins.
+Then the number of ways to choose $c_1$ of them to put in bin 1, $c_2$
+of them to put in bin 2,..., and $c_r$ of them to put in bin r is
+
+\begin{equation}
+\frac{c!}{c_1!...c_r!}, ~~~ c_1+...+c_r = c
+\end{equation}
+
+Of course, the ``bins'' may just be metaphorical.  In the political
+party example above, the ``bins '' were political parties, and
+``objects'' were seats.
+
+\subsection{Example:  Probability of Getting Four Aces in a Bridge
+Hand}
+
+A standard deck of 52 cards is dealt to four players, 13 cards each.
+One of the players is Millie.  What is the probability that Millie is
+dealt all four aces?
+
+Well, there are
+
+\begin{equation}
+\frac{52!}{13!13!13!13!}
+\end{equation}
+
+possible deals.  (the ``objects'' are the 52 cards, and the ``bins'' are
+the 4 players.) The number of deals in which Millie holds all four aces
+is the same as the number of deals of 48 cards, 9 of which go to Millie
+and 13 each to the other three players, i.e.  
+
+\begin{equation}
+\frac{48!}{13!13!13!9!}
+\end{equation}
+
+Thus the desired probability is
+
+\begin{equation}
+\frac
+{
+\frac{48!}{13!13!13!9!}
+}
+{
+\frac{52!}{13!13!13!13!}
+}
+= 0.00264
+\end{equation}
+
+\startproblemset
+
+\oneproblem
+This problem concerns the ALOHA network model of Section
+\ref{aloha}.  Feel free to use (but cite) computations already in the
+example. 
+
+\begin{itemize}
+
+   \item [(a)] $P(X_1 = 2 \text{ and } X_2 = 1)$, for the same values
+   of $p$ and $q$ in the examples. 
+
+   \item [(b)] Find $P(X_2 = 0)$. 
+
+   \item [(c)] Find $(P(X_1 = 1 | X_2 = 1)$.
+
+\end{itemize}
+
+\oneproblem
+Urn I contains three blue marbles and three yellow ones, while
+Urn II contains five and seven of these colors.  We draw a marble at
+random from Urn I and place it in Urn II.  We then draw a marble at
+random from Urn II.  
+
+\begin{itemize}
+
+\item [(a)] Find P(second marble drawn is blue).
+
+\item [(b)] Find P( first marble drawn is blue $|$ second marble drawn is blue).
+
+\end{itemize}
+
+\oneproblem
+Consider the example of association rules in Section \ref{assocrules}.  
+How many two-antecedent, two-consequent rules are possible from 20 
+items?  Express your answer in terms of combinatorial (``n choose k'') 
+symbols.
+
+\oneproblem
+Suppose 20\% of all C++ programs have at least one major
+bug.  Out of five programs, what is the probability that exactly two of
+them have a major bug?
+
+\oneproblem
+Assume the ALOHA network model as in Section \ref{aloha}, i.e. m = 2 and
+$X_0 = 2$, but with general values for p and q.  Find the probability
+that a new message is created during epoch 2.
+
+\oneproblem
+You bought three tickets in a lottery, for which 60 tickets were sold in
+all.  There will be five prizes given.  Find the probability that you
+win at least one prize, and the probability that you win exactly one
+prize.
+
+\oneproblem
+Two five-person committees are to be formed from your group of 20
+people.  In order to foster communication, we set a requirement that 
+the two committees have the same chair but no other overlap.  Find the
+probability that you and your friend are both chosen for some committee.
+
+\oneproblem
+Consider a device that lasts either one, two or three months, with
+probabilities 0.1, 0.7 and 0.2, respectively.  We carry one spare.  Find
+the probability that we have some device still working just before four
+months have elapsed.
+
+\oneproblem
+A building has six floors, and is served by two freight elevators, named Mike
+and Ike.  The destination floor of any order of freight is equally
+likely to be any of floors 2 through 6.  Once an elevator reaches any of
+these floors, it stays there until summoned.  When an order arrives to the
+building, whichever elevator is currently closer to floor 1 will be
+summoned, with elevator Ike being the one summoned in the case in which
+they are both on the same floor.
+
+Find the probability that after the summons, elevator Mike is on floor
+3.  Assume that only one order of freight can fit in an elevator at a
+time.  Also, suppose the average time between arrivals of freight to the
+building is much larger than the time for an elevator to travel between
+the bottom and top floors; this assumption allows us to neglect travel
+time.
+
+\oneproblem
+Without resorting to using the fact that $\binom{n}{k} = n!/[k!(n-k!)]$,
+find $c$ and $d$ such that 
+
+\begin{equation}
+\binom{n}{k} = \binom{n-1}{k} + \binom{c}{d}
+\end{equation}
+
+\oneproblem
+Consider the ALOHA example from the text, for general p and q,
+and suppose that $X_{0} = 0$, i.e. there are no active nodes at the
+beginning of our observation period.  Find $P(X_1 = 0)$.
+
+\label{threesideddiepage}
+\oneproblem
+Consider a three-sided die, as opposed to the standard
+six-sided type.  The die is cylinder-shaped, and gives equal
+probabilities to one, two and three dots.  The game is to keep 
+rolling the die until we get a total of at least 3.  Let N denote the 
+number of times we roll the die.  For example, if we get a 3 on the 
+first roll, N = 1.  If we get a 2 on the first roll, then N will be 2 
+no matter what we get the second time.  The largest N can be is 3.  
+The rule is that one wins if one's final total is exactly 3.
+
+\begin{itemize}
+
+\item [(a)] Find the probability of winning.
+
+\item [(b)] Find P(our first roll was a 1 $|$ we won).
+
+\item [(c)] How could we construct such a die?
+
+\end{itemize}
+
+\oneproblem
+Consider the ALOHA simulation example in Section \ref{alohasim}.
+
+\begin{itemize}
+
+\item [(a)] Suppose we wish to find $P(X_2 = 1 | X_1 = 1)$ instead of
+$P(X_2 = 2 | X_1 = 1)$.  What line(s) would we change, and how would we
+change them?
+
+\item [(b)] In which line(s) are we in essence checking for a collision?
+
+\end{itemize}
+
+\oneproblem
+Jack and Jill keep rolling a four-sided and a three-sided die,
+respectively.  The first player to get the face having just one dot 
+wins, except that if they both get a 1, it's a tie, and play continues.  
+Let N denote the number of turns needed.  Find the following:
+
+\begin{itemize}
+
+\item [(a)] P(N = 1), P(N = 2).
+
+\item [(b)] $P(\textrm{the first turn resulted in a tie} | N = 2)$
+
+\end{itemize}
+
+\oneproblem
+In the ALOHA network example in Sec. 1.1, suppose $X_0 = 1$, i.e. we
+start out with just one active node. Find  $P(X_2 = 0)$, as an 
+expression in p and q.
+
+\oneproblem
+Suppose a box contains two pennies, three nickels and five dimes.
+During transport, two coins fall out, unseen by the bearer. Assume each
+type of coin is equally likely to fall out. Find: P(at least \$0.10
+worth of money is lost); P(both lost coins are of the same
+denomination)
+
+\oneproblem
+Suppose we have the track record of a certain weather forecaster. Of the
+days for which he predicts rain, a fraction c actually do have rain.
+Among days for which he predicts no rain, he is correct a fraction 
+d of the time. Among all days, he predicts rain g of the  time, and
+predicts no rain 1-g of the time. Find P(he predicted rain $|$ it does
+rain), P(he predicts wrong) and P(it does rain | he was wrong).  Write R
+simulation code to verify. (Partial answer: For the case c = 0.8, d =
+0.6 and g = 0.2, P(he predicted rain $|$ it does rain) = 1/3.) 
+
+\oneproblem
+The Game of Pit is really fun because there are no turns. People shout
+out bids at random, chaotically. Here is a slightly simplified version of
+the game:
+
+There are four suits, Wheat, Barley, Corn and Rye, with nine cards each,
+36 cards in all. There are four players. At the opening, the cards are
+all dealt out, nine to each player. The players hide their cards from
+each other's sight.
+
+Players then start trading. In computer science terms, trading is
+asynchronous, no turns; a player can bid at any time. The only rule is
+that a trade must be homogeneous in suit, e.g. all Rye. (The player
+trading Rye need not trade all the Rye he has, though.) The player bids
+by shouting out the number she wants to trade, say ``2!'' If another
+player wants to trade two cards (again, homogeneous in suit), she yells
+out, ``OK, 2!'' and they trade. When one player acquires all nine of a
+suit, he shouts ``Corner!''
+
+Consider the situation at the time the cards have just been dealt.
+Imagine that you are one of the players, and Jane is another. Find the
+following probabilities:
+
+\begin{itemize}
+
+\item [(a)] P(you have no Wheats).
+
+\item [(b)] P(you have seven Wheats).
+
+\item [(c)] P(Jane has two Wheats | you have seven Wheats).           
+
+\item [(d)] P(you have a corner) (note: someone else might too; whoever
+shouts it out first wins). 
+
+\end{itemize}
+
+\oneproblem
+In the board game example in Section \ref{boardgame}, suppose that the
+telephone report is that A ended up at square 1 after his first turn.  
+Find the probability that he got a bonus.
+
+\oneproblem
+Consider the bus ridership example in Section \ref{busridership}
+of the text. Suppose the bus is initially empty, and let $X_n$ denote 
+the number of passengers on the bus just after it has left the n$^{th}$
+stop, n = 1,2,... Find the following:                 
+
+\begin{itemize}
+
+\item [(a)] $P(X_2 = 1)$
+
+\item [(b)] P(at least one person boarded the bus at the first stop $|
+X_2 = 1$)
+
+\end{itemize}
+
+\oneproblem
+Suppose committees of sizes 3, 4 and 5 are to be chosen at random from
+20 people, among whom are persons A and B.  Find the probability that A
+and B are on the same committee.
+
+\oneproblem
+Consider the ALOHA simulation in Section \pageref{alohasim}.
+
+\begin{itemize}
+
+\item [(a)] On what line do we simulate the possible creation of a
+new message?
+
+\item [(b)] Change line 10 so that it uses {\bf sample()} instead of
+{\bf runif()}.
+
+\end{itemize}
+

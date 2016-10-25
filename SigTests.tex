@@ -1,0 +1,925 @@
+\chapter{Introduction to Significance Tests} 
+\label{chap:sigtests} 
+
+Suppose (just for fun, but with the same pattern as in more serious
+examples) you have a coin that will be flipped at the Super Bowl to see
+who gets the first kickoff.  (We'll assume slightly different rules
+here.  The coin is not ``called.''  Instead, it is agreed beforehand
+that if the coin comes up heads, Team A will get the kickoff, and
+otherwise it will be Team B.) You want to assess for ``fairness.''  Let
+p be the probability of heads for the coin.  
+
+You could toss the coin, say, 100 times, and then form a confidence
+interval for p using (\ref{propci}).  The width of the interval would
+tell you the margin of error, i.e. it tells you whether 100 tosses were
+enough for the accuracy you want, and the location of the interval would
+tell you whether the coin is ``fair'' enough.
+
+For instance, if your interval were (0.49,0.54), you might feel
+satisfied that this coin is reasonably fair.  In fact, {\bf note
+carefully that even if the interval were, say, (0.502,0.506), you would
+still consider the coin to be reasonably fair}; the fact that the
+interval did not contain 0.5 is irrelevant, as the entire interval would
+be reasonably near 0.5.
+
+However, this process would not be the way it's traditionally done.
+Most users of statistics would use the toss data to test the {\bf null
+hypothesis} 
+
+\begin{equation}
+H_0:  p = 0.5
+\end{equation}
+
+against the {\bf alternate hypothesis} 
+
+\begin{equation}
+H_A:  p \neq 0.5
+\end{equation}
+
+For reasons that will be explained below, this procedure is called {\bf
+significance testing}.  It forms the very core of statistical inference
+as practiced today.  This, however, is unfortunate, as there are some
+serious problems that have been recognized with this procedure.  We will
+first discuss the mechanics of the procedure, and then look closely at
+the problems with it in Section \ref{whatswrong}.
+
+\section{The Basics}
+\label{sigtests}
+
+Here's how significance testing works.
+
+The approach is to consider $H_0$ ``innocent until proven guilty,''
+meaning that we assume $H_0$ is true unless the data give strong
+evidence to the contrary.  {\bf KEEP THIS IN MIND!}---we are continually
+asking, ``What if...?''
+
+The basic plan of attack is this:
+
+\begin{quote}
+
+We will toss the coin n times.  Then we will believe that the coin is
+fair unless the number of heads is ``suspiciously'' extreme, i.e. much
+less than n/2 or much more than n/2.
+
+\end{quote}
+
+Let p denote the true probability of heads for our coin.  As in Section
+\ref{derivation}, let $\widehat{p}$ denote the proportion of heads in
+our sample of n tosses.  We observed in that section that $\widehat{p}$
+is a special case of a sample mean (it's a mean of 1s and 0s).  We also
+found that the standard deviation of $\widehat{p}$ is $\sqrt{p (1 -
+p)/n}$, so that the standard error (Section \ref{notionofse}) is 
+$\sqrt{\widehat{p} (1-\widehat{p}) / n }$.
+
+In other words, the material surrounding (\ref{thetahatstderr})
+tells us that 
+
+\begin{equation}
+\label{tmpfraction}
+\frac{\widehat{p}-p}
+{\sqrt{
+\frac{1}{n} 
+\cdot \widehat{p} (1-\widehat{p})
+}
+} 
+\end{equation}
+
+has an approximate N(0,1) distribution.
+
+But remember, we are going to assume $H_0$ for now, until and unless we
+find strong evidence to the contrary.  So, in the numerator of
+(\ref{tmpfraction}), p = 0.5.  And in the denominator, why use the
+standard error when we ``know'' (under our provisional assumption) that
+p = 0.5?  The exact standard deviation of $\widehat{p}$ is $\sqrt{p
+(1-p)/ n}$. So, replace (\ref{tmpfraction}) by
+
+\begin{equation}
+\label{pz}
+Z = \frac{\widehat{p}-0.5}{\sqrt{\frac{1}{n} \cdot 0.5(1-0.5)}} 
+\end{equation}
+
+then Z has an approximate N(0,1) distribution under the assumption that
+$H_0$ is true.
+
+Now recall from the derivation of (\ref{meanci}) that -1.96 and 1.96 are
+the lower- and upper-2.5\% points of the N(0,1) distribution.  Thus,
+
+\begin{equation}
+P(Z < -1.96 \textrm{ or } Z > 1.96) \approx 0.05
+\end{equation}
+
+Now here is the point:  After we collect our data, in this case by
+tossing the coin n times, we compute $\widehat{p}$ from that data,
+and then compute Z from (\ref{pz}).  If Z is smaller than -1.96 or
+larger than 1.96, we reason as follows:
+
+\begin{quote}
+Hmmm, Z would stray that far from 0 only 5\% of the time.  So, either I
+have to believe that a rare event has occurred, or I must abandon my
+assumption that $H_0$ is true.
+\end{quote}
+
+For instance, say n = 100 and we get 62 heads in our sample.  That gives
+us Z = 2.4, in that ``rare'' range.  We then {\bf reject} $H_0$, and
+announce to the world that this is an unfair coin.  We say, ``The value
+of p is significantly different from 0.5.'' 
+
+The 5\% ``suspicion criterion'' used above is called the {\bf
+significance level}, typically denoted $\alpha$.  One common statement
+is ``We rejected $H_0$ at the 5\% level.''
+
+On the other hand, suppose we get 47 heads in our sample.  Then Z =
+-0.60.  Again, taking 5\% as our significance level, this value of Z
+would not be deemed suspicious, as it occurs frequently.  We would then
+say ``We accept $H_0$ at the 5\% level,'' or ``We find that p is not
+significantly different from 0.5.''
+
+The word {\it significant} is misleading.  It should NOT be confused
+with {\it important}.  It simply is saying we don't believe the observed
+value of Z is a rare event, which it would be under $H_0$; we have
+instead decided to abandon our believe that $H_0$ is true.
+
+Note by the way that Z values of -1.96 and 1.96 correspond getting $50 -
+1.96 \cdot 0.5 \cdot \sqrt{100}$ or $50 + 1.96 \cdot 0.5 \cdot
+\sqrt{100}$ heads, i.e. roughly 40 or 60.  In other words, we can
+describe our rejection rule to be ``Reject if we get fewer than 40 or
+more than 60 heads, out of our 100 tosses.''
+
+\section{General Testing Based on Normally Distributed Estimators}
+\label{genhyp}
+
+In Section \ref{stderrest}, we developed a method of constructing
+confidence intervals for general approximately normally distributed
+estimators.  Now we do the same for significance testing.
+
+Suppose $\widehat{\theta}$ is an approximately normally distributed
+estimator of some population value $\theta$.  Then to test $H_0: \theta
+= c$, form the test statistic
+
+\begin{equation}
+\label{genz}
+Z = \frac{\widehat{\theta} - c}{s.e.(\widehat{\theta})}
+\end{equation}
+
+where $s.e.(\widehat{\theta})$ is the standard error of
+$\widehat{\theta}$,\footnote{See Section \ref{stderrest}.  Or, if we
+know the exact standard deviation of $\widehat{\theta}$ under $H_0$,
+which was the case in our coin example above, we could use that, for a
+better normal approximation.} and proceed as before:  
+
+\begin{quote}
+
+Reject $H_0:  \theta = c$ at the significance level of  $\alpha=0.05$ if
+$|Z| \geq 1.96$.
+
+\end{quote}
+
+\section{Example: Network Security}
+
+Let's look at the network security example in Section \ref{netsecapp}
+again.  Here $\widehat{\theta} = \overline{X} - \overline{Y}$, and c is
+presumably 0 (depending on the goals of Mano {\it et al}).  From
+\ref{sediff}, the standard error works out to 0.61.  So, our test
+statistic (\ref{genz}) is
+
+\begin{equation}
+Z = \frac{\overline{X} - \overline{Y} - 0}{0.61} = \frac{11.52-2.00}{0.61} = 15.61
+\end{equation}
+
+This is definitely larger in absolute value than 1.96, so we reject
+$H_0$, and conclude that the population mean round-trip times are
+different in the wired and wireless cases.
+
+\section{The Notion of ``p-Values''}
+
+Recall the coin example in Section \ref{sigtests}, in which we got 62
+heads, i.e. Z = 2.4.  Since 2.4 is considerably larger than 1.96, our
+cutoff for rejection, we might say that in some sense we not only
+rejected $H_0$, we actually \underline{strongly} rejected it.
+
+To quantify that notion, we compute something called the {\bf observed
+significance level}, more often called the {\bf p-value}. 
+
+We ask,
+
+\begin{quote}
+We rejected $H_0$ at the 5\% level.  Clearly, we would have rejected it
+even at some small---thus more stringent---levels.  What is the smallest
+such level?  Call this the p-value of the test.
+\end{quote}
+
+By checking a table of the N(0,1) distribution, or by calling {\bf
+pnorm(2.40)} in R, we would find that the N(0,1) distribution has area
+0.008 to the right of 2.40, and of course by symmetry there is an equal
+area to the left of -2.40.  That's a total area of 0.016.  In other
+words, we would have been able to reject $H_0$ even at the much more
+stringent significance level of 0.016 (the 1.6\% level) instead of 0.05.
+So, Z = 2.40 would be considered even more significant than Z = 1.96.
+In the research community it is customary to say, ``The p-value was
+0.016.'' \footnote{The `p' in ``p-value'' of course stands for
+``probability,'' meaning the probably that a N(0,1) random variable
+would stray as far, or further, from 0 as our observed Z here.  By the
+way, be careful not to confuse this with the quantity p in our coin
+example, the probability of heads.}  The smaller the p-value, the more
+significant the results are considered.  
+ 
+% \checkpoint
+
+In our network security example above in which Z was 15.61, the value is
+literally ``off the chart''; {\bf pnorm(15.61)} returns a value of 1.
+Of course, it's a tiny bit less than 1, but it is so far out in the
+right tail of the N(0,1) distribution that the area to the right is
+essentially 0.  So the p-value would be essentially 0, and the result
+would be treated as very, very highly significant.
+
+In computer output or research reports, we often see small p-values
+being denoted by asterisks.  There is generally one asterisk for p under
+0.05, two for p less than 0.01, three for 0.001, etc.  The more
+asterisks, the more significant the data is supposed to be.  See for
+instance the R regression output on page \pageref{asterisksexample}.
+
+% \section{What's Random and What Is Not}
+% 
+% It is crucial to keep in mind that $H_0$ is not an event or any other
+% kind of random entity.  This coin either has p = 0.5 or it doesn't.  If
+% we repeat the experiment, we will get a different value of X, but p
+% doesn't change; it's still the same coin!  So for example, it would be
+% wrong and meaningless to speak of the ``probability that $H_0$ is
+% true.''  
+% 
+% Similarly, it would be wrong and meaningless to write $0.05 = P(|Z| >
+% 1.96 | H_0)$, again because $H_0$ is not an event and this kind of
+% conditional probability would not make sense.  What is customarily
+% written is something like
+% 
+% \begin{equation}
+% \label{z196}
+% 0.05 = P_{H_0}(|Z| > 1.96)
+% \end{equation}
+% 
+% This is read aloud as ``the probability that $|Z|$ is larger than 1.96
+% under $H_0$,'' with the phrase {\it under $H_0$} referring to the
+% probability measure if $H_0$ is true.  Again, it's all an exercise in
+% ``What if?'' thinking.\footnote{Nothing wrong with this!  The problems
+% with significance testing, discussed in Section \ref{whatswrong} below,
+% do not stem from ``What if?'' thinking.}
+% 
+
+\section{Example:  Bank Data}
+
+Consider again the bank marketing data in Section \ref{ucibank}.
+Our comparison was between marketing campaign success rates for married
+and unmarried customers.  The p-value was quite tiny, $2.2 \times
+10^{-16}$, but be careful interpreting this.
+
+First, don't take that p-value as exact by any means.  Though our sample
+sizes are certainly large enough for the Central Limit Theorem to work
+well, that is in the heart of the distribution, not the far tails.  So,
+just take the p-value as ``tiny,'' and leave it at that.
+
+Second, although the standard description for a test with such a small
+p-value is ``very highly significant,'' keep in mind that the difference
+between the two groups was not that large.  The confidence interval we
+are 95\% confident that the population success rate is between 3.3\% and
+4.6\% less for married people.  That is an interesting difference and
+possibly of some use to the marketing people, but it is NOT large.
+
+\section{One-Sided $H_A$}
+
+Suppose that---somehow---we are sure that our coin in the example above
+is either fair or it is more heavily weighted towards heads.  Then we
+would take our alternate hypothesis to be
+
+\begin{equation}
+\label{onesideha}
+H_A: p > 0.5
+\end{equation}
+
+A ``rare event'' which could make us abandon our belief in $H_0$ would
+now be if Z in (\ref{pz}) is very large in the positive direction.  So,
+with $\alpha = 0.05$, we call {\bf qnorm(0.95)}, and find that our rule
+would now be to reject $H_0$ if $Z > 1.65$.
+
+One-sided tests are not common, as their assumptions are often difficult
+to justify.
+
+% The same would be the case if our null hypothesis were
+% 
+% \begin{equation}
+% H_A: p \leq 0.5
+% \end{equation}
+% 
+% instead of 
+% 
+% \begin{equation}
+% H_A: p = 0.5
+% \end{equation}
+% 
+% Then (\ref{z196}) would change to
+% 
+% \begin{equation}
+% \label{z196new}
+% 0.05 \geq P_{H_0}(|Z| > 1.65)
+% \end{equation}
+
+\section{Exact Tests}
+
+Remember, the tests we've seen so far are all approximate.  In
+(\ref{pz}), for instance, $\widehat{p}$ had an approximate normal
+distribution, so that the distribution of Z was approximately N(0,1).
+Thus the significance level $\alpha$ was approximate, as were the
+p-values and so on.\footnote{Another class of probabilities which would
+be approximate would be the {\bf power} values.  These are the
+probabilities of rejecting $H_0$ if the latter is not true.  We would
+speak, for instance, of the power of our test at p = 0.55, meaning the
+chances that we would reject the null hypothesis if the true population
+value of p were 0.55.}
+
+But the only reason our tests were approximate is that we only had the
+{\it approximate} distribution of our test statistic Z, or equivalently,
+we only had the approximate distribution of our estimator, e.g.
+$\widehat{p}$.  If we have an {\it exact} distribution to work with,
+then we can perform an exact test.
+
+\subsection{Example: Test for Biased Coin}
+
+Let's consider the coin example again, with the one-sided alternative
+(\ref{onesideha}) .  To keep things simple, let's suppose we toss the
+coin 10 times.  We will make our decision based on X, the number of
+heads out of 10 tosses.  Suppose we set our threshhold for ``strong
+evidence'' again $H_0$ to be 8 heads, i.e. we will reject $H_0$ if $X
+\geq 8$.  What will $\alpha$ be?
+
+\begin{equation}
+\alpha = \sum_{i=8}^{10} P(X = i) = 
+\sum_{i=8}^{10} 
+ \left (
+\begin{array}{c}
+10 \\
+i
+\end{array}
+\right )
+\left ( \frac{1}{2} \right )^{10} = 0.055
+\end{equation}
+
+That's not the usual 0.05.  Clearly we cannot get an exact significance
+level of 0.05,\footnote{Actually, it could be done by introducing some
+randomization to our test.} but our $\alpha$ is exactly 0.055, so this
+is an exact test.
+
+So, we will believe that this coin is perfectly balanced, unless we get
+eight or more heads in our 10 tosses.  The latter event would be very
+unlikely (probability only 5.5\%) if $H_0$ were true, so we decide not
+to believe that $H_0$ is true.
+
+\subsection{Example:  Improved Light Bulbs}
+\label{bulbexact}
+
+Suppose lifetimes of lightbulbs are exponentially distributed with mean
+$\mu$. In the past, $\mu = 1000$, but there is a claim that the new
+light bulbs are improved and $\mu > 1000$. To test that claim, we will
+sample 10 lightbulbs, getting lifetimes $X_1,...,X_{10}$, and compute
+the sample mean $\overline{X}$.  We will then perform a significance
+test of 
+
+\begin{equation}
+H_0: \mu = 1000
+\end{equation}
+
+vs. 
+
+\begin{equation}
+H_A: \mu > 1000
+\end{equation}
+
+It is natural to have our test take the form in which we reject
+$H_0$ if 
+
+\begin{equation}
+\overline{X} > w
+\end{equation}
+
+for some constant w chosen so that
+
+\begin{equation}
+\label{exactbulb}
+P(\overline{X} > w) = 0.05
+\end{equation}
+
+under $H_0$.  Suppose we want an exact test, not one based on a normal
+approximation. 
+
+Remember, we are making our calculations under the assumption that $H_0$
+is true.  Now recall (Section \ref{gammaprops}) that $10 \overline{X}$,
+the sum of the $X_i$, has a gamma distribution, with r = 10 and $\lambda
+= 0.001$.  So, we can find the w for which $P(\overline{X} > w) = 0.05$
+by using R's {\bf qgamma()}:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> qgamma(0.95,10,0.001)
+[1] 15705.22
+\end{Verbatim}
+
+So, we reject $H_0$ if our sample mean is larger than 1570.5.
+
+Now suppose it turns out that $\overline{X} = 1624.2$.  Under $H_0$
+there was only a 0.05 chance that $\overline{X}$ would exceed 1570.5, so
+we would reject $H_0$ with $\alpha = 0.05$.  But what if we had set w to
+1624.2?  We didn't do so, of course, but what if?  The computation 
+
+\begin{lstlisting}
+> 1 - pgamma(16242,10,0.001)
+[1] 0.03840629
+\end{lstlisting}
+
+shows that we would have rejected $H_0$ even if we had originally set
+$\alpha$ to the more stringent criterion of 0.038 instead of 0.05.  So
+we report that the p-value was 0.038.
+
+The idea of a p-value is to indicate in our report ``how strongly'' we
+rejected $H_0$.  Arguably there is a bit of game-playing in p-values, as
+there is with significance testing in general.  This will be pursued in
+Section \ref{whatswrong}.
+
+\subsection{Example:  Test Based on Range Data}
+
+Suppose lifetimes of some electronic component formerly had an
+exponential distribution with mean 100.0.  However, it's claimed that
+now the mean has increased.  (Suppose we are somehow sure it has not
+decreased.)  Someone has tested 50 of these new components, and has
+recorded their lifetimes, $X_1,...,X_{50}$.  Unfortunately, they only
+reported to us the range of the data, $R = \max_i X_i - \min_i X_i$, not
+the individual $X_i$.  We will need to do a significance test with this
+limited data, at the 0.05 level.  
+
+Recall that the variance of an exponential random variable is the square
+of its mean.  Intutively, then, the larger this population mean of X,
+the larger the mean of the range R.  In other words, the form of the
+test should be to reject $H_0$ if R is greater than some cutoff value c.
+So, we need to find the value of c to make $\alpha$ equal to 0.05.
+
+Unfortunately, we can't do this analytically, i.e. mathematically, as
+the distribution of R is far too complex.  This we'll have to resort to
+simulation.\footnote{I am still referring to the following as an exact
+test, as we are not using any statistical approximation, such as the
+Central Limit Theorm.}  Here is code to do that:
+
+\begin{lstlisting}[numbers=left]
+# code to determine the cutoff point for significance 
+# at 0.05 level
+
+nreps <- 200000
+n <- 50
+
+rvec <- vector(length=nreps)
+for (i in 1:nreps) {
+   x <- rexp(n,0.01)
+   rng <- range(x)
+   rvec[i] <- rng[2] - rng[1]
+}
+
+rvec <- sort(rvec)
+cutoff <- rvec[ceiling(0.95*nreps)]
+cat("reject H0 if R >",rvec[cutoff],"\n")
+\end{lstlisting}
+
+Here we general {\bf nreps} samples of size 50 from an exponential
+distribution having mean 100.  Note that since we are setting $\alpha$,
+a probability defined in the setting in which $H_0$ is true, we assume
+the mean is 100.  For each of the {\bf nreps} samples we find the value
+of R, recording it in {\bf rvec}.  We then take the 95$^{th}$ percentile
+of those values, which is the c for which P(R $>$ c) = 0.05.\footnote{Of
+course, this is approximate.  The greater the value of {\bf nreps}, the
+better the approximation.}
+
+The value of c output by the code was 220.4991.  A second run yielded,
+220.9304, and a third 220.7099.  The fact that these values varied little
+among themselves indicates that our value of {\bf nreps}, 200000, was
+sufficiently large.
+
+\subsection{Exact Tests under a Normal Distribution Assumption}
+
+If you are willing to assume that you are sampling from a
+normally-distributed population, then the Student-t test is nominally
+exact.  The R function {\bf t.test()} performs this operation, with the
+argument {\bf alternative} set to be either {\bf "less"} or {\bf
+"greater"}.
+
+\section{Don't Speak of ``the Probability That $H_0$ Is True''}
+
+It is very important to understand that throughout this chapter, we
+cannot speak of ``the probability that $H_0$ is true,'' because we have
+no probablistic structure on $H_0$.
+
+Consider the fair-coin problem at the beginning of this chapter.
+Suppose we hope to make a statement like, say, ``Given that we got 62
+heads out of 100 tosses, we find that the probability that this is a
+fair coin is 0.04.''  What kind of derivation would need to go into
+this?  It would go along the following lines:
+
+\begin{eqnarray}
+P(H_0 \textrm{ is true } ~|~ \textrm{ our data}) &=& 
+\frac
+{P(H_0 \textrm{ is true and our data})} 
+{P(\textrm{our data})} \\ 
+&=& 
+\nonumber
+\frac
+{P(H_0 \textrm{ is true and our data})} 
+{P(H_0 \textrm{ is true and our data}) + P(H_0 \textrm{ is false and our data})}
+\\
+&=& 
+\nonumber
+\frac
+{P(H_0 \textrm{ true}) ~ P(\textrm{our data} ~|~ H_0 \textrm{ true})} 
+{P(H_0 \textrm{ true}) ~ P(\textrm{our data }  ~|~ H_0 \textrm{ true} ) +
+P(H_0 \textrm{ false}) ~ P(\textrm{our data}  ~|~ H_0 \textrm{ false} )} 
+\end{eqnarray}
+
+Through our modeling process, e.g. the discussion surrounding
+(\ref{pz}), we can calculate $P(\textrm{our data} ~|~ H_0 \textrm{ is
+true})$.  (The false case would be more complicated, since there are
+many different kinds of false cases here, for different values of p, but
+could be handled similarly.) But what we don't have is $P(H_0 \textrm{
+is true})$.
+
+We could certainly try to model that latter quantity, say by taking a
+sample of all possible pennies (if our coin is a penny), doing very
+extensive testing of them;\footnote{Say, 100,000 tosses per coin.} the
+proportion found to be fair would then be $P(H_0 \textrm{ is true})$.
+But lacking that, we have no probablistic structure for $P(H_0 \textrm{
+is true})$, and thus cannot use language like ``the probability that
+$H_0$ is true,'' 
+
+\section{R Computation}
+
+The R function {\bf t.test()}, discussed in Section \ref{rcomp}, does
+both confidence intervals and tests, including p-values in the latter
+case.
+
+\section{The Power of a Test} 
+
+In addition to the significance level of a test, we may also be
+interested in its {\bf power} (or its many power values, as will be
+seen).
+
+\subsection{Example: Coin Fairness}
+
+For example, consider our first example in this chapter, in which we
+were testing a coin for fairness (Section \ref{sigtests}).  Our rule for
+a test at a 0.05 significance level turned out to be that we reject
+$H_0$ if we get fewer than 40 or more than 60 heads out of our 100
+tosses.  We might ask the question, say:
+
+\begin{quote}
+Suppose the true heads probability is 0.65.  We don't know, of course,
+but what if that were the case.  That's a pretty substantial departure
+from $H_0$, so hopefully we would reject.  Well, what is the probability
+that we would indeed reject?
+\end{quote}
+
+We could calculate this.  Let N denote the number of heads.  Then the
+desired probability is $P(N < 40 \textrm{ or } N > 60) =  P(N < 40) +
+P(N > 60)$.  Let's find the latter.\footnote{The former would be found
+similarly, but would come out quite small.}
+
+Once again, since N has a binomial distribution, it is approximately
+normal, in this case with mean $np = 100 \times 0.65 = 65$ and variance
+$np(1-p) = 100 \times 0.65 \times 0.35 = 22.75$.  Then $P(N > 60)$ is about
+
+\begin{lstlisting}
+1 - pnorm(60,65,sqrt(22.75))
+\end{lstlisting}
+
+% \begin{equation}
+% P(N > 60) = 
+% P \left (Z > \frac{60 - 100 \cdot 0.65}{\sqrt{100 \cdot 0.65 \cdot
+% 0.35}} \right )
+% \end{equation}
+% 
+% where now Z is 
+% 
+% \begin{equation}
+% \frac{N - 100 \cdot 0.65}{\sqrt{100 \cdot 0.65 \cdot 0.35}}
+% \end{equation}
+
+or about 0.85.  So we would be quite likely to decide this is an unfair
+coin if (unknown to us) the true probability of heads is 0.65.
+
+We say that the power of this test {\it at} p = 0.65 is 0.85.  There
+is a different power for each p.
+
+\subsection{Example:  Improved Light Bulbs}
+
+Let's find the power of the test in Section \ref{bulbexact}, at
+$\mu = 1250$.  Recall that we reject $H_0$ if $\overline{X} > 1570.522$.
+Thus our power is
+
+\begin{lstlisting}
+1 - pgamma(15705.22,10,1/1250)
+\end{lstlisting}
+
+This turns out to be about 0.197.  So, if (remember, this is just a
+``what if?'') the true new mean were 1250, we'd only have about a 20\%
+chance of discovering that the new bulbs are improved.
+
+\section{What's Wrong with Significance Testing---and What to Do Instead}
+\label{whatswrong}
+
+{\it 
+The first principle is that you must not fool yourself---and you are
+the easiest person to fool. So you have to be very careful about
+that. After you've not fooled yourself, it's easy not to fool other
+scientists.}---Richard Feynman, Nobel laureate in physics
+
+{\it ``Sir Ronald [Fisher] has befuddled us, mesmerized us, and led us
+down the primrose path''}---Paul Meehl, professor of psychology and the
+philosophy of science
+
+\bigskip
+
+{\bf Significance testing is a time-honored approach, used by tens of thousands
+of people every day.}  But it is ``wrong.'' I use the quotation marks
+here because, although significance testing is mathematically correct, it
+is at best noninformative and at worst seriously misleading.  
+
+\subsection{History of Significance Testing, and Where We Are Today} 
+
+We'll see why significance testing has serious problems shortly, but
+first a bit of history.  
+
+When the concept of significance testing, especially the 5\% value for
+$\alpha$, was developed in the 1920s by Sir Ronald Fisher, many
+prominent statisticians opposed the idea---for good reason, as we'll see
+below.  But Fisher was so influential that he prevailed, and thus
+significance testing became the core operation of statistics.
+
+So, significance testing became entrenched in the field, in spite of
+being widely recognized as faulty, to this day.  Most modern
+statisticians understand this, even if many continue to engage in the
+practice.\footnote{Many are forced to do so, e.g. to comply with
+government standards in pharmaceutical testing.  My own approach in such
+situations is to quote the test results but then point out the problems,
+and present confidence intervals as well.}  Here are a few places you
+can read criticism of testing:
+
+\begin{itemize}
+
+\item There is an entire book on the subject, {\it The Cult of
+Statistical Significance}, by S. Ziliak and D. McCloskey.
+Interestingly, on page 2, they note the prominent people who have
+criticized testing.  Their list is a virtual ``who's who'' of
+statistics, as well as physics Nobel laureate Richard Feynman and
+economics Nobelists Kenneth Arrow and Milton Friedman. 
+
+\item See \url{http://www.indiana.edu/~stigtsts/quotsagn.html} for a
+nice collection of quotes from famous statisticians on this point.
+
+\item There is an entire chapter devoted to this issue in one of the
+best-selling elementary statistics textbooks in the
+nation.\footnote{{\it Statistics}, third edition, by David Freedman,
+Robert Pisani, Roger Purves, pub. by W.W.  Norton, 1997.} 
+
+\item The Federal Judicial Center, which is the educational and research
+arm of the federal court system, commissioned two prominent academics,
+one a statistics professor and the other a law professor, to write a
+guide to statistics for judges:  {\it Reference Guide on Statistics}.
+David H.  Kaye. David A. Freedman, at
+\begin{Verbatim}[fontsize=\relsize{-2}]
+http://www.fjc.gov/public/pdf.nsf/lookup/sciman02.pdf/$file/sciman02.pdf
+\end{Verbatim}
+
+There is quite a bit here on the problems of significance testing, and
+especially p.129.
+
+\end{itemize}
+
+\subsection{The Basic Fallacy}
+
+To begin with, {\bf it's absurd to test $H_0$ in the first place},
+because we know {\it a priori} that $H_0$ is false.  
+
+Consider the coin example, for instance.  No coin is absolutely
+perfectly balanced, and yet that is the question that significance
+testing is asking:
+
+\begin{equation}
+H_0: p = 0.5000000000000000000000000000...  
+\end{equation}
+
+We know before even collecting any data that the hypothesis we are
+testing is false, and thus it's nonsense to test it.
+
+{\bf But much worse is this word ``significant.''}  Say our coin actually
+has p = 0.502.  From anyone's point of view, that's a fair coin!  But
+look what happens in (\ref{pz}) as the sample size n grows.  If we have
+a large enough sample, eventually the denominator in (\ref{pz}) will be
+small enough, and $\widehat{p}$ will be close enough to 0.502, that Z will
+be larger than 1.96 and we will declare that p is ``significantly''
+different from 0.5.  But it isn't!  Yes, 0.502 is different from 0.5, but
+NOT in any significant sense in terms of our deciding whether to use
+this coin in the Super Bowl.
+
+The same is true for government testing of new pharmaceuticals.  We
+might be comparing a new drug to an old drug.  Suppose the new drug
+works only, say, 0.4\% (i.e. 0.004) better than the old one.  Do we want
+to say that the new one is ``signficantly'' better?  This wouldn't be
+right, especially if the new drug has much worse side effects and costs
+a lot more (a given, for a new drug).
+
+Note that in our analysis above, in which we considered what would
+happen in (\ref{pz}) as the sample size increases, we found that
+eventually {\it everything} becomes ``signficiant''---even if there is no
+practical difference.  This is especially a problem in computer science
+applications of statistics, because they often use very large data sets.
+A data mining application, for instance, may consist of hundreds of
+thousands of retail purchases.  The same is true for data on visits to a
+Web site, network traffic data and so on.  In all of these, the standard
+use of significance testing can result in our pouncing on very small
+differences that are quite insignificant to us, yet will be declared
+``significant'' by the test.
+
+% \checkpoint
+
+Conversely, if our sample is too small, we can miss a difference that
+actually {\it is} significant---i.e. important to us---and we would
+declare that p is NOT significantly different from 0.5.  In the example
+of the new drug, this would mean that it would be declared as ``not
+significantly better'' than the old drug, even if the new one is much
+better but our sample size wasn't large enough to show it.
+
+In summary, the basic problems with significance testing are
+
+\begin{itemize}
+
+\item $H_0$ is improperly specified.  What we are really interested in
+here is whether p is {\it near} 0.5, not whether it is {\it exactly} 0.5
+(which we know is not the case anyway).
+
+\item Use of the word {\it significant} is grossly improper (or, if you
+wish, grossly misinterpreted).
+
+\end{itemize}
+
+Significance testing forms the very core usage of statistics, yet you
+can now see that it is, as I said above, ``at best noninformative and at
+worst seriously misleading.'' This is widely recognized by thinking
+statisticians and prominent scientists, as noted above.  But the
+practice of significance testing is too deeply entrenched for things to
+have any prospect of changing.
+
+\subsection{You Be the Judge!}
+
+This book has been written from the point of view that every educated
+person should understand statistics.  It impacts many vital aspects of
+our daily lives, and many people with technical degrees find a need for
+it at some point in their careers.  
+
+In other words, statistics is something to be {\it used}, not just
+learned for a course.  You should think about it critically, especially
+this material here on the problems of significance testing.  You
+yourself should decide whether the latter's widespread usage is
+justified.
+
+\subsection{What to Do Instead}
+
+Note carefully that I am not saying that we should not make a decision.
+We {\it do} have to decide, e.g. decide whether a new hypertension drug
+is safe or in this case decide whether this coin is ``fair'' enough for
+practical purposes, say for determining which team gets the kickoff in
+the Super Bowl.  But it should be an informed decision, and even testing
+the modified $H_0$ above would be much less informative than a
+confidence interval.
+
+In fact, the real problem with significance tests is that they {\bf take
+the decision out of our hands}.  They make our decision mechanically for
+us, not allowing us to interject issues of importance to us, such
+possible side effects in the drug case.
+
+So, what can we do instead?
+
+In the coin example, we could set limits of fairness, say require that p
+be no more than 0.01 from 0.5 in order to consider it fair.  We could
+then test the hypothesis
+
+\begin{equation}
+H_0:  0.49 \leq p \leq 0.51
+\end{equation}
+
+Such an approach is almost never used in practice, as it is somewhat
+difficult to use and explain.  But even more importantly, what if the
+true value of p were, say, 0.51001?  Would we still really want to
+reject the coin in such a scenario?
+
+{\bf Forming a confidence interval is the far superior approach.}  The width
+of the interval shows us whether n is large enough for $\widehat{p}$ to be
+reasonably accurate, and the location of the interval tells us whether
+the coin is fair enough for our purposes.
+
+{\bf Note that in making such a decision, we do NOT simply check whether
+0.5 is in the interval.}  That would make the confidence interval reduce
+to a significance test, which is what we are trying to avoid.  If for
+example the interval is (0.502,0.505), we would probably be quite
+satisfied that the coin is fair enough for our purposes, even though 0.5
+is not in the interval.
+
+On the other hand, say the interval comparing the new drug to the old
+one is quite wide and more or less equal positive and negative
+territory.  Then the interval is telling us that the sample size just
+isn't large enough to say much at all.
+
+Significance testing is also used for model building, such as for
+predictor variable selection in regression analysis (a method to be
+covered in Chapter \ref{chap:linreg}).  The problem is even worse there,
+because there is no reason to use $\alpha = 0.05$ as the cutoff point
+for selecting a variable.  In fact, even if one uses significance
+testing for this purpose---again, very questionable---some studies have
+found that the best values of $\alpha$ for this kind of application are
+in the range 0.25 to 0.40, far outside the range people use in testing.
+
+In model building, we still can and should use confidence intervals.
+However, it does take more work to do so.  We will return to this point
+in our unit on modeling, Chapter \ref{chap:mod}.
+
+\subsection{Decide on the Basis of ``the Preponderance of Evidence''}
+\label{preponderance}
+
+{\it I was in search of a one-armed economist, so that the guy could
+never make a statement and then say: ``on the other hand''}---President
+Harry S Truman
+
+{\it If all economists were laid end to end, they would not reach a
+conclusion}---Irish writer George Bernard Shaw
+
+\bigskip
+
+In the movies, you see stories of murder trials in which the accused
+must be ``proven guilty beyond the shadow of a doubt.''  But in most
+noncriminal trials, the standard of proof is considerably lighter, {\bf
+preponderance of evidence}.  This is the standard you must use when
+making decisions based on statistical data.  Such data cannot ``prove''
+anything in a mathematical sense.  Instead, it should be taken merely as
+evidence.  The width of the confidence interval tells us the likely
+accuracy of that evidence.  We must then weigh that evidence against
+other information we have about the subject being studied, and then
+ultimately make a decision on the basis of the preponderance of all the
+evidence.
+
+Yes, juries must make a decision.  But they don't base their verdict on
+some formula.  Similarly, you the data analyst should not base your
+decision on the blind application of a method that is usually of little
+relevance to the problem at hand---significance testing.
+
+\subsection{Example:  the Forest Cover Data}
+
+In Section \ref{forestcover}, we found that an approximate 95\%
+confidence interval for $\mu_1 - \mu_2$ was
+
+\begin{equation}
+223.8 - 226.3 \pm 2.3
+= (-4.8,-0.3)
+\end{equation}
+
+Clearly, the difference in HS12 between cover types 1 and 2 is tiny when
+compared to the general size of HS12, in the 200s.  Thus HS12 is not
+going to help us guess which cover type exists at a given location.  Yet
+with the same data, we would reject the hypothesis
+
+\begin{equation}
+H_0:  \mu_1 = \mu_2
+\end{equation}
+
+and say that the two means are ``significantly'' different, which sounds
+like there is an important difference---which there is not.
+
+\subsection{Example:  Assessing Your Candidate's Chances for Election}
+
+Imagine an election between Ms. Smith and Mr. Jones, with you serving as
+campaign manager for Smith.  You've just gotten the results of a very
+small voter poll, and the confidence interval for p, the fraction of
+voters who say they'll vote for Smith, is (0.45,0.85).  Most of the
+points in this interval are greater than 0.5, so you would be highly
+encouraged!  You are certainly not sure of the final election result, as
+a small part of the interval is below 0.5, and anyway voters might
+change their minds between now and the election.  But the results would
+be highly encouraging.
+
+Yet a significance test would say ``There is no significant difference
+between the two candidates.  It's a dead heat.''  Clearly that is not
+telling the whole story.  The point, once again, is that {\bf the
+confidence interval is giving you much more information than is the
+significance test.}
+
+% Another way to describe this is that the preponderance of evidence is
+% that Smith is winning the election.  This can be formalized by noting
+% that the point at the center of the interval has the highest likelihood,
+% while the further a point is from the center, the lower its likelihood.
+% (I mean this in the sense of Section \ref{mle}, NOT in a Bayesian sense,
+% which I disapprove of.)
+
+\startproblemset
+
+\oneproblem
+In the light bulb example on page \pageref{bulbexact}, suppose the actual
+observed value of $\overline{X}$ turns out to be 15.88.  Find the p-value.
+

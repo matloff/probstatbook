@@ -1,0 +1,1184 @@
+\chapter{Covariance and Random Vectors} 
+\label{randvec}
+
+Most applications of probability and statistics involve the
+\underline{interaction} between variables.  For instance, when you buy a
+book at Amazon.com, the software will likely inform you of other books
+that people bought in conjunction with the one you selected.  Amazon is
+relying on the fact that sales of certain pairs or groups of books are
+correlated.
+
+Thus we need the notion of distributions that describe how two or more
+variables vary together.  This chapter develops that notion, {\bf which
+forms the very core of statistics}.
+
+\section{Measuring Co-variation of Random Variables}
+
+\subsection{Covariance}
+\label{covar}
+
+\begin{definition}
+The {\bf covariance} between random variables X and Y is defined as
+
+\begin{equation}
+\label{covdef}
+Cov(X,Y) = E[(X-EX) (Y-EY)]
+\end{equation}
+\end{definition}
+
+Suppose that typically when X is larger than its mean, Y is also larger
+than its mean, and vice versa for below-mean values.  Then (\ref{covdef})
+will likely be positive.  In other words, if X and Y are positively
+correlated (a term we will define formally later but keep intuitive for
+now), then their covariance is positive.  Similarly, if X is often smaller
+than its mean whenever Y is larger than its mean, the covariance and
+correlation between them will be negative.  All of this is roughly
+speaking, of course, since it depends on {\it how much} and {\it how
+often} X is larger or
+smaller than its mean, etc.
+
+{\bf Linearity in both arguments:}
+
+\begin{equation}
+\label{covlin}
+Cov(aX+bY,cU+dV) = ac Cov(X,U) + ad Cov(X,V) + bc Cov(Y,U) + bd Cov(Y,V) 
+\end{equation}
+
+for any constants a, b, c and d.  
+
+{\bf Insensitivity to additive constants:}
+
+\begin{equation}
+\label{covq}
+Cov(X,Y+q) = Cov(X,Y)
+\end{equation}
+
+for any constant q and so on.
+
+{\bf Covariance of a random variable with itself:}
+
+\begin{equation}
+\label{selfcov}
+Cov(X,X) = Var(X)
+\end{equation}
+
+for any X with finite variance.
+
+{\bf Shortcut calculation of covariance:}
+
+\begin{equation}
+\label{shortcut}
+Cov(X,Y) = E(XY) - EX \cdot EY
+\end{equation}
+
+The proof will help you review some important issues, namely (a) E(U+V)
+= EU + EV, (b) E(cU) = c EU and Ec = c for any constant c, and (c) EX
+and EY are constants in (\ref{shortcut}).
+
+\begin{eqnarray}
+Cov(X,Y) &=& E[(X-EX) (Y-EY) ] ~~ \textrm{(definition)}\\
+&=& E \left [ XY - EX \cdot Y - EY \cdot X + EX \cdot EY \right ] ~~
+\textrm{(algebra)} \\ 
+&=& E(XY) + E[- EX \cdot Y] + E[- EY \cdot X] + E[EX \cdot EY ] ~~
+\textrm{(E[U+V]=EU+EV)} \\ 
+&=& E(XY) - EX \cdot EY ~~ \textrm{(E[cU] = cEU, Ec = c)}
+\end{eqnarray}
+
+{\bf Variance of sums:}
+
+\begin{equation}
+\label{genvarxplusy}
+Var(X+Y) = Var(X) + Var(Y) + 2 Cov(X,Y)
+\end{equation}
+
+This comes from (\ref{shortcut}), the relation $Var(X) = E(X^2) - EX^2$ 
+and the corresponding one for Y.  Just substitute and do the algebra.
+
+By induction, (\ref{genvarxplusy}) generalizes for more than two variables:
+
+\begin{equation}
+\label{varmultsum}
+Var(W_1+...+W_r) =
+\sum_{i=1}^r Var(W_i) +
+2 \sum_{1 \leq j < i \leq r} Cov(W_i,W_j)
+\end{equation}
+
+\subsection{Example:  Variance of Sum of Nonindependent Variables}
+\label{simpleex}
+
+Consider random variables $X_1$ and $X_2$, for which $Var(X_i) = 1.0$
+for i = 1,2, and $Cov(X_1,X_2) = 0.5$.  Let's find $Var(X_1+X_2)$.
+
+This is quite straightforward, from (\ref{genvarxplusy}):
+
+\begin{equation}
+Var(X_1+X_2) = Var(X_1) + Var(X_2) + 2 Cov(X_1,X_2) = 3
+\end{equation}
+
+\subsection{Example:  the Committee Example Again}
+
+Let's find Var(M) in the committee example of Section \ref{combex}.  In
+(\ref{massum}), we wrote M as a sum of indicator random variables:
+
+\begin{equation}
+\label{massum2}
+M = G_1 + G_2 + G_3 + G_4 
+\end{equation}
+
+and found that
+
+\begin{equation}
+P(G_i = 1) = \frac{2}{3}
+\end{equation}
+
+for all i.  
+
+You should review why this value is the same for all i, as
+this reasoning will be used again below.  Also review Section
+\ref{indicator}.
+
+Applying (\ref{varmultsum}) to (\ref{massum2}), we have
+
+\begin{equation}
+\label{varm}
+Var(M) = 4 Var(G_1) + 12 Cov(G_1.G_2)
+\end{equation}
+
+Finding that first term is easy, from (\ref{varofeqp1p}):
+
+\begin{equation}
+Var(G_1) = \frac{2}{3} \cdot \left ( 1 - \frac{2}{3} \right ) =
+\frac{2}{9}
+\end{equation}
+
+Now, what about $Cov(G_1.G_2)$?  Equation (\ref{shortcut}) will be handy here:
+
+\begin{equation}
+\label{covg1g2}
+Cov(G_1.G_2) = E(G_1 G_2) - E(G_1) E(G_2)
+\end{equation}
+
+That first term in (\ref{covg1g2}) is 
+
+\begin{eqnarray}
+E(G_1 G_2) &=& P(G_1 = 1 \textrm{ and } G_2 = 1) \\ 
+&=& P(\textrm{choose a man on both the first and second pick)} \\
+&=& \frac{6}{9} \cdot \frac{5}{8} \\
+&=& \frac{5}{12} 
+\end{eqnarray}
+
+That second term in (\ref{covg1g2}) is, again from Section
+\ref{indicator},
+
+\begin{equation}
+\left (
+\frac{2}{3}
+\right )^2 = \frac{4}{9}
+\end{equation}
+
+All that's left is to put this together in (\ref{varm}), left to the
+reader.
+
+\section{Correlation}
+\label{correlation}
+
+Covariance does measure how much or little X and Y vary together, but it
+is hard to decide whether a given value of covariance is ``large'' or
+not.  For instance, if we are measuring lengths in feet and change to
+inches, then (\ref{covlin}) shows that the covariance will increase by
+$12^2 = 144$.  Thus it makes sense to scale covariance according to the
+variables' standard deviations.  Accordingly, the {\it correlation}
+between two random variables X and Y is defined by
+
+\begin{equation}
+\label{rhodef}
+\rho(X,Y) = \frac{Cov(X,Y)}
+{\sqrt{Var(X)} \sqrt{Var(Y)}}
+\end{equation}
+
+So, correlation is unitless, i.e. does not involve units like feet,
+pounds, etc.
+
+It is shown later in this chapter that 
+
+\begin{itemize}
+
+\item $-1 \leq \rho(X,Y) \leq 1$
+
+\item  $|\rho(X,Y)| = 1$ if and only if X and Y are exact linear functions
+of each other, i.e. Y = cX + d for some constants c and d
+\end{itemize}
+
+\subsection{Example:  a Catchup Game}
+\label{catchupgame}
+
+Consider the following simple game.  There are two players, who take
+turns playing.  One's position after k turns is the sum of one's
+winnings in those turns.  Basically, a turn consists of generating a
+random U(0,1) variable, with one difference---if that player is
+currently losing, he gets a bonus of 0.2 to help him catch up.  
+
+Let X and Y be the total winnings of the two players after 10 turns.
+Intuitively, X and Y should be positively correlated, due to the 0.2
+bonus which brings them closer together.  Let's see if this is true.
+
+Though very simply stated, this problem is far too tough to solve
+mathematically in an elementary course (or even an advanced one).  So,
+we will use simulation.  In addition to finding the correlation between
+X and Y, we'll also find $F_{X,Y}(5.8,5.2) = 
+P(X \leq 5.8 \textrm{ and } Y \leq 5.2)$. 
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+taketurn <- function(a,b) {
+   win <- runif(1)
+   if (a >= b) return(win)
+   else return(win+0.2)
+}
+
+nturns <- 10
+xyvals <- matrix(nrow=nreps,ncol=2)
+for (rep in 1:nreps) {
+   x <- 0
+   y <- 0
+   for (turn in 1:nturns) {
+      # x's turn
+      x <- x + taketurn(x,y)
+      # y's turn
+      y <- y + taketurn(y,x)
+   }
+   xyvals[rep,] <- c(x,y)
+}
+print(cor(xyvals[,1],xyvals[,2]))
+\end{Verbatim}
+
+The output is 0.65.  So, X and Y are indeed positively correlated as we
+had surmised.
+
+Note the use of R's built-in function {\bf cor()} to compute
+correlation, a shortcut that allows us to avoid summing all the products
+{\bf xy} and so on, from (\ref{shortcut}).  The reader should make sure
+he/she understands how this would be done.
+
+\section{Sets of Independent Random Variables}
+
+Recall from Section \ref{indepdef}:
+
+\begin{definition}
+
+Random variables X and Y are said to be {\bf independent} if for any
+sets I and J, the events \{X is in I\} and \{Y is in J\} are 
+independent, i.e.  P(X is in I and Y is in J) = P(X is in I) P(Y is in
+J). 
+
+\end{definition}
+
+Intuitively, though, it simply means that knowledge of the value of X
+tells us nothing about the value of Y, and vice versa.
+
+Great mathematical tractability can be achieved by assuming that the
+$X_i$ in a random vector $X = (X_1,...,X_k)$ are independent.  In many
+applications, this is a reasonable assumption.
+
+\subsection{Properties}
+
+In the next few sections, we will look at some commonly-used properties
+of sets of independent random variables.  For simplicity, consider the
+case k = 2, with X and Y being independent (scalar) random variables.
+
+\subsubsection{Expected Values Factor}
+
+If X and Y are independent, then 
+
+\begin{equation}
+\label{evalfactors}
+E(XY) = E(X) E(Y)
+\end{equation}
+
+\subsubsection{Covariance Is 0}
+
+If X and Y are independent, we have
+
+\begin{equation}
+\label{cov0}
+Cov(X,Y) = 0
+\end{equation}
+
+and thus
+
+$\rho(X,Y) = 0$ as well.
+
+This follows from (\ref{evalfactors}) and (\ref{shortcut}).
+
+However, the converse is false.  A counterexample is the random pair
+$(X,Y)$ that is uniformly distributed on the unit disk, $\{(s,t):
+s^2+t^2 \leq 1\}$.  Clearly 0 = E(XY) = EX = EY due to the symmetry of
+the distribution about (0,0), so Cov(X,Y) = 0 by (\ref{shortcut}).  
+
+But X and Y just as clearly are not independent.  If for example we know that
+$X > 0.8$, say, then $Y^2 < 1 - 0.8^2$ and thus $|Y| < 0.6$.  If X and Y
+were independent, knowledge of X should not tell us anything about Y,
+which is not the case here, and thus they are not independent.  If we
+also know that X and Y are bivariate normally distributed (Section
+\ref{mvnormdens}), then zero covariance does imply independence.
+
+\subsubsection{Variances Add}
+
+If X and Y are independent, then we have
+
+\begin{equation}
+\label{covsadd}
+Var(X+Y) = Var(X) + Var(Y).
+\end{equation}
+
+This follows from (\ref{genvarxplusy}) and (\ref{evalfactors}). 
+
+\subsection{Examples Involving Sets of Independent Random Variables}
+
+\subsubsection{Example:  Dice}
+\label{diceex}
+
+In Section \ref{catchupgame}, we speculated that the correlation between
+X, the number on the blue die, and S, the total of the two dice, was
+positive.  Let's compute it.
+
+Write S = X + Y, where Y is the number on the yellow die.  Then
+using the properties of covariance presented above, we have that 
+
+\begin{eqnarray}
+Cov(X,S) &=& Cov(X,X+Y) ~~ (\textrm{def. of S}) \\ 
+&=& Cov(X,X) + Cov(X,Y) ~~ (\textrm{from } (\ref{covlin})) \\
+&=& Var(X) + 0 ~~ (\textrm{from } (\ref{selfcov}),~ (\ref{cov0}))
+\end{eqnarray}
+
+Also, from (\ref{covsadd}),
+
+\begin{equation}
+Var(S) =  Var(X+Y) = Var(X) + Var(Y)
+\end{equation}
+
+But Var(Y) = Var(X).  So the correlation between X and S is
+
+\begin{equation}
+\rho(X,S) = \frac{Var(X)}
+{\sqrt{Var(X)} \sqrt{2Var(X)}} = 0.707
+\end{equation}
+
+Since correlation is at most 1 in absolute value, 0.707 is considered a
+fairly high correlation.  Of course, we did expect X and S to be highly
+correlated.
+
+\subsubsection{Example:  Variance of a Product}
+
+Suppose $X_1$ and $X_2$ are independent random variables with $EX_i =
+\mu_i$ and $Var(X_i) = \sigma^2_i$, i = 1,2.  Let's find an expression
+for $Var(X_1 X_2)$.
+
+\begin{eqnarray}
+Var(X_1 X_2) &=& E(X^2_1 X^2_2) - [E(X_1 X_2)]^2 ~~~~ 
+   \textrm{(\ref{varuformula})}  \\ 
+&=& E(X^2_1) \cdot E(X^2_2) - \mu^2_1 \mu^2_2 
+   ~~~~ \textrm{(\ref{evalfactors})} \\
+&=& (\sigma^2_1 + \mu^2_1) (\sigma^2_2 + \mu^2_2) - \mu^2_1 \mu^2_2 \\
+&=& \sigma^2_1 \sigma^2_2 
++ \mu^2_1 \sigma^2_2
++ \mu^2_2 \sigma^2_1
+\end{eqnarray}
+
+Note that $E(X^2_1) = \sigma^2_1 + \mu^2_1$ by virtue of
+(\ref{varuformula}).
+
+\subsubsection{Example:  Ratio of Independent Geometric Random Variables}
+
+Suppose X and Y are independent geometrically distributed
+random variables with success probability p.  Let Z = X/Y.  We are
+interested in EZ and $F_Z$.
+
+First, by (\ref{evalfactors}), we have
+
+\begin{eqnarray}
+EZ &=& E(X \cdot \frac{1}{Y}) \\ 
+&=& EX \cdot E(\frac{1}{Y}) ~~~~ (\ref{evalfactors}) \\ 
+&=& \frac{1}{p} \cdot E(\frac{1}{Y}) ~~~~ \textrm{(mean of geom is 1/p)} 
+\end{eqnarray}
+
+So we need to find E(1/Y).  Using (\ref{egofx}), we have
+
+\begin{equation}
+E(\frac{1}{Y}) = \sum_{i=1}^{\infty} \frac{1}{i} (1-p)^{i-1} p
+\end{equation}
+
+
+
+Unfortunately, no further simplification seems possible.
+
+Now let's find $F_Z(m)$ for a positive integer m.
+
+\begin{eqnarray}
+F_Z(m) &=& P \left (\frac{X}{Y} \leq m \right ) \\ 
+&=& P(X \leq mY) \\ 
+&=& \sum_{i=1}^{\infty} P(Y = i) ~ P(X \leq mY | Y = i) \\
+&=& \sum_{i=1}^{\infty} (1-p)^{i-1} p ~ P(X \leq mi) \\
+&=& \sum_{i=1}^{\infty} (1-p)^{i-1} p ~ [1 - (1-p)^{mi}]
+\label{mess}
+\end{eqnarray}
+
+this last step coming from (\ref{geomcdf}).
+
+We can actually reduce (\ref{mess}) to closed form, by writing
+
+\begin{equation}
+(1-p)^{i-1} (1-p)^{mi} =  (1-p)^{mi+i-1} = \frac{1}{1-p}
+\left [ (1-p)^{m+1} \right ]^i
+\end{equation}
+
+and then using (\ref{infgeom}).  Details are left to the reader.
+
+\section{Matrix Formulations}
+\label{matrix}
+
+(Note that there is a review of matrix algebra in Appendix
+\ref{chap:matrixreview}.)
+
+In your first course in matrices and linear algebra, your instructor
+probably motivated the notion of a matrix by using an example involving
+linear equations, as follows.
+
+Suppose we have a system of equations
+
+\begin{equation}
+\label{linsyst}
+a_{i1} x_1 + ... + a_{in} x_{n} = b_i, ~~ i = 1,...,n,
+\end{equation}
+
+where the $x_i$ are the unknowns to be solved for.
+
+This system can be represented compactly as
+
+\begin{equation}
+\label{lin}
+AX = B,
+\end{equation}
+
+where A is nxn and X and B are nx1.
+
+That compactness coming from the matrix formulation applies to
+statistics too, though in different ways, as we will see.  (Linear
+algebra in general is used widely in statistics---matrices, rank and
+subspace, eigenvalues, even determinants.)
+
+When dealing with multivariate distributions, some very messy equations
+can be greatly compactified through the use of matrix algebra.  We will
+introduce this here.
+
+Throughout this section, consider a random vector $W = (W_1,...,W_k)'$
+where $'$ denotes matrix transpose, and a vector written horizontally like
+this without a $'$ means a row vector.
+
+\subsection{Properties of Mean Vectors}
+
+In statistics, we frequently need to find covariance matrices of linear
+combinations of random vectors.
+
+\begin{definition}
+
+The expected value of W is defined to be the vector
+
+\begin{equation}
+\label{evalrandvec}
+EW = (EW_1,...,EW_k)'
+\end{equation}
+
+\end{definition}
+
+The linearity of the components implies that of the vectors:  
+
+For any scalar constants c and d, and any random vectors V and W, we
+have
+
+\begin{equation}
+E(cV+dW) = c EV + d EW
+\end{equation}
+
+where the multiplication and equality is now in the vector sense.
+
+Also, multiplication by a constant matrix factors:  
+
+If A is a nonrandom matrix having k columns, then
+
+\begin{equation}
+\label{eaw}
+E(AW) = A EW
+\end{equation}
+
+\subsection{Covariance Matrices}
+
+\begin{definition}
+The covariance matrix Cov(W) of $W = (W_1,...,W_k)'$
+is the k x k matrix whose $(i,j)^{th}$ element is $Cov(W_i,W_j)$.  
+\end{definition}
+
+Note that that implies that the diagonal elements of the matrix are the
+variances of the $W_i$, and that the matrix is symmetric.  
+
+As you can see, in the statistics world, the Cov() notation is
+``overloaded.''  If it has two arguments, it is ordinary covariance,
+between two variables.  If it has one argument, it is the covariance
+matrix, consisting of the covariances of all pairs of components in the
+argument.  When people mean the matrix form, they always say so, i.e.
+they say ``covariance MATRIX'' instead of just ``covariance.''
+
+The covariance matrix is just a way to compactly do operations on
+ordinary covariances.  Here are some important properties:
+
+Say c is a constant scalar.  Then cW is a
+k-component random vector like W, and 
+
+\begin{equation}
+\label{c2cov}
+Cov(cW) = c^2 Cov(W)
+\end{equation}
+
+Suppose V and W are independent random vectors, meaning that each
+component in V is independent of each component of W.  (But this does
+NOT mean that the components within V are independent of each other, and
+similarly for W.)  Then
+
+\begin{equation}
+\label{vectorsumcov}
+Cov(V + W) = Cov(V) + Cov(W) 
+\end{equation}
+
+Of course, this is also true for sums of any (nonrandom) number of
+independent random vectors.
+
+In analogy with (\ref{varuformula}), for any
+random vector Q,
+
+\begin{equation}
+\label{quickcovarmat}
+Cov(Q) = E(Q Q') - EQ ~ (EQ)'
+\end{equation}
+
+\subsection{Covariance Matrices Linear Combinations of Random Vectors}
+
+Suppose A is an r x k but nonrandom matrix.  Then AW is an r-component
+random vector, with its i$^{th}$ element being a linear combination of
+the elements of W.  Then one can show that
+
+\begin{equation}
+\label{covawaprime}
+Cov(AW) = A ~ Cov(W)  ~A'
+\end{equation}
+
+An important special case is that in which A consists of just one row.
+In this case AW is a vector of length 1---a scalar!  And its covariance
+matrix, which is of size $1 \times 1$, is thus simply the variance of
+that scalar.  In other words:
+
+\begin{quote}
+
+Suppose we have a random vector $U = (U_1,...,U_k)'$ and are interested
+in the variance of a linear combination of the elements of U, 
+
+\begin{equation}
+\label{quadform1}
+Y = c_1 U_1 + ...+ c_k U_k
+\end{equation}
+
+for a vector of constants $c = (c_1,...,c_k)'$.
+
+Then
+
+\begin{equation}
+\label{quadform2}
+Var(Y) =  c'Cov(U) c
+\end{equation}
+
+\end{quote}
+
+\subsection{Example: (X,S) Dice Example Again}
+
+Recall Sec. \ref{diceex}.  We rolled two dice, getting X and Y dots, and
+set S to X+Y.  We then found $\rho(X,S)$.  Let's find
+$\rho(X,S)$ using matrix methods.
+
+The key is finding a proper choice for A in (\ref{covawaprime}).  A
+little thought shows that
+
+\begin{equation}
+   \left (
+   \begin{array}{r}
+   X \\
+   S \\
+   \end{array}
+   \right )
+   =
+   \left (
+   \begin{array}{rr}
+   1 & 0 \\
+   1 & 1 \\
+   \end{array}
+   \right )
+   \left (
+   \begin{array}{r}
+   X \\
+   Y \\
+   \end{array}
+   \right )
+\end{equation}
+
+Thus the covariance matrix of (X,S)' is
+
+\begin{eqnarray}
+Cov[(X,S)']&=& 
+   \left (
+   \begin{array}{rr}
+   1 & 0 \\
+   1 & 1 \\
+   \end{array}
+   \right )
+   \left (
+   \begin{array}{cc}
+   Var(X) & 0 \\
+   0 & Var(Y) \\
+   \end{array}
+   \right )
+   \left (
+   \begin{array}{rr}
+   1 & 1 \\
+   0 & 1 \\
+   \end{array}
+   \right ) \\
+&=&
+   \left (
+   \begin{array}{cc}
+   Var(X) & 0 \\
+   Var(X) & Var(Y) \\
+   \end{array}
+   \right )
+   \left (
+   \begin{array}{rr}
+   1 & 1 \\
+   0 & 1 \\
+   \end{array}
+   \right ) \\ 
+&=&
+   \left (
+   \begin{array}{cc}
+   Var(X) & Var(X) \\
+   Var(X) & Var(X) + Var(Y) \\
+   \end{array}
+   \right )
+\end{eqnarray}
+
+since X and Y are independent.  We would then proceed as before.
+
+This matches what we found earlier, as it should, but shows how matrix
+methods can be used.  This example was fairly simple, so those methods
+did not produce a large amount of streamlining, but in other examples
+later in the book, the matrix approach will be key.
+
+\subsection{Example:  Easy Sum Again}
+
+Let's redo the example in Section \ref{simpleex} again, this time using
+matrix methods.
+
+First note that
+
+\begin{equation}
+X_1 + X_2 = (1,1) 
+\left (
+\begin{array}{r}
+X_1 \\
+X_2 \\
+\end{array}
+\right )
+\end{equation}
+
+i.e. it is of the form (\ref{quadform1}).  So, (\ref{quadform2}) gives
+us
+
+\begin{equation}
+\label{easyvar}
+Var(X_1 + X_2) =
+(1,1)
+\left (
+\begin{array}{rr}
+1 & 0.5 \\
+0.5 & 1 \\
+\end{array}
+\right )
+\left (
+\begin{array}{r}
+1 \\
+1 \\
+\end{array}
+\right )
+= 3
+\end{equation}
+
+Of course using the matrix formulation didn't save us much time here,
+but for complex problems it's invaluable.  We will frequently have need
+for finding the variance of a linear combination of the elements of a
+vector, exactly what we did above.
+
+\section{The Multivariate Normal Family of Distributions}
+\label{multnorm}
+
+This is a generalization of the normal distribution.  It is covered in
+detail in Section \ref{multnormal}, but here is the overview:
+
+\begin{itemize}
+
+\item Just as the univariate normal family is parameterized by the mean and
+variance, the multivariate normal family has as its parameters the mean
+{\it vector} and the covariance {\it matrix}.  
+
+\item In the bivariate case, the density looks like a three-dimensional
+bell, as on the cover of this book.
+
+\item If a random vector W has a multivariate normal distribution, and A
+is a constant matrix, then the new random vector AW is also multivariate
+normally distributed.
+
+\item The multivariate version of the Central Limit Theorem holds, i.e.
+the sum of i.i.d. random vectors has an approximate multivariate normal
+distribution.
+
+\end{itemize}
+
+\subsection{R Functions}
+
+R provides functions that compute probabilities involving this family of
+distributions, in the library {\bf mvtnorm}.  In particular  the R
+function {\bf pmvnorm()}, which computes probabilities of
+``rectangular'' regions for multivariate normally distributed random
+vectors W.  The arguments we'll use for this function here are:
+
+\begin{itemize}
+
+\item {\bf mean}: the mean vector
+
+\item {\bf sigma}: the covariance matrix
+
+\item {\bf lower, upper}: bounds for a multidimensional ``rectangular''
+region of interest
+
+\end{itemize}
+
+Since a multivariate normal distribution is characterized by its mean
+vector and covariance matrix, the first two arguments above shouldn't
+suprise you.  But what about the other two?
+
+The function finds the probability of our random vector falling into a
+multidimensional rectangular region that we specify, through the
+arguments are {\bf lower} and {\bf upper}.  For example, suppose we have
+a trivariate normally distributed random vector $(U,V,W)'$, and we
+want to find 
+
+\begin{equation}
+P( 1.2 < U < 5 \textrm{ and } -2.2 < V < 3 \textrm{ and } 1 < W < 10)
+\end{equation}
+
+Then {\bf lower} would be (1.2,-2.2,1) and {\bf upper} would be
+(5,3,10).
+
+Note that these will typically be specified via R's {\bf c()} function,
+but default values are recycled versions of {\bf -Inf} and {\bf Inf},
+built-in R constants for $-\infty$ and $\infty$.
+
+An important special case is that in which we specify {\bf upper}
+but allow {\bf lower} to be the default values, thus computing a
+probability of the form
+
+\begin{equation}
+P(W_1 \leq c_1,...,W_r \leq c_r)
+\end{equation}
+
+\subsection{Special Case: New Variable Is a Single Linear Combination of
+a Random Vector} 
+\label{singlelincomb}
+
+Suppose the vector $U = (U_1,...,U_k)'$ has an approximately k-variate
+normal distribution, and we form the scalar
+
+\begin{equation}
+Y = c_1 U_1 + ...+ c_k U_k
+\end{equation}
+
+Then Y is approximately univate normal, and its (exact) variance is
+given by (\ref{quadform2}).  It's mean is obtained via (\ref{eaw}).
+
+We can then use the R functions for the univariate normal distribution,
+e.g. {\bf pnorm()}.
+
+\section{Indicator Random Vectors}
+\label{indicvecs}
+
+Let's extend the notion of indicator random variables in Section
+\ref{indicator} to vectors.
+
+Say one of events $A_1,...,A_k$ must occur, and they are disjoint.  So,
+their probabilities sum to 1.  Define the k-component random vector I to
+consist of k-1 0s and one 1, where the position of the 1 is itself
+random; if $A_i$ occurs, then $I_i$ is 1.
+
+For example, say U has a U(0,1) distribution, and say $A_1$, $A_2$ and
+$A_3$ are the events corresponding to $U < 0.2$, $0.2 \leq U \leq 0.7$
+and $U > 0.7$, respectively.  Then the random vector I would be
+$(1,0,0)'$ in the first case, and so on.  
+
+Let $p_i = P(A_i)$.  The analogs of (\ref{eofxeqp}) and
+(\ref{varofeqp1p}) can easily be shown to be as follows:
+
+\begin{itemize}
+
+\item The mean vector is $E(I) = (p_1,...,p_k)'$.
+
+\item Cov(I) has $p_i(1-p_i)$ as its i$^{th}$ element, and for 
+$i \neq j$, element (i,j) is $-p_i p_j$.
+
+\end{itemize}
+
+\section{Example:  Dice Game}
+\label{dicegame}
+
+This example will be short on some details, but it will really
+illustrate the value of using matrices.
+
+Suppose we roll a die 50 times.  Let X denote the number of rolls in
+which we get one dot, and let Y be the number of times we get either two
+or three dots.  For convenience, let's also define Z to be the number of
+times we get four or more dots.  Suppose also that we win \$5 for each
+roll of a one, and \$2 for each roll of a two or three. 
+
+Let's find the approximate values of the following:
+
+\begin{itemize}
+
+\item $P(X \leq 12 \textrm{ and } Y \leq 16)$
+
+\item P(win more than \$90)
+
+\item $P(X > Y > Z)$
+
+\end{itemize}
+
+The exact probabilities could, in principle, be calculated.  But that
+would be rather cumbersome.  But we can get approximate answers by
+noting that the triple (X,Y,Z) has an approximate multivariate normal
+distribution.  This is shown in Section \ref{multnormal}, but it
+basically the derivation works like this:
+
+\begin{itemize}
+
+\item Write (X,Y,Z) as a sum of indicator vectors (Section
+\ref{indicvecs}), analogous to what we did in Section \ref{binom}.
+
+\item Invoke the multivariate CLT.
+
+\end{itemize}
+
+Since the parameters of the multivariate normal family are the mean
+vector and the covariance matrix, we'll of course need to know those for
+the random vector $(X,Y,Z)'$ when we call {\bf pmvnorm()}.  Once again,
+this will be shown later, but basically it follows from Section
+\ref{indicvecs} above.  Here are the results:
+
+\begin{equation}
+E[(X,Y,Z)] = (50/6, 50/3, 50/2)
+\end{equation}
+
+and
+
+\begin{equation}
+Cov[(X,Y,Z)] =  
+50
+\begin{pmatrix}
+5/36 & -1/18 & -1/12 \\
+-1/18 & 2/9 & -1/6 \\
+-1/12 & -1/6 & 1/4 
+\end{pmatrix}
+\end{equation}
+
+Here's a partial check:  X has a binomial distribution with 50 trials
+and success probability 1/6, so (\ref{binvar}) tells us that Var(X) =
+250/36, just as seen above.
+
+We can now use the R multivariate normal probability function mentioned
+in Section \ref{multnorm} to find $P(X \leq 12 \textrm{ and } Y \leq
+16)$.
+
+To account for the integer nature of X and Y, we call the function with
+upper limits of 12.5 and 16.5, rather than 12 and 16, which is often
+used to get a better approximation.  (Recall the ``correction for
+continuity,'' Section \ref{correctcontin}.) Our code is
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+p1 <- 1/6
+p23 <- 1/3
+meanvec <- 50*c(p1,p23)
+var1 <- 50*p1*(1-p1)
+var23 <- 50*p23*(1-p23)
+covar123 <- -50*p1*p23
+covarmat <- matrix(c(var1,covar123,covar123,var23),nrow=2)
+print(pmvnorm(upper=c(12.5,16.5),mean=meanvec,sigma=covarmat))
+\end{Verbatim}
+
+We find that 
+
+\begin{equation}
+P(X \leq 12 \textrm{ and } Y \leq 16) \approx 0.43
+\end{equation}
+
+Now, let's find the probability that our total winnings, T, is over
+\$90.  We know that T = 5X + 2Y, and Section \ref{singlelincomb} above
+applies.  We simply choose the vector {\bf c} to be
+
+\begin{equation}
+c = (5,2,0)'
+\end{equation}
+
+since
+
+\begin{equation}
+(5,2,0) 
+\left (
+\begin{array}{c}
+X \\
+Y \\
+Z 
+\end{array}
+\right )
+=  5X + 2Y
+\end{equation}
+
+Then Section \ref{singlelincomb} tells us that 5X + 2Y also has an
+approximate univariate normal distribution.  Excellent---we can now use
+{\bf pnorm()}.  We thus need the mean and variance of T, again using
+Section \ref{singlelincomb}:
+
+\begin{equation}
+ET = E(5X+2Y) = 5 EX + 2 EY = 250/6 + 100/3 = 75
+\end{equation}
+
+\begin{equation}
+Var(T) =
+c' ~ Cov
+\left (
+\begin{array}{c}
+X \\
+Y \\
+Z 
+\end{array}
+\right )
+c
+=
+(5,2,0) ~
+50 ~
+\left (
+\begin{array}{rrr}
+5/36 & -1/18 & -1/12 \\
+-1/18 & 2/9 & -1/6 \\
+-1/12 & -1/6 & 1/4 
+\end{array}
+\right )
+\left (
+\begin{array}{r}
+5 \\
+2 \\
+0 \\
+\end{array}
+\right )
+= 162.5
+\end{equation}
+
+So, we have our answer:
+
+\begin{lstlisting}
+> 1 - pnorm(90,75,sqrt(162.5))
+[1] 0.1196583
+\end{lstlisting}
+
+Now to find $P(X > Y > Z)$, we need to work with $(U,V)' = (X-Y,Y-Z)$. 
+U and V are both linear functions of X, Y and Z, so let's write the
+matrix equation:
+
+We need to have
+
+\begin{equation}
+\left (
+\begin{array}{r}
+X-Y \\
+Y-Z \\
+\end{array}
+\right )
+=
+A ~
+\left (
+\begin{array}{c}
+X \\
+Y \\
+Z 
+\end{array}
+\right )
+\end{equation}
+
+so set
+
+\begin{equation}
+   A = 
+      \left (
+      \begin{array}{rrr}
+      1 & -1 & 0\\
+      0 & 1 & -1   
+      \end{array}
+      \right )     
+\end{equation}
+
+and then proceed as before to find $P(U > 0, V > 0)$.  Now we take
+{\bf lower} to be (0,0), and {\bf upper} to be the default values,
+$\infty$ in {\bf pmvnorm()}.
+
+\subsection{Correlation Matrices}
+
+The correlation matrix corresponding to a given covariance matrix is
+defined as follows.  Element (i,j) is the correlation between the
+i$^{th}$ and the j$^{th}$ elements of the given random vector.
+
+Here is R code to compute a correlation matrix from a covariance matrix:
+
+\begin{lstlisting}
+covtocorr <- function(covmat) {
+   n <- nrow(covmat)
+   stddev <- vector(length=n)
+   cormat <- matrix(nrow=n,ncol=n)
+   for (i in 1:n) {
+      stddev[i] <- sqrt(covmat[i,i])
+      cormat[i,i] <- 1.0
+   }
+   for (i in 1:(n-1)) {
+      for (j in (i+1):n) {
+         tmp <- covmat[i,j] / (stddev[i]*stddev[j])
+         cormat[i,j] <- tmp
+         cormat[j,i] <- tmp
+      }
+   }
+   return(cormat)
+}
+\end{lstlisting}
+
+\subsection{Further Reading}
+
+You can see some more examples of the multivariate normal distribution,
+covariance matrices etc. in a computer science context in my paper 
+A Modified Random Perturbation Method for Database Security (with
+Patrick Tendick). {\it ACM Transactions on Database Systems}, 1994, 19(1),
+47-63.  The application is database security.
+
+\startproblemset
+
+\oneproblem
+Suppose the pair (X,Y)' has mean vector (0,2) and covariance matrix
+
+$
+\left (
+   \begin{array}{cc}
+   1 & 2 \\
+   2 & 6   
+   \end{array}
+\right )     
+$
+
+Find the covariance matrix of the pair U = (X+Y,X-2Y)'.
+
+\oneproblem
+Show that
+
+\begin{equation}
+\rho(aX+b,cY+d) = \rho(X,Y)
+\end{equation}
+
+for any constants a, b, c and d.
+
+\oneproblem
+Suppose X, Y and Z are "i.i.d." (independent, identically distributed)
+random variables, with $E(X^k)$ being denoted by $\nu_k$, k = 1,2,3.
+Find Cov(XY,XZ) in terms of the $\nu_k$.
+
+\oneproblem
+Using the properties of covariance in Section \ref{covar}, show that
+for any random variables X and Y, Cov(X+Y,X-Y) = Var(X) - Var(Y).
+
+\oneproblem
+Suppose we wish to predict a random variable $Y$ by using another random
+variable, $X$.  We may consider predictors of the form $cX+d$ for
+constants c and d.  Show that the values of c and d that minimize
+the mean squared prediction error, $E[(Y- cX - d)^2$ are
+
+\begin{equation}
+c = \frac{E(XY) - EX \cdot EY}{Var(X)}
+\end{equation}
+
+\begin{equation}
+d = \frac{E(X^2) \cdot EY - EX \cdot E(XY)}{Var(X)}
+\end{equation}
+
+\oneproblem
+Programs A and B consist of r and s modules, respectively, of which c
+modules are common to both. As a simple model, assume that each module
+has probability p of being correct, with the modules acting
+independently. Let $X$ and $Y$ denote the numbers of correct modules in
+A and B, respectively.  Find the correlation $Ï~A(X,Y)$ as a function of
+r, s, c and p.
+
+Hint:  Write $X = X_1+...X_r$, where $X_i$ is 1 or 0, depending on
+whether module i of A is correct.   Of those, let $X_1,...,X_c$
+correspond to the modules in common to A and B.  Similarly, write $Y =
+Y_1+...Y_s$, for the modules in B, again having the first c of them
+correspond to the modules in common.  Do the same for B, and for the set
+of common modules.
+
+\oneproblem
+Suppose we have random variables X and Y, and define the new
+random variable Z = 8Y.  Then which of the following is correct?
+(i) $\rho(X,Z) = \rho(X,Y)$.  (ii) $\rho(X,Z) =
+0$. (iii) $\rho(Y,Z) = 0$.  (iv) $\rho(X,Z) = 8 \rho(X,Y)$.  (v)
+$\rho(X,Z) = \frac{1}{8} \rho(X,Y)$. (vi) There is no special
+relationship.
+
+\oneproblem
+Derive (\ref{covq}).  Hint: A constant, q here, is a random variable,
+trivially, with 0 variance.
+
+\oneproblem
+Consider a three-card hand drawn from a 52-card deck. Let X and Y
+denote the number of hearts and diamonds, respectively. Find
+$\rho(X,Y)$.
+
+\oneproblem
+Consider the lightbulb example in Section \ref{connpoi}. Use the
+``mailing tubes'' on Var() and Cov() to find $\rho(X_1,T_2)$.
+
+\oneproblem
+Find the following quantities for the dice example in Section
+\ref{diceex}:
+
+\begin{itemize}
+
+\item [(a)] Cov(X,2S)
+
+\item [(b)] Cov(X,S+Y)
+
+\item [(c)] Cov(X+2Y,3X-Y)
+
+\item [(d)] $p_{X,S}(3,8)$
+
+\end{itemize}
+
+\oneproblem
+Suppose $X_i$, i = 1,2,3,4,5 are independent and each have mean 0 and
+variance 1.  Let $Y_i = X_{i+1} - X_i$, i = 1,2,3,4.  Using the
+material in Section \ref{matrix}, find the covariance matrix of
+$Y = (Y_1, Y_2, Y_3, Y_4)$.
+

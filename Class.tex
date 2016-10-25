@@ -1,0 +1,1008 @@
+\chapter{Classification} 
+\label{chap:class}
+
+% \section{Nonlinear Parametric Regression Models}
+% \label{nonlin}
+% 
+% We pointed out in Section \ref{whatmeans} that the word {\it linear} in
+% {\it linear regression model} means linear in $\beta$, not in t.  This
+% is the most popular approach, as it is computationally easy, but
+% nonlinear models are often used.
+% 
+% The most famous of these is the {\bf logistic} model, for the case in
+% which $Y$ takes on only the values 0 and 1.  As we have seen before
+% (Section \ref{indicator}), in this case the expected value becomes a
+% probability.  The logistic model for a nonvector $X$ is then
+% 
+% \begin{equation}
+% \label{logit}
+% m_{Y;X}(t) = P(Y = 1 | X = t) = \frac{1}{1+e^{-(\beta_0+\beta_1 t})}
+% \end{equation}
+% 
+% It extends to the case of vector-valued $X$ in the obvious way. 
+% 
+% The logistic model is quite widely used in computer science, in medicine,
+% economics, psychology and so on.  We'll return to this model in Section
+% \ref{logitsec}.
+% 
+% Here is an example of a nonlinear model used in kinetics of chemical
+% reactions, with r = 3: \footnote{See
+% \url{http://www.mathworks.com/access/helpdesk/help/toolbox/stats/rsmdemo.html}.}
+% 
+% \begin{equation}
+% m_{Y;X}(t) = \frac
+% {\beta_1 t^{(2)} - t^{(3)}/\beta_5}
+% {1+\beta_2 t^{(1)} + \beta_3 t^{(2)} + \beta_4 t^{(3)}}
+% \end{equation}
+% 
+% Here the X vector is (hydrogen, n-pentane, isopentane) and Y is the
+% reaction rate.
+% 
+% Unfortunately, in most cases, the least-squares estimates of the
+% parameters in nonlinear regression do not have closed-form solutions,
+% and numerical methods must be used.  But R does that for you, via the
+% {\bf nls()} function in general, and via {\bf glm()} for the logistic
+% and related models in particular.
+
+In prediction problems, in the special case in which Y is an indicator
+variable, with the value 1 if the object is in a class and 0 if not, the
+regression problem is called the {\bf classification
+problem}.\footnote{The case of c $>$ 2 classes will be treated in
+Section \ref{multiclass}.}
+
+We'll formalize this idea in Section \ref{meanisprob}, but first,
+here are some examples:
+
+\begin{itemize}
+
+\item A forest fire is now in progress.  Will the fire reach a certain
+populated neighborhood?  Here Y would be 1 if the fire reaches the
+neighborhood, 0 otherwise.  The predictors might be wind direction,
+distance of the fire from the neighborhood, air temperature and
+humidity, and so on.
+
+\item Is a patient likely to develop diabetes?  This problem has been
+studied by many researchers, e.g.  Using Neural Networks To Predict the
+Onset of Diabetes Mellitus, Murali S. Shanker {\it J. Chem. Inf. Comput.
+Sci.}, 1996, 36 (1), pp 35–41.  A famous data set involves Pima Indian
+women, with Y being 1 or 0, depending on whether the patient does
+ultimately develop diabetes, and the predictors being the number of
+times pregnant, plasma glucose concentration, diastolic blood pressure,
+triceps skin fold thickness, serum insulin level, body mass index,
+diabetes pedigree function and age. 
+
+\item Is a disk drive likely to fail soon?  This has been studied for
+example in Machine Learning Methods for Predicting Failures in Hard
+Drives: A Multiple-Instance Application, by Joseph F. Murray, Gordon F.
+Hughes, and Kenneth Kreutz-Delgado, {\it Journal of Machine Learning
+Research} 6 (2005) 783-816.  Y was 1 or 0, depending on whether the
+drive failed, and the predictors were temperature, number of read
+errors, and so on.
+
+\item An online service has many customers come and go.  It would like
+to predict who is about to leave, so as to offer them a special deal for
+staying with this firm.
+
+\item Of course, a big application is character recognition, based on
+pixel data.  This is different from the above examples, as there are
+more than two classes, many more.  We'll return to this point soon.
+
+\end{itemize}
+
+In electrical engineering the classification is called {\bf pattern
+recognition}, and the predictors are called {\bf features}.  In computer
+science the term {\bf machine learning} usually refers to classification
+problems.  Different terms, same concept.
+
+\section{Classification = Regression}
+\label{meanisprob}
+
+All of the many machine learning algorithms, despite their
+complexity, really boil down to regression at their core.  Here's why:
+
+\subsection{What Happens with Regression in the Case Y = 0,1?}
+
+As we have frequently noted the mean of any indicator random variable is
+the probability that the variable is equal to 1 (Section
+\ref{indicator}).  Thus in the case in which our response variable Y
+takes on only the values 0 and 1, i.e.  classification problems, the
+regression function reduces to
+
+\begin{equation}
+m_{Y;X}(t) = P(Y = 1 | X = t)
+\end{equation}
+
+(Remember that X and t are vector-valued.)
+
+As a simple but handy example, suppose Y is gender (1 for male, 0 for
+female), $X^{(1)}$ is height and $X^{(2)}$ is weight, i.e. we are
+predicting a person's gender from the person's height and weight.  Then
+for example, $m_{Y;X}(70,150)$ is the probability that a person of
+height 70 inches and weight 150 pounds is a man.  Note again that this
+probability is a population fraction, the fraction of men among all
+people of height 70 and weight 150 in our population.
+
+Make a mental note of the optimal prediction rule, if we know the
+population regression function:
+
+\begin{quote}
+Given X = t, the optimal prediction rule is to predict that Y = 1 if and
+only if $m_{Y;X}(t) > 0.5$.
+\end{quote}
+
+So, if we known a certain person is of height 70 and weight 150, our
+best guess for the person's gender is to predict the person is male
+if and only if $m_{Y;X}(70,150) > 0.5$.\footnote{Things change in the
+multiclass case, though, as will be seen in Section \ref{multiclass}.}
+
+The optimality makes intuitive sense, and is shown in Section
+\ref{optimal2}.   
+
+\section{Logistic Regression:  a Common Parametric Model for the
+Regression Function in Classification Problems}
+\label{logitsec}
+
+Remember, we often try a parametric model for our regression function
+first, as it means we are estimating a finite number of quantities,
+instead of an infinite number.  Probably the most commonly-used model is
+that of the {\bf logistic function} (often called ``logit'').  Its
+r-predictor form is 
+
+\begin{equation}
+\label{logit2}
+m_{Y;X}(t) = P(Y = 1 | X = t) = \frac{1}{1+e^{-(\beta_0+\beta_1
+t_1+...+\beta_r t_r)}}
+\end{equation}
+
+For instance, consider the patent example in Section \ref{examples}.
+Under the logistic model, the population proportion of all patents that
+are publicly funded, among those that contain the word ``NSF,'' do not
+contain ``NIH,'' and make five claims would have the value
+
+\begin{equation}
+\frac{1}{1+e^{-(\beta_0 + \beta_1 + 5\beta_3)}}
+\end{equation}
+
+\subsection{The Logistic Model:  Motivations}
+\label{logitmotivations}
+
+The logistic function itself, 
+
+\begin{equation}
+\frac{1}{1+e^{-u}}
+\end{equation}
+
+has values between 0 and 1, and is thus a good candidate for modeling a
+probability.  Also, it is monotonic in u, making it further attractive,
+as in many classification problems we believe that $m_{Y;X}(t)$ should
+be monotonic in the predictor variables.
+
+But there are additional reasons to use the logit model, as it includes
+many common parametric models for X.  To see this, note that we can
+write, for vector-valued discrete X and t,
+
+\begin{eqnarray}
+\label{oneonelogodds}
+P(Y = 1 | X = t) &=&  \frac{P(Y = 1 ~ \textrm{and} ~ X = t)}{P(X = t)} \\
+&=& \frac{P(Y = 1) P(X = t | Y = 1)}{P(X = t)} \\
+&=& \frac{P(Y = 1) P(X = t | Y = 1)}
+{P(Y = 1) P(X = t | Y = 1) + P(Y = 0) P(X = t | Y = 0)} \\
+\label{intermedone}
+&=& \frac{1}
+{1 + \frac{(1-q) P(X = t | Y = 0)}{q P(X = t | Y = 1)}}
+\label{finaloneone}
+\end{eqnarray}
+
+where $q = P(Y = 1)$ is the proportion of members of the population which
+have $Y = 1$.  (Keep in mind that this probability is unconditional!!!!
+In the patent example, for instance, if say $q = 0.12$, then 12\% of all
+patents in the patent population---without regard to words used, numbers
+of claims, etc.---are publicly funded.) 
+
+% \checkpoint
+
+If $X$ is a continuous random vector, then the analog of
+(\ref{finaloneone}) is
+
+\begin{equation}
+\label{oneonelogodds2}
+P(Y = 1 | X = t) = \frac{1}
+{1 + \frac{(1-q) f_{X|Y=0}(t)}{q f_{X|Y=1}(t)}}
+\end{equation}
+
+Now for simplicity, suppose $X$ is scalar, i.e. r = 1.  And suppose
+that, given Y, X has a normal distribution.  In other words, within each
+class, $Y$ is normally distributed.  Suppose also that the two
+within-class variances of X are equal, with common value $\sigma^2$, but
+with means $\mu_0$ and $\mu_1$.  Then
+
+\begin{equation}
+f_{X|Y=i}(t) = \frac{1}{\sqrt{2\pi\sigma}}
+\exp{\left [ -0.5 \left (\frac{t-\mu_i}{\sigma} \right )^2 \right ]}
+\end{equation}
+
+After doing some elementary but rather tedious algebra,
+(\ref{oneonelogodds2}) reduces to the logistic form
+
+\begin{equation}
+\label{logitform}
+\frac{1}{1+e^{-(\beta_0 + \beta_1 t)}}
+\end{equation}
+
+where 
+
+\begin{equation}
+\label{logitbeta0}
+\beta_0 = -\ln{\left ( \frac{1-q}{q} \right )} + 
+\frac{\mu^2_0 - \mu^2_1}{2\sigma^2},
+\end{equation}
+
+and
+
+\begin{equation}
+\label{logitbeta1}
+\beta_1 = \frac{\mu_1 - \mu_0}{\sigma^2},
+\end{equation} 
+
+{\bf In other words, if X is normally distributed in both classes, with
+the same variance but different means, then $m_{Y;X}()$ has the logistic
+form!} And the same is true if X is multivariate normal in each class,
+with different mean vectors but equal covariance matrices.  (The algebra
+is even more tedious here, but it does work out.)  Given the central
+importance of the multivariate normal family---the word {\it central}
+here is a pun, alluding to the (multivariate) Central Limit
+Theorem---this makes the logit model even more useful.
+
+If you retrace the derivation above, you will see that the logit model
+will hold for any within-class distributions for which 
+
+\begin{equation}
+\label{logitlogodds}
+\ln \left ( \frac{f_{X|Y=0}(t)}{f_{X|Y=1}(t)} \right )
+\end{equation}
+
+(or its discrete analog) is linear in t.  Well guess what---this
+condition is true for exponential distributions too!  Work it out for
+yourself.
+
+% \checkpoint
+
+In fact, a number of famous distributions imply the logit model.  So,
+logit is not only a good intuitive model, as discussed above, but in
+addition there are some good theoretical recommendations for it.
+
+\subsection{Esimation and Inference for Logit Coefficients}
+
+We fit a logit model in R using the {\bf glm()} function, with the
+argument {\bf family=binomial}.  The function finds Maximum Likelihood
+Estimates (Section \ref{mle}) of the $\beta_i$.\footnote{As in the case
+of linear regression, estimation and inference are done conditionally on
+the values of the predictor variables $X_i$.} 
+
+The output gives standard errors for the $\widehat{\beta}_i$ as in the
+linear model case.  This enables the formation of confidence intervals
+and significance tests on individual $\widehat{\beta}_i$.  For inference
+on linear combinations of the $\widehat{\beta}_i$, use the {\bf vcov()}
+function as in the linear model case.
+
+\section{Example:  Forest Cover Data}
+\label{forest}
+
+Let's look again at the forest cover data we saw in Section
+\ref{forestcover}.\footnote{There is a problem here, to be discussed in
+Section \ref{ymarg}, but which will not affect the contents of this
+section.} Recall that this application has the Prediction goal, rather
+than the Description goal;\footnote{Recall these concepts from Section
+\ref{goals}.} we wish to predict the type of forest cover.  There were
+seven classes of forest cover.  
+
+\subsubsection{R Code}
+
+For simplicity, I restricted my analysis to classes 1 and
+2.\footnote{This will be generalized in Section \ref{multiclass}.}  In
+my R analysis I had the class 1 and 2 data in objects {\bf cov1} and
+{\bf cov2}, respectively.  I combined them,
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> cov1and2 <- rbind(cov1,cov2)
+\end{Verbatim}
+
+and created a new variable to serve as Y, recoding the 1,2 class names
+to 1,0:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+cov1and2[,56] <- ifelse(cov1and2[,55] == 1,1,0)
+\end{Verbatim}
+
+Let's see how well we can predict a site's class from the variable HS12
+(hillside shade at noon) that we investigated in Chapter
+\ref{chap:sigtests}, using a logistic model.
+
+As noted earlier, in R we fit logistic models via the {\bf glm()}
+function, for generalized linear models.  The word {\it generalized}
+here refers to models in which some function of $m_{Y;X}(t)$ is linear
+in parameters $\beta_i$.  For the classification model, 
+
+\begin{equation}
+\ln \left (  m_{Y;X}(t) / [1-m_{Y;X}(t)] \right )
+= \beta_0 + \beta_1 t^{(1)} + ... + \beta_r t^{(r)}
+\end{equation}
+
+(Recall the discussion surrounding (\ref{logitlogodds}).)
+
+This kind of generalized linear model is specified in R by setting the
+named argument {\bf family} to {\bf binomial}.  Here is the call:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> g <- glm(cov1and2[,56] ~ cov1and2[,8],family=binomial)
+\end{Verbatim}
+
+The result was:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> summary(g)
+
+Call:
+glm(formula = cov1and2[, 56] ~ cov1and2[, 8], family = binomial)
+
+Deviance Residuals:
+   Min      1Q  Median      3Q     Max
+-1.165  -0.820  -0.775   1.504   1.741
+
+Coefficients:
+               Estimate Std. Error z value Pr(>|z|)
+(Intercept)    1.515820   1.148665   1.320   0.1870
+cov1and2[, 8] -0.010960   0.005103  -2.148   0.0317 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 959.72  on 810  degrees of freedom
+Residual deviance: 955.14  on 809  degrees of freedom
+AIC: 959.14
+
+Number of Fisher Scoring iterations: 4
+\end{Verbatim}
+
+\subsection{Analysis of the Results}
+
+You'll immediately notice the similarity to the output of {\bf lm()}.
+In particular, note the Coefficients section.  There we have the
+estimates of the population coefficients $\beta_i$, their standard
+errors, and p-values for the tests of $H_0: \beta_i = 0$.
+
+One difference from the linear case is that in that case, the tests of 
+
+\begin{equation}
+ H_0:  \beta_i = 0
+\end{equation}
+
+were ``exact,'' based on the Student-t distribution, rather than being
+approximate tests based on the Central Limit Theorem.  The assumption is
+that the conditional distribution of the response given the predictors
+is exactly normal.  As noted before, those tests can't possibly be
+exact, since the assumption cannot exactly hold.
+
+But in the logit case, no ``exact'' test is available anyway, so R does
+indeed do approximate tests based on the Central Limit Theorem.
+Accordingly, the test column in the output is labeled ``z value,''
+rather than ``t value'' as before.
+
+At any rate, we see that for example $\widehat{\beta}_1 = -0.01$.  This
+is tiny, reflecting our analysis of this data in Chapter
+\ref{chap:sigtests}.  There we found that the estimated mean values of
+HS12 for cover types 1 and 2 were 223.8 and 226.3, a difference of only
+2.5, minuscule in comparison to the estimated means themselves.  That
+difference in essence now gets multiplied by 0.01.  Let's see the effect
+on the regression function, i.e. the probability of cover type 1 given
+HS12.
+
+Note first, though, that things are a little more complicated than they
+were in the linear case.  Recall our first baseball data analysis, in
+Section \ref{baseball1}.  Our model for $m_{Y;X}()$ was
+
+\begin{equation}
+\textrm{mean weight = } 
+\beta_0 + \beta_1 \textrm{ height}
+\end{equation}
+
+After estimating the $\beta_i$ from the data, we had the estimated
+regression equation,
+
+\begin{lstlisting}
+mean weight = -155.092 + 4.841 height
+\end{lstlisting}
+
+In presenting these results to others, we can illustrate the above
+equation by noting, for instance, that a 3-inch difference in height
+corresponds to an estimated $3 \times 4.841 = 14.523$ difference in mean
+weight.  The key point, though, is that this difference is the same
+whether we are comparing 70-inch-tall players with 73-inch-tall ones, or
+comparing 72-inch-tall players with 75-inch-tall ones, etc.  
+
+In our nonlinear case, the logit, the different in regression value will
+NOT depend only on the difference between the predictor values, in this
+case HS12.  We cannot simply say something like ``If two forest sites
+differ in HS12 by 15, then the difference in probability of cover type 1
+differs by such-and-such an amount.''  
+
+Instead we'll have to choose two specific HS11 values for our
+illustration.  Let's use the estimated mean HS12 values for the two
+cover types, 223.8 and then 226.3, found earlier.  
+
+So, in (\ref{logit2}), let's plug in our estimates 1.52 and -0.01 from
+our R output above, twice, first with HS12 = 223.8 and then with HS12 =
+226.3   
+
+In other words, let's imagine two forest sites, with unknown cover type,
+but known HS12 values 223.8 and 226.8 that are right in the center of
+the HS12 distribution for the two cover types.  What would we predict
+for the cover types to be for those two sites?
+
+Plugging in to (\ref{logit2}), the results are 0.328 and 0.322,
+respectively.  Remember, these numbers are the estimated probabilities
+that we have cover type 1, given HS12.  So, our guess---predicting
+whether we have cover type 1 or 2---isn't being helped much by knowing
+HS12.
+
+In other words, HS12 isn't having much effect on the probability of
+cover type 1, and so it cannot be a good predictor of cover type.  
+
+{\bf And yet...} the R output says that $\beta_1$ is ``significantly''
+different from 0, with a p-value of 0.03.  Thus, we see once again that
+significance testing does not achieve our goal.  
+
+\section{The Multiclass Case} 
+\label{multiclass}
+
+In classification problems, we often have more than two classes.  In the
+forest cover example above, we simplified to having just two types of
+forest cover, but there were actually seven.  In an optical character
+recognition application, there may be dozens of classes, maybe even
+hundreds or thousands for some written languages.
+
+We will use $m$ to denote the number of classes, and code the classes as
+$0,1,...,m-1$.  $Y$ will the class number, and let
+
+\begin{equation}
+q_i = P(Y = i) = P(\textrm{class i}), i = 0,1,...,m-1
+\end{equation}
+
+Note that the $q_i$ are {\it un}conditional probabilities.
+
+\subsection{One vs. All Approach}
+
+The methods remain basically the same.  Consider the forest cover
+example, for instance.  There are seven cover types, so we could run
+seven logistic models, predicting a dummy Y for each type.  In the first
+run, Y would be 1 for cover type 1, 0 for everything else.  In
+predicting a new case, we plug the predictor values into each of the
+seven models, and guess Y to be the one with maximal probability among
+the seven.
+
+The above approach is called One versus All (OVA).  To see where the name
+comes from, again consider the forest cover example, with seven logistic
+regression models.  In the i$^{th}$ model, we are predicting class i,
+against the collective alternative of all the other classes.  
+
+There is also the All versus All method (AVA). Here we run a regression
+analysis for each possible pair of classes ($7 \times 6 / 2 = 21$ of
+them for the forest cover data).  For exach pair, we restrict our
+analysis only to data for the two classes.  In predicting a new case, we
+use a ``voting'' procedure:  For each pair of classes, we decide which
+of the two classes is more likely for this new case, and then take our
+guess for the class to be whichever class ``won'' the most times.
+
+AVA has the disadvantage of using much less data for each pair. But if
+for example we are using a logistic model, which implies a linear
+boundary between each class and all the others,\footnote{The boundary is
+implied by setting (\ref{logitform}) to 0.5.}, an assumption that may
+not be very accurate. AVA essentially makes the weaker assumption that
+the boundary is linear between each {\it pair} of classes.
+
+{\it Note that under either OVA or AVA, we are always predicting one
+class at a time.}  Let's call this the Two Classes Suffice Principle,
+which will have implications below.
+
+There are multivariate versions of the logit model, but they make
+certain restrictive assumptions.
+
+\subsection{Issues of Data Balance}
+\label{ymarg}
+
+Here will discuss a topic that is usually  glossed over in treatments of
+the classification problem, and indeed is often misunderstood in the
+machine learning (ML) research literature, where one sees much
+questionable handwringing over ``the problem of unbalanced data.''  On
+the contrary, the real problem is often that the data are {\it
+balanced}.
+
+\subsubsection{Statement of the Problem}
+
+Consider the UCI Letters Recognition data set
+(\url{https://archive.ics.uci.edu/ml/datasets/Letter+Recognition}).
+There are between 700 and 800 cases for each English capital letter,
+which does not reflect that wide variation in letter frequencies.  The
+letter 'E', for example, is more than 100 times as frequent as the
+letter 'Z', according to published data (see below).  This would be
+considered ``balanced'' data, but it would be artificially so.
+
+Now think of a different version of that data, in which the
+letter frequencies reflect their true nature in general English.  There
+would be rather few instances of 'Z' here, but lots of cases of 'A'.
+This would be ``unbalanced'' but natural.  And our predictions for data
+as a whole would be optimal in the sense of minimizing overall
+misclassification error (Section \ref{optimal2}).  
+
+From here on, we will use the term {\it unbalanced} to mean that our
+data form a sample from our target population, in this case the
+population of all English text. Then we can estimate the $q_i$ from the
+data:
+
+\begin{equation}
+\label{qihat}
+\widehat{q}_i = \frac{N_i}{n}
+\end{equation}
+
+where $N_i$ is the number of our data points in class $i$, and $n$ is
+the total number of observations in the data set.  For balanced data,
+our data arose from sampling independently from the various classes,
+without attempting to have our data's class frequencies be
+representative of the population.
+
+In the balanced case, due to a paucity of data for 'Z', our
+misclassification rate for that particular letter (guessing another
+letter when the letter is actually 'Z') might not be good.  The latter
+issue is the one of concern in the machine learning community.
+
+In other words, for general prediction accuracy, unbalanced data is the
+best.  If we are concerned with misclassification rates for specific
+classes, things are more complex.
+
+\subsubsection{Solutions}
+
+There are really two problems to be solved:
+
+\begin{itemize}
+
+\item [(a)] Our data is balanced, when it shouldn't be, as with the Letter
+Recognition data.
+
+\item [(b)] Our data is unbalanced, and we are concerned about
+misclassification with the rarer classes.
+
+\end{itemize}
+
+We will assume just two classes here, per the Two Classes Suffice
+Principle we set up earlier.  Let $q$ and $1-q$ denote the class
+probabilities for $Y = 1$ and $Y = 0$.
+
+Let's first treat the context of Problem (a), and consider the quantity
+$q$ in (\ref{oneonelogodds2}). If our data were balanced, we actually
+has an easy solution, if we know the correct value of $q$ from some
+external source. For instance, in the English letters example above,
+there is much published data, such as at the Web page Practical
+Cryptography (\url{http://practicalcryptography.com/cryptanalysis/
+letter-frequencies-various-languages/english-letter-frequencies/}). They
+find that $\pi_A = 0.08$, $\pi_B = 0.0160$, $\pi_C = 0.0316$ and so on.
+So, if we use logistic regression (26 times), then when we run the one
+for 'C', we take $q = 0.0316$.
+
+Now recall from Section \ref{logitmotivations} that one of the
+motivations for the logistic model is that it holds if the density of
+our predictor vector $X$ is multivariate normal within each class (with
+equal covariance matrices in each class).  It turns out that Equation
+(\ref{logitbeta0}) holds for a general number of predictors, not just 1
+as in that equation.  
+
+If we then run {\bf glm()} for our logistic regression, that function
+will act as if our data is unbalanced (the situation it was designed
+for).  That means that our $\widehat{\beta}_0$ term will be incorrect,
+essentially using (\ref{qihat}) .  This suggests the following
+adjustment procedure.
+
+\begin{itemize}
+
+\item[(i)] Add $\ln(Ni0/n)$.
+
+\item[(ii)] Subtract $\ln[(1-\pi)/\pi)]$, where $\pi$ is the true class
+probability.
+
+\end{itemize}
+
+If we use a nonparametric approach (Chapter \ref{chap:nonparregclass}),
+Equation (\ref{oneonelogodds2}) shows us how to make the necessary
+adjustment.  When we have a new case to predict, we do the following:
+
+\begin{itemize}
+
+\item [(a)] Our software has given us an estimate of the left-hand side
+of that equation, for $t$ equal to our new data point.
+
+\item [(b)] We know the value that our software has used for its
+estimate of $(1-q)/q$, which is $N_0/N_1$.
+
+\item [(c)] Using (a) and (b), we can solve for the estimate of
+$f_o(t)/f_1(t)$.
+
+\item [(d)] Now plug the correct estimate of $(1-q)/q$, and the result
+of (c), back into (\ref{oneonelogodds2}) to get the proper estimate of
+the desired conditional probability.
+
+\end{itemize}
+
+Now what about Problem (b) above, the unbalanced situation?  The easiest
+solution is to deliberately use the {\it wrong} value of $q$ in the
+above adjustment procedure.
+
+\section{Model Selection in Classification}
+
+Since, as has been emphasized here, classification is merely a special
+case of regression, the same issues arise for model selection as in
+Section \ref{regmodsel}.  The only new issue is what to do with
+nonparametric models.  For instance, with k-Nearest Neighbor estimation,
+how do we choose k?
+
+Here the standard technique is again, as in Section \ref{regmodsel}, to split
+the data into training and validation sets.  We could fit models with
+various values of k to the training set, and then see how well each does
+on the validation set.
+
+The same points apply to deciding which predictors to use, and which to
+discard, as well as (in the parametric model case) whether to add
+polynomial terms and so on.
+
+\section{Optimality of the Regression Function for 0-1-Valued Y
+(optional section)}
+\label{optimal2}
+
+Remember, our context is that we want to guess Y, knowing X.  Since Y is
+0-1 valued, our guess for Y based on X, g(X), should be 0-1 valued too.
+What is the best function g()?
+
+Again, since Y and g are 0-1 valued, our criterion should be what will I
+call Probability of Correct Classification (PCC):\footnote{This assumes
+that our goal is to minimize the overall misclassification error rates,
+which in terms assumes equal costs for the two kinds of classification
+errors, i.e. that guessing Y = 1 when Y = 0 is no more or no less
+serious than the opposite error.}
+
+\begin{equation}
+\label{pcc}
+\textrm{PCC} = P[Y = g(X)]
+\end{equation}
+
+We'll show intuitively that the best rule, i.e. the g() that maximizes
+(\ref{pcc}), is given by the function
+
+\begin{equation}
+\label{bestg}
+g(t) = 
+\begin{cases}
+0, \textrm{ if } g(t) \leq 0.5 \cr
+1, \textrm{ if } g(t) > 0.5 \cr
+\end{cases}
+\end{equation}
+
+Think of this simple situation:  There is a biased coin, with
+\underline{known} probability of heads p.  The coin will be tossed once,
+and you are supposed to guess the outcome.  
+
+Let's name your guess q, and let C denote the as-yet-unknown outcome of
+the toss (1 for heads, 0 for tails).  Then the probability that you
+guess correctly is
+
+\begin{eqnarray}
+P(C = q) &=& P(C = 1) q + P(C = 0) (1-q) \\ 
+&=& P(C = 1) q + [1 - P(C = 1)] (1-q) \\ 
+&=& [2 P(C = 1) - 1] q + 1 - P(C = 1) \\
+&=& [2 p - 1] q + 1 - p 
+\end{eqnarray}
+
+(That first equation merely accounts for the two cases, q = 1 and q =
+0.  For example, if you choose q = 0, then the right-hand side reduces
+to P(C = 0), as it should.)
+
+Inspecting the last of the three equations above, we see that if we set
+q = 1, then P(C = q), i.e. the probability that we correctly predict the
+coin toss, is p.  If we set q to 0, then P(C = q) is 1-p.  That in turn
+says that if $p > 0.5$ (remember, p is known), we should set q to 1;
+otherwise we should set q to 0.
+
+The above reasoning gives us very intuitive---actually trivial---result:
+
+\begin{quote}
+If the coin is biased toward heads, we should guess heads.  If the coin
+is biased toward tails, we should guess tails.
+\end{quote}
+
+Now returning to (\ref{bestg}), would take P(C = q) above as the
+conditional probability P(Y = g(X) $|$ X).  The above coin example says
+we should predict Y to be 1 or 0, depending on whether g(X) is larger or
+smaller than 0.5.  Then use (\ref{adamsdiscrete}) to complete the proof.
+
+
+\startproblemset
+
+\oneproblem
+Suppose we are interested in documents of a certain type, which we'll
+call Type 1.  Everything that is not Type 1 we'll call Type 2, with
+a proportion $q$ of all documents being Type 1.  Our goal will be to 
+try to guess document type by the presence of absence of a certain word;
+we will guess Type 1 if the word is present, and otherwise will guess
+Type 2.  
+
+Let $T$ denote document type, and let $W$ denote the event that the word
+is in the document.  Also, let $p_i$ be the proportion of documents that
+contain the word, among all documents of Type i, i = 1,2.  The event $C$
+will denote our guessing correctly.
+
+Find the overall probability of correct classification, $P(C)$, and also
+$P(C | W)$.
+
+Hint:  Be careful of your conditional and unconditional probabilities
+here.
+
+\oneproblem
+We showed that (\ref{oneonelogodds2}) reduces to the logistic model in
+the case in which the distribution of $X$ given $Y$ is normal.  Show
+that this is also true in the case in which that distribution is
+exponential, i.e.
+
+\begin{equation}
+f_{X|Y}(t,i) = \lambda_i e^{-\lambda_i t}, ~ t > 0
+\end{equation}
+
+% \section{Linear Regression with All Predictors Being Nominal Variables:
+% Analysis of ``Variance''}
+% \label{anova}
+% 
+% (Note to readers:  The material in this section is arguably of lesser
+% value to computer science.  As such, it can easily be skipped.  However,
+% it does provide motivation for our treatment of the log-linear model in
+% Section \ref{loglin}.)
+% 
+% Continuing the ideas in Section \ref{nominal}, suppose in the software
+% engineering study they had kept the project size constant, and instead
+% of $X^{(1)}$ being project size, this variable recorded whether the
+% programmer uses an integrated development environment (IDE).  Say
+% $X^{(1)}$ is 1 or 0, depending on whether the programmer uses the
+% Eclipse IDE or no IDE, respectively.  Continue to assume the study
+% included the nominal Language variable, i.e. assume the study included
+% the indicator variables $X^{(2)}$ (C++) and $X^{(3)}$ (Java).  Now all
+% of our predictors would be nominal/indicator variables.  Regression
+% analysis in such settings is called {\bf analysis of variance} (ANOVA).
+% 
+% Each nominal variable is called a {\bf factor}.  So, in our software
+% engineering example, the factors are IDE and Language.  Note again that
+% in terms of the actual predictor variables, each factor is represented
+% by one or more indicator variables; here IDE has one indicator variables
+% and Language has two.
+% 
+% Analysis of variance is a classic statistical procedure, used heavily in
+% agriculture, for example.  We will not go into details here, but mention
+% it briefly both for the sake of completeness and for its relevance to
+% Sections \ref{interaction} and \ref{loglin}.  (The reader is strongly
+% advised to review Sections \ref{interaction} before continuing.)
+% 
+% \subsection{It's a Regression!}
+% 
+% The term {\it analyisis of variance} is a misnomer.  A more appropriate
+% name would be {\bf analysis of means}, as it is in fact a regression
+% analysis, as follows.
+% 
+% First, note in our software engineering example we basically are talking
+% about six groups, because there are six different combinations of values
+% for the triple $(X^{(1)},X^{(2)},X^{(3)})$.  For instance, the triple
+% (1,0,1) means that the programmer is using an IDE and programming in
+% Java.  Note that triples of the form (w,1,1) are impossible.
+% 
+% So, all that is happening here is that we have six groups with six
+% means.  But that is a regression!  Remember, for variables U and V,
+% $m_{V;U}(t)$ is the mean of all values of V in the subpopulation group
+% of people (or cars or whatever) defined by U = s.  If U is a continuous
+% variable, then we have infinitely many such groups, thus infinitely many
+% means.  In our software engineering example, we only have six groups,
+% but the principle is the same.  We can thus cast the problem in
+% regression terms:
+% 
+% \begin{equation}
+% m_{Y;X}(i,j,k) = E(Y|X^{(1)}=i, X^{(2)}=j, X^{(3)}=k), ~ i,j,k=0,1, j+k
+% \leq 1
+% \end{equation}
+% 
+% Note the restriction $j+k \leq 1$, which reflects the fact that j and k
+% can't both be 1.
+% 
+% Again, keep in mind that we are working with means.  For instance,
+% $m_{Y;X}(0,1,0)$ is the population mean project completion time for
+% the programmers who do not use Eclipse and who program in C++.
+% 
+% Since the triple (i,j,k) can take on only six values, m can be modeled
+% fully generally in the following six-parameter linear form:
+% 
+% \begin{equation}
+% \label{full}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% + \beta_4 ij
+% + \beta_5 ik
+% \end{equation}
+% 
+% where $\beta_4$ and $\beta_5$ are the coefficients of two interaction
+% terms, as in Section \ref{interaction}.  
+% 
+% \subsection{Interaction Terms}
+% 
+% It is crucial to understand the interaction terms.  Without the ij and
+% ik terms, for instance, our model would be
+% 
+% \begin{equation}
+% \label{nointeraction}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% \end{equation}
+% 
+% which would mean (as in Section \ref{interaction}) that the difference
+% between using Eclipse and no IDE is the same for all three programming
+% languages, C++, Java and C.  That common difference would be $\beta_1$.
+% If this condition---the impact of using an IDE is the same across
+% languages---doesn't hold, at least approximately, then we would use the
+% full model, (\ref{full}).  More on this below.
+% 
+% Note carefully that there is no interaction term corresponding to jk,
+% since that quantity is 0, and thus there is no three-way interaction
+% term corresponding to ijk either.  
+% 
+% But suppose we add a third factor, Education, represented by the
+% indicator $X^{(4)}$, having the value 1 if the programmer has a least a
+% Master's degree, 0 otherwise.  Then m would take on 12 values, and the
+% full model would have 12 parameters: 
+% 
+% \begin{equation}
+% \label{full3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% + \beta_{10} ijl
+% + \beta_{11} ikl
+% \end{equation}
+% 
+% Again, there would be no ijkl term, as jk = 0.
+% 
+% Here $\beta_1$, $\beta_2$, $\beta_3$ and $\beta_4$ are called the {\bf
+% main effects}, as opposed to the coefficients of the interaction terms,
+% called of course the {\bf interaction effects}.
+% 
+% The no-interaction version would be
+% 
+% \begin{equation}
+% \label{noint3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% \end{equation}
+% 
+% \subsection{Now Consider Parsimony}
+% 
+% In the three-factor example above, we have 12 groups and 12 means.  Why
+% not just treat it that way, instead of applying the powerful tool of
+% regression analysis?  The answer lies in our desire for parsimony, as
+% noted in Section \ref{overfit}.
+% 
+% If for example (\ref{noint3}) were to hold, at least approximately, we
+% would have a far more satisfying model.  We could for instance then talk
+% of ``the'' effect of using an IDE, rather than qualifying such a
+% statement by stating what the effect would be for each different
+% language and education level.  Moreover, if our sample size is not very
+% large, we would get more accurate estimates of the various subpopulation
+% means, once again due to bias/variance tradeoff.
+% 
+% Or it could be that, while (\ref{noint3}) doesn't hold, a model with only
+% two-way interactions,
+% 
+% \begin{equation}
+% \label{2way}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% \end{equation}
+% 
+% does work well.  This would not be as nice as (\ref{noint3}), but it
+% still would be more parsimonious than (\ref{full3}).
+% 
+% Accordingly, the major thrust of ANOVA is to decide how rich a model is
+% needed to do a good job of describing the situation under study.  There
+% is an implied hierarchy of models of interest here:
+% 
+% \begin{itemize}
+% 
+% \item the full model, including two- and three-way interactions,
+% (\ref{full3})
+% 
+% \item the model with two-factor interactions only, (\ref{2way})
+% 
+% \item the no-interaction model, (\ref{noint3})
+% 
+% \end{itemize}
+% 
+% Traditionally these are determined via hypothesis testing, which
+% involves certain partitionings of sums of squares similar to
+% (\ref{sumsq}).  (This is where the name {\it analysis of variance} stems
+% from.)  The null distribution of the test statistic often turns out to
+% be an F-distribution.  Of course, in this book, we consider hypothesis
+% testing inappropriate, preferring to give some careful thought to the
+% estimated parameters, but it is standard.  Further testing can be done
+% on individual $\beta_1$ and so on.  Often people use simultaneous
+% inference procedures, discussed briefly in Section \ref{simultancis} of
+% our chapter on estimation and testing, since many tests are performed.
+% 
+% \subsection{Reparameterization}
+% 
+% Classical ANOVA uses a somewhat different parameterization than that
+% we've considered here.  For instance, consider a single-factor setting
+% (called {\bf one-way ANOVA}) with three levels.  Our predictors are then
+% $X^{(1)}$ and $X^{(2)}$.  Taking our approach here, we would write
+% 
+% \begin{equation}
+% m_{Y;X}(i,j) = \beta_0 + \beta_1 i + \beta_2 j 
+% \end{equation}
+% 
+% The traditional formulation would be
+% 
+% \begin{equation}
+% \mu_i = \mu + \alpha_i, ~ i = 1,2,3
+% \end{equation}
+% 
+% where
+% 
+% \begin{equation}
+% \mu = \frac{\mu_1+\mu_2+\mu_3}{3}
+% \end{equation}
+% 
+% and 
+% 
+% \begin{equation}
+% \alpha_i = \mu_i - \mu
+% \end{equation}
+% 
+% Of course, the two formulations are equivalent.  It is left to the
+% reader to check that, for instance, 
+% 
+% \begin{equation}
+% \mu = \beta_0 + \frac{\beta_1+\beta_2}{2}
+% \end{equation}
+% 
+% There are similar formulations for ANOVA designs with more than one
+% factor.
+% 
+% Note that the classical formulation overparameterizes the problem.  In
+% the one-way example above, for instance, there are four parameters
+% ($\mu$, $\alpha_1$, $\alpha_2$, $\alpha_3$) but only three groups.
+% This would make the system indeterminate, but we add the constraint
+% 
+% \begin{equation}
+% \sum_{i=1}^3 \alpha_i = 0
+% \end{equation}
+% 
+% Equation (\ref{betahat}) then must make use of {\bf generalized matrix
+% inverses}.
+% 
+% \section{Clustering}
+% 
+% HERE ONE **REALLY* HAS TROUBLE 
+% WITH "WHAT DOES IT MEAN?:
+
+% pdf("CARTBound.pdf")
+% plot(c(0,1),c(0,1),type="n",xlab="s",ylab="t")
+% lines(c(0,0.62),c(0.8,0.8))
+% lines(c(0.62,1),c(0.58,0.58))
+% lines(c(0.62,0.62),c(0.58,0.8))
+% dev.off()
+% 
+% 
+% lines(c(0.62,0.62),c(0,1))
+

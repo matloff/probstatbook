@@ -1,0 +1,1002 @@
+\chapter{The Normal Family of Distributions} 
+\label{chap:normal}
+
+Again, these are the famous ``bell-shaped curves,'' so called because
+their densities have that shape.
+
+\section{Density and Properties}
+
+The density for a normal distribution is
+
+\begin{equation}
+\label{nointegral}
+f_W(t) = \frac{1}{\sqrt{2\pi} \sigma} ~ e^{- 0.5 \left (\frac{t-\mu}{\sigma}
+\right )^2}, -\infty < t < \infty
+\end{equation}
+
+Again, this is a two-parameter family, indexed by the parameters $\mu$
+and $\sigma$, which turn out to be the mean\footnote{Remember, this is a
+synonym for expected value.} and standard deviation  $\mu$ and $\sigma$,
+The notation for it is $N(\mu,\sigma^2)$ (it is customary to state
+the variance $\sigma^2$ rather than the standard deviation).
+
+And we write 
+
+\begin{equation}
+X ~ \widetilde{ } ~ N(\mu,\sigma^2)
+\end{equation}
+
+to mean that the random variable X has the distribution $N(\mu,\sigma^2)$.
+(The tilde is read ``is distributed as.'')
+
+
+{\bf Note:} Saying ``X has a $N(\mu,\sigma^2)$ distribution'' is {\it
+more} than simply saying ``X has mean $\mu$ and variance $\sigma^2$.''
+The former statement tells us not only the mean and variance of X, but
+{\it also} the fact that X has a ``bell-shaped'' density in the
+(\ref{nointegral}) family.
+
+\subsection{Closure Under Affine Transformation}
+\label{affine}
+
+The family is closed under affine transformations:
+
+\begin{quote}
+
+If 
+
+\begin{equation}
+X ~ \widetilde{} ~ N(\mu,\sigma^2)
+\end{equation}
+
+and we set 
+
+\begin{equation}
+Y = cX + d 
+\end{equation}
+
+then
+
+\begin{equation}
+Y ~ \widetilde{} ~ N(c\mu+d,c^2\sigma^2)
+\end{equation}
+
+\end{quote}
+
+For instance, suppose X is the height of a randomly selection UC Davis
+student, measured in inches.  Human heights do have approximate normal
+distributions; a histogram plot of the student heights would look
+bell-shaped.  Now let Y be the student's height in centimeters.  Then we
+have the situation above, with c = 2.54 and d = 0.  The claim about
+affine transformations of normally distributed random variables would
+imply that a histogram of Y would again be bell-shaped.
+
+Consider the above statement carefully.  
+
+\begin{quote}
+
+It is saying much more than simply that Y has mean $c\mu + d$ and
+variance $c^2\sigma^2$, which would follow from our our ``mailing
+tubes'' such as (\ref{varcu}) {\it even if X did not have a normal
+distribution}.  The key point is that this new variable Y is also a
+member of the normal family, i.e.\ its density is still given by
+(\ref{nointegral}), now with the new mean and variance.
+
+\end{quote}
+
+Let's derive this, using the reasoning of Section \ref{densgofx}.
+
+For convenience, suppose $c > 0$.  Then
+
+\begin{eqnarray}
+F_Y(t) &=& P(Y \leq t)  ~~ (\textrm{definition of } F_Y)  \\ 
+&=& P(cX + d \leq t) ~~ (\textrm{definition of Y}) \\
+&=& P \left ( X \leq \frac{t-d}{c} \right ) ~~ (\textrm{algebra}) \\
+&=& F_X \left (\frac{t-d}{c} \right )~~ (\textrm{definition of } F_X)
+\label{xcdf}
+\end{eqnarray}
+
+Therefore
+
+\begin{eqnarray}
+f_Y(t) &=& \frac{d}{dt} F_Y(t) ~~ (\textrm{definition of } f_Y) \\
+&=& \frac{d}{dt} F_X \left (\frac{t-d}{c} \right ) ~~ (\textrm{from } 
+(\ref{xcdf})) \\      
+&=& f_X \left ( \frac{t-d}{c} \right ) \cdot \frac{d}{dt} \frac{t-d}{c}
+~~ (\textrm{definition of } f_X \textrm{ and the Chain Rule}) \\
+&=& \frac{1}{c} \cdot 
+\frac{1}{\sqrt{2\pi} \sigma} ~ e^{- 0.5 
+\left (\frac{\frac{t-d}{c}-\mu}{\sigma} \right )^2} 
+~~ (\textrm{from } (\ref{nointegral}) \\
+&=& \frac{1}{\sqrt{2\pi} (c \sigma)} ~ 
+e^{- 0.5 \left (\frac{t-(c\mu +d)}{c\sigma} \right )^2} ~~ (\textrm{algebra})
+\end{eqnarray}
+
+That last expression is the $N(c\mu+d,c^2\sigma^2)$ density, so we are
+done!
+
+\subsection{Closure Under Independent Summation}
+\label{sumindep}
+
+If X and Y are independent random variables, each having a normal
+distribution, then their sum S = X + Y also is normally distributed.
+
+This is a pretty remarkable phenomenon, not true for most other
+parametric families.  If for instance X and Y each with, say, a U(0,1)
+distribution, then the density of S turns out to be triangle-shaped, NOT
+another uniform distribution.  (This can be derived using the methods of
+Section \ref{convolution}.)
+
+Note that if X and Y are independent and normally distributed, then the
+two properties above imply that cX + dY will also have a normal
+distribution, for any constants c and d.
+
+More generally:
+
+\begin{quote}
+For constants $a_1,...,a_k$ and random variables
+$X_1,...,X_k$, with
+
+\begin{equation}
+X_i ~ \widetilde{ } ~ N(\mu_i, \sigma_i^2
+\end{equation}
+
+form the new random variable $Y = a_1 X_1 +...+ a_k X_k$.   Then
+
+\begin{equation}
+\label{lincombnormal}
+Y ~ \widetilde{ } ~ N(\sum_{i=1}^k \mu_i, \sum_{i=1}^k \sigma_i^2)
+\end{equation}
+\end{quote}
+
+\section{The Standard Normal Distribution}
+\label{stdnorm}
+
+\begin{definition}
+
+If $Z ~ \widetilde{} ~ N(0,1)$ we say the random variable Z has a {\it
+standard normal distribution}.
+
+Note that if $X \widetilde{} N(\mu,\sigma^2)$, and fi we set
+
+\begin{equation}
+Z = \frac{X - \mu}{\sigma}
+\end{equation}
+
+then 
+
+\begin{equation}
+\label{zisn01}
+Z ~ \widetilde{} ~ N(0,1)
+\end{equation}
+
+\end{definition}
+
+The above statements follow from the earlier material:
+
+\begin{itemize}
+
+\item Define $Z = \frac{X - \mu}{\sigma}$.
+
+\item Rewrite it as $Z = \frac{1}{\sigma} \cdot X +
+(\frac{-\mu}{\sigma})$.
+
+% \item By (\ref{aubv}) we know that
+\item Since E(cU + d) = c EU + d for any random variable U and constants
+c and d, we have
+
+\begin{equation}
+EZ = \frac{1}{\sigma} EX - \frac{\mu}{\sigma} = 0
+\end{equation}
+
+and (\ref{affinevar}) and (\ref{varcu}) imply that Var(X) = 1.
+
+\item OK, so we know that Z has mean 0 and variance 1.  But does it have
+a normal distribution?  Yes, due to our discussion above titled
+``Closure Under Affine Transformations."
+
+\end{itemize}
+
+By the way, the N(0,1) cdf is traditionally denoted by $\Phi$.  
+
+\section{Evaluating Normal cdfs}
+
+The function in (\ref{nointegral}) does not have a closed-form
+indefinite integral.  Thus probabilities involving normal random
+variables must be approximated.  Traditionally, this is done with a
+table for the cdf of N(0,1), which is included as an appendix to almost
+any statistics textbook; the table gives the cdf values for that
+distribution.
+
+But this raises a question:  There are infinitely many distributions in
+the normal family.  Don't we need a separate table for each?  That of
+course would not be possible, and in fact it turns out that this one
+table---the one for the N(0,1) distribution--- is sufficient for the
+entire normal family.  Though we of course will use R to gt such
+probabilities, it will be quite instructive to see how these table
+operations work.
+
+Here's why one table is enough: Say X has an $N(10,2.5^2)$ distribution.
+How can we get a probability like, say, $P(X < 12)$ using the N(0,1)
+table?  Write
+
+\begin{equation}
+P(X < 12) = P\left (Z < \frac{12-10}{2.5}\right ) = P(Z < 0.8)
+\end{equation}
+
+Since on the right-hand side Z has a standard normal distribution,
+we can find that latter probably from the N(0,1) table!
+
+
+
+As noted, traditionally it has played a central role, as one could
+transform any probability involving some normal distribution to an
+equivalent probability involving N(0,1).  One would then use a table of
+N(0,1) to find the desired probability.
+
+The transformation $Z = (X - \mu)/\sigma$ will play a big role in other
+contexts in future chapters, but for the sole purpose of simply
+evaluating normal probabilities, we can be much more direct.  Nowadays,
+probabilities for any normal distribution, not just N(0,1), are easily
+available by computer.  In the R statistical package, the normal cdf for
+any mean and variance is available via the function {\bf pnorm()}.  The
+call form is
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+pnorm(q,mean=0,sd=1)
+\end{Verbatim}
+
+This returns the value of the cdf evaluated at {\bf q}, for a normal
+distribution having the specified mean and standard deviation (default
+values of 0 and 1).
+
+We can use {\bf rnorm()} to simulate normally distributed random
+variables.  The call is 
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+rnorm(n,mean=0,sd=1)
+\end{Verbatim}
+
+which returns a vector of {\bf n} random variates from the specified
+normal distribution.
+
+There are also of course the corresponding density and quantile
+functions, {\bf dnorm()} and {\bf qnorm()}.
+
+\section{Example:  Network Intrusion}
+\label{netintrude}
+
+As an example, let's look at a simple version of the network intrusion
+problem.  Suppose we have found that in Jill's remote logins to a
+certain computer, the number X of disk sectors she reads or writes has
+an approximate normal distribution with a mean of 500 and a standard
+deviation of 15.
+
+Before we continue, a comment on modeling: Since the number of sectors
+is discrete, it could not have an exact normal distribution. But then,
+no random variable in practice has an exact normal or other continuous
+distribution, as discussed in Section \ref{unicorns}, and the
+distribution can indeed by approximately normal.
+
+Now, say our network intrusion monitor finds that Jill---or someone
+posing as her---has logged in and has read or written 535 sectors.
+Should we be suspicious?  
+
+To answer this question, let's find $P(X \geq 535)$:  Let $Z =
+(X-500)/15$.  From our discussion above, we know that Z has a N(0,1)
+distribution, so
+
+\begin{equation}
+P(X \geq 535) = P \left (Z \geq \frac{535-500}{15} \right ) 
+= 1 - \Phi(35/15) = 0.01
+\end{equation}
+
+Again, traditionally we would obtain that 0.01 value from a N(0,1) cdf
+table in a book.  With R, we would just use the function {\bf pnorm()}:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> 1 - pnorm(535,500,15)
+[1] 0.009815329
+\end{Verbatim}
+
+Anyway, that 0.01 probability makes us suspicious.  While it {\it could}
+really be Jill, this would be unusual behavior for Jill, so we start to
+suspect that it isn't her.  It's suspicious enough for us to probe more
+deeply, e.g. by looking at which files she (or the impostor)
+accessed---were they rare for Jill too?
+
+Now suppose there are two logins to Jill's account, accessing X and Y
+sectors, with X+Y = 1088.  Is this rare for her, i.e. is $P(X+Y >
+1088)$? small? 
+
+We'll assume X and Y are independent.  We'd have to give some thought as
+to whether this assumption is reasonable, depending on the details of
+how we observed the logins, etc., but let's move ahead on this basis.
+
+From page \pageref{sumindep}, we know that the sum S = X+Y is again normally
+distributed.  Due to the properties in Chapter \ref{dis}, we know S has
+mean $2 \cdot 500$ and variance $2 \cdot 15^2$.  The desired
+probability is then found via
+
+\begin{lstlisting}
+1 - pnorm(1088,1000,sqrt(450))
+\end{lstlisting}
+
+which is about 0.00002.  That is indeed a small number, and we should be
+highly suspicious.
+
+Note again that the normal model (or any other continuous model) can
+only be approximate, especially in the tails of the distribution, in
+this case the right-hand tail.  But it is clear that S is only rarely
+larger than 1088, and the matter mandates further investigation.
+
+Of course, this is very crude analysis, and real intrusion detection
+systems are much more complex, but you can see the main ideas here.
+
+\section{Example:  Class Enrollment Size}
+\label{classize}
+
+After years of experience with a certain course, a university has found
+that online pre-enrollment in the course is approximately normally
+distributed, with mean 28.8 and standard deviation 3.1.  Suppose that in
+some particular offering, pre-enrollment was capped at 25, and it hit
+the cap.  Find the probability that the actual demand for the course was
+at least 30.
+
+Note that this is a conditional probability!  Evaulate it as follows.
+Let N be the actual demand.  Then the key point is that we are given that
+$N \geq 25$, so
+
+\begin{eqnarray}
+P(N \geq 30 | N \geq 25) 
+&=&  
+\frac
+{P(N \geq 30 \textrm{ and } N \geq 25)}
+{P(N \geq 25)} ~~~~ ((\ref{genand})) \\
+&=&  
+\frac
+{P(N \geq 30)}
+{P(N \geq 25)} \\
+&=& 
+\frac
+{1 -\Phi \left [ (30-28.8)/3.1 \right ] }
+{1 -\Phi \left [ (25-28.8)/3.1 \right ] } \\
+&=& 0.39
+\end{eqnarray}
+
+Sounds like it may be worth moving the class to a larger room before
+school starts.
+
+Since we are approximating a discrete random variable by a continuous
+one, it might be more accurate here to use a {\bf correction for
+continuity}, described in Section \ref{correctcontin}.
+
+\section{More on the Jill Example}
+
+Continuing the Jill example, suppose there is never an intrusion, i.e.
+all logins are from Jill herself.  Say we've set our network intrusion
+monitor to notify us every time Jill logs in and accesses 535 or more
+disk sectors.  In what proportion of all such notifications will Jill
+have accessed at least 545 sectors?  
+
+This is $P(X \geq 545 $|$ X \geq 535)$.  By an analysis similar
+to that in Section \ref{classize}, this probability is
+
+\begin{lstlisting}
+(1 - pnorm(545,500,15)) / (1 - pnorm(535,500,15))
+\end{lstlisting}
+
+\section{Example:  River Levels}
+
+Consider a certain river, and L, its level (in feet) relative to its
+average. There is a flood whenever L $>$ 8, and it is reported that 
+2.5\% of days have flooding.  Let's assume that the level 
+L is normally distributed; the above information implies that the mean
+is 0. 
+
+Suppose the standard deviation of L, $\sigma$, goes up by 10\%. How much
+will the percentage of flooding days increase?
+
+To solve this, let's first find $\sigma$.  We have that
+
+\begin{equation}
+0.025 = P(L > 8) = P \left ( \frac{L-0}{\sigma} > \frac{8-0}{\sigma}
+\right )
+\end{equation}
+
+Since $(L-0)/\sigma$ has a N(0,1) distribution, we can find the 0.975
+point in its cdf:
+
+\begin{lstlisting}
+> qnorm(0.975,0,1)
+[1] 1.959964
+\end{lstlisting}
+
+So,
+
+\begin{equation}
+1.96 =  \frac{8-0}{\sigma}
+\end{equation}
+
+so $\sigma$ is about 4.
+
+If it increases to 4.4, then we can evaluate $P(L > 8)$ by
+
+\begin{lstlisting}
+> 1 - pnorm(8,0,4.4)
+[1] 0.03451817
+\end{lstlisting}
+
+So, a 10\% increase in $\sigma$ would lead in this case to about a 40\%
+increase in flood days.
+
+\section{Example:  Upper Tail of a Light Bulb Distribution}
+
+Suppose we model light bulb lifetimes as having a normal
+distribution with mean and standard deviation 500 and 50 hours,
+respectively.  Give a loop-free R expression for finding the value of d
+such that 30\% of all bulbs have lifetime more than d.
+
+You should develop the ability to recognize when we need {\bf p}-series
+and {\bf q}-series functions.  Here we need
+
+\begin{lstlisting}
+qnorm(1-0.30,500,50)
+\end{lstlisting}
+
+\section{The Central Limit Theorem}
+\label{theclt}
+
+The Central Limit Theorem (CLT) says, roughly speaking, that a random
+variable which is a sum of many components will have an approximate
+normal distribution.  So, for instance, human weights are approximately
+normally distributed, since a person is made of many components.  The
+same is true for SAT test scores,\footnote{This refers to the raw
+scores, before scaling by the testing company.} as the total score is
+the sum of scores on the individual problems.
+
+There are many versions of the CLT.  The basic one requires that the
+summands be independent and identically distributed:\footnote{A more
+mathematically precise statement of the theorem is given in Section
+\ref{formalclt}.}
+
+\begin{theorem}
+\label{impreciseclt}
+
+Suppose $X_1, X_2, ...$ are independent random variables, all having the
+same distribution which has mean m and variance $v^2$.  Form the new
+random variable $T = X_1+...+X_n$.  Then for large n, the distribution
+of T is approximately normal with mean nm and variance $nv^2$.
+
+\end{theorem}
+
+The larger n is, the better the approximation, but typically n = 20 or
+even n = 10 is enough.
+
+\section{Example:  Cumulative Roundoff Error}
+
+Suppose that computer roundoff error in computing the square roots of
+numbers in a certain range is distributed uniformly on (-0.5,0.5), and
+that we will be computing the sum of n such square roots.  Suppose we
+compute a sum of 50 square roots.  Let's find the approximate
+probability that the sum is more than 2.0 higher than it should be.
+(Assume that the error in the summing operation is negligible compared
+to that of the square root operation.)
+
+Let $U_1,...,U_{50}$ denote the errors on the individual terms in the
+sum.  Since we are computing a sum, the errors are added too, so our
+total error is
+
+\begin{equation}
+T = U_1 + ... + U_{50}
+\end{equation}
+
+By the Central Limit Theorem, since T is a sum, it has an approximately
+normal distribution, with mean 50 EU and variance 50 Var(U), where U is
+a random variable having the distribution of the $U_i$.  From Section
+\ref{unifprops}, we know that 
+
+\begin{equation}
+EU = (-0.5+0.5) / 2 = 0, ~~ Var(U) = \frac{1}{12} [0.5-(-0.5)]^2 =
+\frac{1}{12}
+\end{equation}
+
+So, the approximate distribution of T is N(0,50/12).  We can then use R to
+find our desired probability:
+
+\begin{lstlisting}
+> 1 - pnorm(2,mean=0,sd=sqrt(50/12))
+[1] 0.1635934
+\end{lstlisting}
+
+\section{Example:  R Evaluation of a Central Limit Theorem
+Approximation}
+
+Say $W = U_1 + ... + U_{50}$, with the $U_i$ being independent and
+identically distributed (i.i.d.) with uniform distributions on (0,1).
+Give an R expression for the approximate value of $P(W < 23.4)$.
+
+W has an approximate normal distribution, with mean $50 \times
+0.5$ and variance $50 \times (1/12)$.  So we need
+
+\begin{lstlisting}
+pnorm(23.4,25,sqrt(50/12))
+\end{lstlisting}
+
+\section{Example:  Bug Counts}
+
+As an example, suppose the number of bugs per 1,000 lines of code has a
+Poisson distribution with mean 5.2.  Let's find the probability of
+having more than 106 bugs in 20 sections of code, each 1,000 lines long.
+We'll assume the different sections act independently in terms of bugs.
+
+Here $X_i$ is the number of bugs in the i$^{th}$ section of code, and T
+is the total number of bugs.  This is another clear candidate for using
+the CLT.
+
+Since each $X_i$ has a Poisson distribution, $m = v^2 = 5.2$.  So, T,
+being a sum, is approximately distributed normally with mean and
+variance $20 \times 5.2$.  So, we can find the approximate probability
+of having more than 106 bugs:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> 1 - pnorm(106,20*5.2,sqrt(20*5.2))
+[1] 0.4222596
+\end{Verbatim}
+
+\section{Example:  Coin Tosses}
+\label{correctcontin}
+
+Binomially distributed random variables, though discrete, also are
+approximately normally distributed.  Here's why:
+
+Say T has a binomial distribution with n trials.  Then we  
+can write T as a sum of indicator random variables (Section
+\ref{indicator}):
+
+\begin{equation}
+T = T_1+...+T_n
+\end{equation}
+
+where $T_i$ is 1 for a success and 0 for a failure on the i$^{th}$
+trial.  Since we have a sum of independent, identically distributed
+terms, the CLT applies.  Thus we use the CLT if we have binomial
+distributions with large n.
+
+For example, let's find the approximate probability of getting more than
+12 heads in 20 tosses of a coin.  X, the number of heads, has a binomial
+distribution with n = 20 and p = 0.5  Its mean and variance are then
+np = 10 and np(1-p) = 5.  So, let $Z = (X-10)/\sqrt{5}$, and write
+
+\begin{equation}
+\label{gt12}
+P(X > 12) = P(Z > \frac{12-10}{\sqrt{5}}) 
+\approx 1 - \Phi(0.894) = 0.186
+\end{equation}
+
+Or:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> 1 - pnorm(12,10,sqrt(5))
+[1] 0.1855467
+\end{Verbatim}
+
+The exact answer is 0.132, not too close.  Why such a big error?
+The main reason is n here is rather small.  But actually, we can still
+improve the approximation quite a bit, as follows.
+
+Remember, the reason we did the above normal calculation was that X is
+approximately normal, from the CLT.  This is an approximation of the
+distribution of a discrete random variable by a continuous one, which
+introduces additional error.
+
+We can get better accuracy by using the {\bf correction of continuity},
+which can be motivated as follows.  As an alternative to (\ref{gt12}),
+we might write
+
+\begin{equation}
+P(X > 12) = P( X \geq 13) = P(Z > \frac{13-10}{\sqrt{5}}) 
+\approx 1 - \Phi(1.342) = 0.090
+\end{equation}
+
+That value of 0.090 is considerably smaller than the 0.186 we got from
+(\ref{gt12}).  We could ``split the difference'' this way:
+
+\begin{equation}
+P(X > 12) = P( X \geq 12.5) = P(Z > \frac{12.5-10}{\sqrt{5}}) 
+\approx 1 - \Phi(1.118) = 0.132
+\end{equation}
+
+(Think of the number 13 ``owning'' the region between 12.5 and 13.5, 14
+owning the part between 13.5 and 14.5 and so on.) Since the exact answer
+to seven decimal places is 0.131588, the strategy has improved accuracy
+substantially.  
+
+The term {\it correction for continuity} alludes to the fact that we
+are approximately a discrete distribution by a continuous one.
+
+\section{Example:  Normal Approximation to Gamma Family}
+
+Recall from above that the gamma distribution, or at least the Erlang,
+arises as a sum of independent random variables.  Thus the Central Limit
+Theorem implies that the gamma distribution should be approximately
+normal for large (integer) values of r.  We see in Figure \ref{gammas}
+that even with r = 10 it is rather close to normal.\footnote{It should
+be mentioned that technically, the CLT, which concerns convergence of
+cdfs, does not imply convergence of densities.  However, under mild
+mathematical conditions, convergence of densities occurs too.}
+
+\section{Example:  Museum Demonstration}
+
+Many science museums have the following visual demonstration of the CLT.
+
+There are many balls in a chute, with a triangular array of r rows of pins
+beneath the chute.  Each ball falls through the rows of pins, bouncing
+left and right with probability 0.5 each, eventually being collected
+into one of r bins, numbered 0 to r.  A ball will end up in bin i if it
+bounces rightward in i of the r rows of pins, i = 0,1,...,r.  Key point:
+
+\begin{quote}
+Let X denote the bin number at which a ball ends up.  X is the number of
+rightward bounces (``successes'') in r rows (``trials'').  Therefore X
+has a binomial distribution with n = r and p = 0.5
+\end{quote}
+
+Each bin is wide enough for only one ball, so the balls in a bin will
+stack up.  And since there are many balls, the height of the stack in
+bin i will be approximately proportional to P(X = i).  And since the
+latter will be approximately given by the CLT, the stacks of balls will
+roughly look like the famous bell-shaped curve!
+
+There are many online simulations of this museum demonstration, such as
+\url{http://www.mathsisfun.com/data/quincunx.html}.  By collecting the
+balls in bins, the apparatus basically simulates a histogram for $X$,
+which will then be approximately bell-shaped.
+
+\section{Importance in Modeling}
+\label{normalimp}
+
+Needless to say, there are no random variables in the real world that
+are exactly normally distributed.  In addition to our comments at the
+beginning of this chapter that no real-world random variable has a
+continuous distribution, there are no practical applications in which a
+random variable is not bounded on both ends.  This contrasts with normal
+distributions, which extend from $-\infty$ to $\infty$.
+
+Yet, many things in nature do have approximate normal distributions, so
+normal distributions play a key role in statistics.  Most of the
+classical statistical procedures assume that one has sampled from a
+population having an approximate distribution.  In addition, it will be
+seen later than the CLT tells us in many of these cases that the
+quantities used for statistical estimation are approximately normal,
+even if the data they are calculated from are not.
+
+Recall from above that the gamma distribution, or at least the Erlang,
+arises as a sum of independent random variables.  Thus the Central Limit
+Theorem implies that the gamma distribution should be approximately
+normal for large (integer) values of r.  We see in Figure \ref{gammas}
+that even with r = 10 it is rather close to normal.
+
+\section{The Chi-Squared Family of Distributions}
+\label{chisqfam}
+
+\subsection{Density and Properties}
+
+Let $Z_1, Z_2,..., Z_k$ be independent N(0,1) random variables.  Then
+the distribution of 
+
+\begin{equation}
+\label{sumz2}
+Y = Z_1^2+...+Z_k^2
+\end{equation}
+
+is called {\bf chi-squared with k degrees of freedom}.  We write such a
+distribution as $\chi_k^2$.  Chi-squared is a one-parameter family of
+distributions, and arises quite frequently in statistical applications,
+as will be seen in future chapters.
+
+We can derive the mean of a chi-squared distribution as follows.  First,
+
+\begin{equation}
+EY = E(Z_1^2+...+Z_k^2) = k E(Z_1^2)
+\end{equation}
+
+Well, $E(Z_1^2)$ sounds somewhat like variance, and we do know that
+$Var(Z_1) = 1$.  Let's use that fact:
+
+\begin{equation}
+E(Z_1^2) = Var(Z_1) +  [E(Z_1)]^2 = Var(Z_1) = 1
+\end{equation}
+
+Then EY in (\ref{sumz2}) is k.  One can also show that Var(Y) = 2k.
+
+It turns out that chi-squared is a special case of the gamma family in
+Section \ref{gammafam} below, with r = k/2 and $\lambda = 0.5$.
+
+The R functions {\bf dchisq()}, {\bf pchisq()}, {\bf qchisq()} and {\bf
+rchisq()} give us the density, cdf, quantile function and random number
+generator for the chi-squared family.  The second argument in each case
+is the number of degrees of freedom.  The first argument is the argument
+to the corresponding math function in all cases but {\bf rchisq()}, in
+which it is the number of random variates to be generated.
+
+For instance, to get the value of $f_X(5.2)$ for a chi-squared random
+variable having 3 degrees of freedom, we make the following call:
+
+\begin{lstlisting}
+> dchisq(5.2,3)
+[1] 0.06756878
+\end{lstlisting}
+
+\subsection{Example:  Error in Pin Placement}
+
+Consider a machine that places a pin in the middle of a flat,
+disk-shaped object. The placement is subject to error. Let $X$ and $Y$ be
+the placement errors in the horizontal and vertical directions,
+respectively, and let $W$ denote the distance from the true center to the
+pin placement. Suppose $X$ and $Y$ are independent and have normal
+distributions with mean 0 and variance 0.04. Let's find $P(W > 0.6)$. 
+
+Since a distance is the square root of a sum of squares, this sounds
+like the chi-squared distribution might be relevant.  So, let's first
+convert the problem to one involving squared distance:
+
+\begin{equation}
+P(W > 0.6) = P(W^2 > 0.36)
+\end{equation}
+
+But $W^2 = X^2 + Y^2$, so
+
+\begin{equation}
+P(W > 0.6) = P(X^2 + Y^2 > 0.36)
+\end{equation}
+
+This is not quite chi-squared, as that distribution involves the sum of
+squares of independent N(0,1) random variables.  But due to the normal
+family's closure under affine transformations (page \pageref{affine}),
+we know that X/0.2 and Y/0.2 do have N(0,1) distributions.  So write
+
+\begin{equation}
+P(W > 0.6) = P[(X/0.2)^2 + (Y/0.2)^2 > 0.36/0.2^2]
+\end{equation}
+
+Now evaluate the right-hand side:
+
+\begin{lstlisting}
+> 1 - pchisq(0.36/0.04,2)
+[1] 0.01110900
+\end{lstlisting}
+
+\subsection{Example:  Generating Normal Random Numbers}
+
+How do normal random number generators such as {\bf rnorm()} work?
+While in principle Section \ref{genrannumgen} could be used, the lack of
+a closed-form expression for $\Phi^{-1()}$ makes that approach
+infeasible.  Instead, we can exploit the relation between the normal
+family and exponential distribution, as follows.
+
+Let $Z_1$ and $Z_2$ be two independent N(0,1) random variables, and define
+$W = Z_1^2 + Z_2^2$.  By definition, $W$ has a chi-squared distribution with
+2 degrees of freedom, and from Section \ref{chisqfam}, we know that $W$
+has a gamma distribution with $k = 1$ and $\lambda = 0.5$.
+
+In turn, we know from Section \ref{gammafam} that that distribution is
+actually just an exponential distribution with the same value of
+$\lambda$.  This is quite fortuitous, since Section \ref{genrannumgen}
+{\it can} be used in this case.
+
+Specifically, $f_W(t) = 0.5 e^{-0.5t}$, so $F_W(t) = 1 - e^{-0.5t}$,
+Thus
+
+\begin{equation}
+F_W^{-1}(s) = -2 \ln(1-s)
+\end{equation}
+
+And there's more.  Think of plotting the pair $(Z_1,Z_2)$ in the X-Y
+plane, and define
+
+\begin{equation}
+\theta = \tan^{-1}(\frac{Y}{X})
+\end{equation}
+
+One can show that $\theta$ has a uniform distribution on
+$(0,2\pi)$.  Also, 
+
+\begin{equation}
+X = W\cos(\theta), ~~~ Y = W\sin(\theta)
+\end{equation}
+
+Putting all this together, we can generate a pair of independent N(0,1)
+random variates via the code
+
+\begin{lstlisting}
+function genn01() {
+   theta <- runif(1,0,pi)
+   w <- -log(1 - runif(1))
+   c(w*cos(theta),w*sin(theta))
+}
+\end{lstlisting}
+
+Note by the way that we ``get two for the price of one.''  If we need,
+say, 1000 random normal variates, we call the above function 500 times.
+If we need just variate, we use the first in the returned pair, and save
+the second in case we need it later in another call.
+
+\subsection{Importance in Modeling}
+
+This distribution family does not come up directly in application nearly
+so often as, say, the binomial or normal distribution family.
+
+But the chi-squared family is used quite widely in statistical
+applications.  As will be seen in our chapters on statistics, many
+statistical methods involve a sum of squared normal random
+variables.\footnote{The motivation for the term {\it degrees of freedom}
+will be explained in those chapters too.}
+
+\subsection{Relation to Gamma Family}
+
+One can show that the chi-square distribution with d degrees of freedom
+is a gamma distribution, with r = d/2 and $\lambda = 0.5$.
+
+\section{The Multivariate Normal Family}
+
+(Here we borrow some material from Chapter \ref{mul}.)
+
+The generalization of the normal family is the multivariate normal.
+Instead of being parameterized by a scalar mean and a scalar variance,
+the multivariate normal family has as its parameters a vector mean and
+a covariance matrix.
+
+Let's look at the bivariate case first.  The joint distribution of
+$X_1$ and $X_2$ is said to be {\bf bivariate normal} if their density is
+
+\begin{equation}
+f_{X,Y}(s,t) = \frac{1}{2\pi \sigma_1 \sigma_2 \sqrt{1-\rho^2}}
+e^
+{-\frac{1}{2(1-\rho^2)} 
+\left [
+\frac{(s-\mu_1)^2}{\sigma_1^2} + \frac{(t-\mu_2)^2}{\sigma_2^2} 
+-\frac
+{2\rho (s-\mu_1)(t-\mu2)}
+{\sigma_1 \sigma_2}
+\right ]
+}, ~ -\infty < s,t < \infty
+\end{equation}
+
+{\bf This looks horrible, and it is.  But don't worry, as we won't work
+with this directly.  It's important for conceptual reasons, as follows.}
+
+First, note the parameters here:  $\mu_1$, $\mu_2$, $\sigma_1$ and
+$\sigma_2$ are the means and standard deviations of X and Y,
+while $\rho$ is the correlation between X and Y.  So, we have a
+five-parameter family of distributions.  The graph of the bivariate
+normal density looks like a 3-dimensional bell, as seen on the cover of
+this book.
+
+The multivariate normal family of distributions is parameterized by one
+vector-valued quantity, the mean $\mu$, and one matrix-valued quantity,
+the covariance matrix $\Sigma$.  Specifically, suppose the random vector
+$X = (X_1,...,X_k)'$ has a k-variate normal distribution.
+
+The density has this form:
+
+\begin{equation}
+f_X(t) = c e^{-0.5 (t-\mu)'\Sigma^{-1}(t-\mu)}
+\end{equation}
+
+Here c is a constant, needed to make the density integrate to 1.0. 
+
+There is a Multivariate Central Limit Theorem, that says that sums of
+random vectors have approximately multivariate normal distributions.
+
+In R the density, cdf and quantiles of the multivariate normal
+distribution are given by the functions {\bf dmvnorm()}, {\bf pmvnorm()} 
+and {\bf qmvnorm()} in the library {\bf mvtnorm}.  You can simulate a
+multivariate normal distribution by using {\bf mvrnorm()} in the library
+{\bf MASS}.
+
+\section{Optional Topic:  Precise Statement of the CLT}
+\label{formalclt}
+
+The statement of Theorem \ref{impreciseclt} is not mathematically precise.
+We will fix it here, not just for mathematical niceness, but also
+because it leads to something called the {\it delta method}, a very
+practical tool in statistics.
+
+\subsection{Convergence in Distribution, and the Precisely-Stated CLT}
+
+\begin{definition}
+A sequence of random variables $L_1, L_2, L_3,...$ {\bf converges in
+distribution} to a random variable $M$ if
+
+\begin{equation}
+\lim_{n \rightarrow \infty} P(L_n \leq t) = P(M \leq t), \textrm{ for
+all t}
+\end{equation}
+\end{definition}
+
+Note by the way, that these random variables need not be defined on the
+same probability space.
+
+The formal statement of the CLT is:
+
+\begin{theorem}
+Suppose $X_1, X_2, ...$ are independent random variables, all having the
+same distribution which has mean m and variance $v^2$.  Then
+
+\begin{equation}
+\label{cltquant}
+Z = 
+\frac
+{X_1+...+X_n -n m}
+{v \sqrt{n}}
+\end{equation}
+
+converges in distribution to a N(0,1) random variable.  
+
+\end{theorem}
+
+\startproblemset
+
+\oneproblem
+In the network intrusion example in Section \ref{netintrude}, suppose 
+X is not normally distributed, but instead has a uniform distribution on
+(450,550).  Find $P(X \geq 535)$ in this case.
+
+\oneproblem
+``All that glitters is not gold,'' and not every bell-shaped density is
+normal. The family of Cauchy distributions, having density
+
+\begin{equation}
+f_X(t) = \frac{1}{\pi c}
+\frac{1}{1 + (\frac{t-b}{c})^2}, ~ \infty < t < \infty
+\end{equation}
+
+is bell-shaped but definitely not normal.  
+
+Here the parameters b and c correspond to mean and standard deviation in
+the normal case, but actually neither the mean nor standard deviation
+exist for Cauchy distributions. The mean's failure to exist is due to
+technical problems involving the theoretical definition of integration.
+In the case of variance, it does not exist because there is no mean, but
+even more significantly, $E[(X-b)^2] = \infty$.  
+
+However, a Cauchy distribution does have a median, b, so we'll use that
+instead of a mean. Also, instead of a standard deviation, we'll use as
+our measure of dispersion the interquartile range, defined (for any
+distribution) to be the difference between the 75th and 25th
+percentiles.
+
+We will be investigating the Cauchy distribution that has b = 0 and c = 1.
+
+\begin{itemize}
+
+\item [(a)] Find the interquartile range of this Cauchy distribution. 
+
+\item [(b)] Find the normal distribution that has the same median and interquartile range as this Cauchy distribution. 
+
+\item [(c)] Use R to plot the densities of the two distributions on the same
+graph, so that we can see that they are both bell-shaped, but different. 
+
+\end{itemize}
+
+\oneproblem
+Suppose X has a binomial distribution with parameters n and
+p.  Then X is approximately normally distributed with mean np and
+variance np(1-p).  For each of the following, answer either A or E, for
+``approximately'' or ``exact,'' respectively:
+
+\begin{itemize}
+
+\item [(a)] the distribution of X is normal
+
+\item [(b)] E(X) is np
+
+\item [(c)] Var(X) is np(1-p)
+
+\end{itemize}
+
+\oneproblem
+Find the value of $E(X^4)$ if X has an N(0,1) distribution.  (Give your
+answer as a number, not an integral.)
+

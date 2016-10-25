@@ -1,0 +1,850 @@
+\chapter{Introduction to Discrete Markov Chains}  
+\label{dismarkov}
+
+(From this point onward, we will be making heavy use of linear algebra.
+The reader may find it helpful to review Appendix
+\ref{chap:matrixreview}.)
+
+Here we introduce Markov chains, a topic covered in much more detail in
+Chapter \ref{mar}.  
+
+The basic idea is that we have random variables $X_1, X_2, ...$, with
+the index representing time.  Each one can take on any value in a given
+set, called the {\bf state space}; $X_n$ is then the {\bf state} of the
+system at time n.  The state space is assumed either finite or {\bf countably
+infinite}.\footnote{The latter is a mathematical term meaning, in
+essence, that it is possible to denote the space using integer
+subscripts.  It can be shown that the set of all real numbers is not 
+countably infinite, though perhaps surprisingly the set of all rational
+numbers {\it is} countably infinite.} 
+
+We sometimes also consider an initial state, $X_0$, which might be
+modeled as either fixed or random.  However, this seldom comes into
+play.
+
+The key assumption is the {\bf Markov property}, which in rough terms
+can be described as:
+
+\begin{quote}
+The probabilities of future states, given the present state and the past
+state, depends only on the present state; the past is irrelevant.
+\end{quote}
+
+In formal terms:
+
+\begin{equation}
+\label{containshidden}
+P(X_{t+1}=s_{t+1}|X_{t}=s_{t},X_{t-1}=s_{t-1},\ldots ,X_{0}=s_{0})=P(X_{t+1}=s_{t+1}|X_{t}=s_{t})
+\end{equation}
+
+Note that in (\ref{containshidden}), the two sides of the equation are
+equal but their common value may depend on t.  We assume that this is
+not the case; nondependence on t is known as {\bf
+stationarity}.\footnote{Not to be confused with the notion of a
+stationary distribution, coming below.} For instance, the probability of
+going from state 2 to state 5 at time 29 is assumed to be the same as
+the corresponding probability at time 333.
+
+\section{Matrix Formulation}
+\label{transmat}
+
+We define $p_{ij}$ to be the probability of going from state i to state
+j in one time step; note that this is a {\it conditional} probability,
+i.e. $P(X_{n+1} = j ~|~ X_n = i)$.  These quantities form a matrix
+P,\footnote{Unfortunately, we have some overloading of symbols here.
+Both in this book and in the field in general, we usually use the letter
+$P$ to denote this matrix, yet we continue to denote probabilities by P(
+).  However, it will be clear from context which we mean.  The same is
+true for our transition probabilities $p_{ij}$, which use a subscripted
+letter $p$, which is also the case for probably mass functions.} whose
+row i, column j element is $p_{ij}$, which is called the {\bf transition
+matrix}.  Each row of P must sum to 1 (do you see why?).
+
+For example, consider a three-state Markov chain with transition matrix
+
+\begin{equation}
+P =
+\left (
+\begin{array}{rrr}
+\frac{1}{2} & 0 & \frac{1}{2} \\
+\frac{1}{4} & \frac{1}{2} & \frac{1}{4} \\
+1 & 0 & 0 \\
+\end{array}
+\right )
+\end{equation}
+
+This means that if we are now at state 1, the probabilities of going to
+states 1, 2 and 3 are 1/2, 0 and 1/2, respectively.  Note that each
+row's probabilities must sum to 1---after all, from any particular
+state, we must go {\it somewhere}.
+
+Actually, the m$^{th}$ power, $P^m$, of the transition matrix gives the
+probabilities for m-step transitions.  In other words, the (i,j) element
+of $P^m$ is $P(X_{t+m} = j | X_t = i)$.  This is clear for the case m =
+2 (after which one can use mathematical induction), as follows.  
+
+As usual, ``break big events down into small events.''  How can it
+happen that $X_{t+2} = j$?  Well, break things down according to where
+we might go first after leaving i.  We might go from i to 1, say, then
+from 1 to j.  So,
+
+\begin{equation}
+P(X_{t+2} = j | X_t = i) = \sum_{k} p_{ik} ~ p_{kj}
+\end{equation}
+
+In view of the rule for multiplying matrices, the expression on the
+right-hand side is simply the (i,j) element of $P^2$!
+
+\section{Example:  Die Game}
+
+As our first example of Markov chains, consider the following game.  One
+repeatedly rolls a die, keeping a running total.  Each time the total
+exceeds 10, we receive one dollar, and continue playing, resuming where
+we left off, mod 10.  Say for instance we have a total of 8, then roll a
+5.  We receive a dollar, and now our total is 3.
+
+It will simplify things if we assume that the player starts with one
+free point.
+
+This process clearly satisfies the Markov property, with our state being
+our current total.  If our current total is 6, for instance, then the
+probability that we next have a total of 9 is 1/6, {\it regardless of
+what happened our previous rolls}.  We have $p_{25}$, $p_{72}$ and so on
+all equal to 1/6, while for instance $p_{29} = 0$.  Here's the code to
+find the transition matrix P:
+
+\begin{lstlisting}[numbers=left]
+# 10 states, so 10x10 matrix
+# since most elements will be 0s, set them all to 0 first, 
+# then replace those that should be nonzero
+p <- matrix(rep(0,100),nrow=10)  
+onesixth <- 1/6
+for (i in 1:10) {  # look at each row
+   # since we are rolling a die, there are only 6 possible states we 
+   # can go to from i, so check these
+   for (j in 1:6) {  
+      k <- i + j  # new total, but did we win?
+      if (k > 10) k <- k - 10 
+      p[i,k] <- onesixth
+   }
+}
+\end{lstlisting}
+
+Note that since we knew that many entries in the matrix would be zero, it
+was easier just to make them all 0 first, and then fill in the nonzero
+ones.
+
+\section{Long-Run State Probabilities}
+
+Let $N_{it}$ denote the number of times we have visited state i during
+times 1,...,t.  For instance, in the die game, $N_{8,22}$ would be the
+number of rolls among the first 22 that resulted in our having a total
+of 8.
+
+In typical applications we have that 
+
+\begin{equation} 
+\label{limntcpy} 
+\pi_{i}=\lim_{t\rightarrow \infty}\frac{N_{it}}{t} 
+\end{equation}
+                 
+exists for each state i.  Under a couple more
+conditions,\footnote{Basically, we need the chain to not be {\bf
+periodic}.  Consider a random walk, for instance:  We start at position
+0 on the number line, at time 0.  The states are the integers.  (So,
+this chain has an infinite state space.) At each time, we flip a coin to
+determine whether to move right (heads) or left (tails) 1 unit.  A
+little thought shows that if we start at 0, the only times we can return
+to 0 are even-number times, i.e. $P(X_n = 0 ~| X_0 = 0)$ for all odd
+numbers n.  This is a periodic chain.  By the way, (\ref{limntcpy})
+turns out to be 0 for this chain.} we have the stronger result,
+
+\begin{equation}
+\label{limprob}
+\lim_{t\rightarrow \infty }P(X_{t}=i)=\pi_{i}
+\end{equation}
+
+These quantities $\pi_i$ are typically the focus of analyses of Markov
+chains.
+
+We will use the symbol $\pi$ to name the column vector of all the
+$\pi_i$:
+
+\begin{equation}
+\pi = (\pi_1, \pi_2, ...)'
+\end{equation}
+
+where $'$ means matrix transpose.
+
+\subsection{Stationary Distribution}
+
+The $\pi_i$ are called {\bf stationary probabilities}, because if the
+initial state $X_0$ is a random variable with that distribution, then
+all $X_i$ will have that distribution.  Here's why:
+
+Using (\ref{limprob}), we have
+
+\begin{eqnarray}
+\label{stationeqns}
+\pi_i 
+&=& \lim_{n \rightarrow \infty} P(X_{n} = i)  \\
+&=& \lim_{n \rightarrow \infty} \sum_k P(X_{n-1} = k) ~ p_{ki} \\ 
+&=& \sum_k \pi_k ~ p_{ki} \label{lastpieqn} 
+\end{eqnarray}
+
+So, if $P(X_0 = i) = \pi_i$, then
+
+\begin{eqnarray}
+P(X_1 = i) 
+&=& \sum_k P(X_{0} = k) ~ p_{ki} \\
+&=& \sum_k \pi_k ~ p_{ki} \\
+&=& \pi_i \label{piderive}
+\end{eqnarray}
+
+this last using (\ref{lastpieqn}).  So, if $X_0$ has distribution $\pi$,
+then the same will be true for $X_1$, and contiuing in this manner we
+see that $X_2, X_3,...$ will all have that distribution, thus
+demostrating the claimed stationary property for $\pi$.  (This will be
+illustrated more concretely in Section \ref{backstation}.)
+
+Of course, (\ref{stationeqns}) holds for all states i.  So
+in matrix terms, (\ref{stationeqns}) says
+
+\begin{equation}
+\label{pipip}
+\pi' =  \pi' P
+\end{equation}
+
+\subsection{Calculation of $\pi$} 
+
+Equation (\ref{pipip}) then shows us how to find the $\pi_i$, at least
+in the case of finite state spaces, the subject of this section here, as
+follows.
+
+First, rewrite (\ref{pipip})
+
+\begin{equation}
+\label{iminuspi} 
+(I-P') \pi = 0
+\end{equation}
+
+Here $I$ is the $n \times n$ identity matrix (for a chain with $n$
+states), and again $'$ denotes matrix transpose.  
+
+This equation has infinitely many solutions; if $\pi$ is a solution,
+then so for example is $8 \pi$.  Moreover, the equation shows that the
+matrix there, $I - P'$, cannot have an inverse; if it did, we could
+multiply both sides by the inverse, and find that the unique solution is
+$\pi = 0$, which can't be right.  This says in turn that the rows of $I
+- P'$ are not linearly independent.  
+
+The latter fact is quite important, for the following reason.  Recall
+the close connection of matrix inverse and systems of linear equations.
+(\ref{iminuspi}), a matrix equation, represents a system of n linear
+equations in n unknowns, the latter being $\pi_1, \pi_2,.., \pi_n$.
+So, the lack of linear independence of the rows of $I-P'$ means, 
+in plain English, that at least one of those equations is redundant.
+
+But we need n independent equations, and fortunately one is available:
+
+\begin{equation}
+\label{sum1}
+\sum_{i}\pi_{i}=1
+\end{equation}
+
+Note that (\ref{sum1}) can be written as
+
+\begin{equation}
+\label{oprime1}
+O' \pi = 1
+\end{equation}
+
+where $O$ is a vector of $n$ 1s.   Excellent, let's use it!
+
+So, again, thinking of (\ref{iminuspi}) as a system of linear equations,
+let's replace the last equation by (\ref{oprime1}).  Switching back to
+the matrix view, that means that we replace the last row in the matrix
+$I - P'$ in (\ref{iminuspi}) by $O'$, and correspondingly replace the
+last element of the right-side vector by 1.  Now we have a nonzero
+vector on the right side, and a full-rank (i.e.\ invertible) matrix on
+the left side.  This is the basis for the following code, which we will
+use for finding $\pi$.
+
+\begin{lstlisting}[numbers=left]
+findpi1 <- function(p) {
+   n <- nrow(p)
+   # find I-P'
+   imp <- diag(n) - t(p)  
+   # replace the last row of I-P' as discussed
+   imp[n,] <- rep(1,n)
+   # replace the corresponding element of the 
+   # right side by (the scalar) 1
+   rhs <- c(rep(0,n-1),1)
+   # now use R's built-in solve()
+   solve(imp,rhs)
+}
+\end{lstlisting}
+
+\subsubsection{Example:  $\pi$ in Die Game}
+
+Consider the die game example above.  Guess what!  Applying the above
+code, all the $\pi_i$ turn out to be 1/10.  In retrospect, this should
+be obvious.  If we were to draw the states 1 through 10 as a ring, with
+1 following 10, it should be clear that all the states are completely
+symmetric.
+
+\subsubsection{Another Way to Find $\pi$}
+
+Here is another way to compute $\pi$.  It is not commonly used, but {\bf
+it will also help illustrate some of the concepts.}  
+
+Suppose (\ref{limprob}) holds.  Recall that $P^m$ is the m-step
+transition matrix, so that for instance row 1 of that matrix is the set
+of probabilities of going from state 1 to the various states in m steps.
+The same will be true for row 2 and so on.  Putting that together with
+(\ref{limprob}), we have that 
+
+\begin{equation}
+\lim_{n \rightarrow \infty} P^n = \Pi
+\end{equation}
+
+where the $n \times n$ matrix $\Pi$ has each of its rows equal to
+$\pi'$. 
+
+We can use this to find $\pi$.  We take P to a large power m, and then
+each of the rows will approximate $\pi$.  In fact, we can get an even
+better appoximation by averaging the rows.
+
+Moreover, we can save a lot of computation by noting the following.  Say
+we want the 16$^{th}$ power of P.  We could set up a loop with 15
+iterations, building up a product.  But actually we can do it with just
+4 iterations.  We first square P, yielding $P^2$.  But then we square
+{\it that}, yielding $P^4$.  Square twice more, yielding $P^8$ and
+finally $P^{16}$.  This is especially fast on a GPU (graphics processing
+unit).
+
+\begin{lstlisting}
+# finds stationary probabilities of a Markov chain using matrix powers
+
+altfindpi <- function(p,k) {
+   niters <- ceiling(log2(k))
+   prd <- p
+   for (i in 1:niters) {
+      prd <- prd %*% prd
+   }
+   colMeans(prd) 
+}
+\end{lstlisting}
+
+This approach has the advantage of being easy to parallelize, unlike
+matrix inversion.
+
+\section{Example:  3-Heads-in-a-Row Game}
+\label{threeinrow}
+
+How about the following game?  We keep tossing a coin until we get three
+consecutive heads.  What is the expected value of the number of tosses
+we need?
+
+We can model this as a Markov chain with states 0, 1, 2 and 3, where
+state i means that we have accumulated i consecutive heads so far. 
+If we simply stop playing the game when we reach state 3, that state
+would be known as an {\bf absorbing state}, one that we never leave.
+
+We could proceed on this basis, but to keep things elementary, let's
+just model the game as being played repeatedly, as in the die game
+above.  You'll see that that will still allow us to answer the original
+question.  Note that now that we are taking that approach, it will
+suffice to have just three states, 0, 1 and 2; there is no state 3,
+because as soon as we win, we immediately start a new game, in state 0.
+
+\subsection{Markov Analysis}
+\label{markovanalysis}
+
+Clearly we have transition probabilities such as $p_{01}$, $p_{12}$,
+$p_{10}$ and so on all equal to 1/2.  Note from state 2 we can only go
+to state 0, so $p_{20} = 1$.
+
+Here's the code below.  Of course, since R subscripts start at 1 instead
+of 0, we must recode our states as 1, 2 an 3.
+
+\label{codesnippets}
+\begin{Verbatim}[fontsize=\relsize{-2}]
+p <- matrix(rep(0,9),nrow=3)
+p[1,1] <- 0.5
+p[1,2] <- 0.5
+p[2,3] <- 0.5
+p[2,1] <- 0.5
+p[3,1] <- 1
+findpi1(p)
+\end{Verbatim}
+
+It turns out that
+
+\begin{equation}
+\label{pi57}
+\pi = (0.5714286, 0.2857143, 0.1428571)
+\end{equation}
+
+So, in the long run, about 57.1\% of our tosses will be done while in state
+0, 28.6\% while in state 1, and 14.3\% in state 2.
+
+Now, look at that latter figure.  Of the tosses we do while in state 2,
+half will be heads, so half will be wins.  In other words, about 0.071
+of our tosses will be wins.  And THAT figure answers our original
+question, through the following reasoning:
+
+Think of, say, 10000 tosses.  There will be about 710 wins sprinkled
+among those 10000 tosses.  Thus the average number of tosses between wins
+will be about 10000/710 = 14.1.  In other words, the expected time until
+we get three consecutive heads is about 14.1 tosses.
+
+\subsection{Back to the word ``Stationary''}
+\label{backstation}
+
+Let's look at the term {\it stationary distribution} in the context of
+this game.
+
+At time 0, we haven't done any coin flips, so $X_0 = 0$.  But consider a
+modified version of the game, in which at time 0 you are given
+``credit'' or a ``head start.  For instance, you might be allowed to
+start in state 1, meaning that you already have one consecutive head,
+even though you actually haven't done any flips.
+
+Now, suppose your head start is random, so that you start in state 0, 1
+or 2 with certain probabilities.  And suppose those probabilities are
+given by $\pi$!  In other words, you start in state 0, 1 or 2, with
+probabilities 0.57, 0.29 and 0.14, as in (\ref{pi57}). What, then, will
+be the distribution of $X_1$?
+
+\begin{eqnarray}
+p_{X_1}(i) &=& P(X_1 = i) \\
+&=& \sum_{j=0}^2 P(X_0 = j) ~ P(X_1 = i ~| X_0 = j) \\
+&=& \sum_{j=0}^2 \pi_j ~ p(j,i) \label{psubx1}
+\end{eqnarray}
+
+This is exactly what we saw in (\ref{piderive}) and the equations
+leading up to it.  So we know that (\ref{psubx1}) will work out to
+$\pi_i$.  In other words, $P(X_1 = 0) = 0.57$ and so on.
+(Work it out numerically if you are in doubt.)  So, we see that
+
+\begin{quote}
+If $X_0$ has distribution $\pi$, then the same will be true for $X_1$.
+We say that the distribution of the chain is {\it stationary}.
+\end{quote}
+
+\section{A Modified Notebook Analysis}
+\label{markovnotebook}
+
+Our previous notebook analysis (and most of our future ones, other than
+for Markov chains), relied on imagining performing many independent
+replications of the same experiment.  
+
+\subsection{A Markov-Chain Notebook}
+
+Consider Table \ref{alohanotebook}, for instance.  There our experiment
+was to watch the network during epochs 1 and 2.  So, on the first line
+of the notebook, we would watch the network during epochs 1 and 2 and
+record the result.  On the second line, we watch a new, independent
+replication of the network during epochs 1 and 2, and record the
+results.
+
+But instead of imagining a notebook recording infinitely many
+replications of the two epochs, we could imagine watching just {\it one}
+replication but over infinitely many epochs.  We'd watch the network
+during epoch 1, epoch 2, epoch 3 and so on.  Now one line of the
+notebook would record one epoch.  
+
+For general Markov chains, each line would record one time step.  We
+would have columns of the notebook labeled $n$ and $X_n$.  The reason
+this approach would be natural is (\ref{limntcpy}).  In that context,
+$\pi_i$ would be the long-run proportion of notebook lines in which $X_n
+= i$.
+
+\subsection{Example:  3-Heads-in-a-Row Game}
+
+For instance, consider the 3-heads-in-a-row game.  Then (\ref{pi57})
+says that about 57\% of the notebook lines would have a 0 in the $X_n$
+column, with about 29\% and 14\% of the lines showing 1 and 2,
+respectively.
+
+Moreover, suppose we also have a notebook column labeled {\it Win}, with
+an entry Yes in a certain line meaning, yes, that coin flip resulted in
+a win, with a No entry meaning no win.  Then the mean time until a win,
+which we found to be 14.1 above, would be described in notebook terms as
+the long-run average number of lines between Yes entries in the {\it
+Win} column.
+
+\section{Simulation of Markov Chains}
+
+Following up on Section \ref{markovnotebook}, recall that our previous
+simulations have basically put into code form our notebook concept.  Our
+simulations up until now have been based on the definition of
+probability, which we had way back in Section \ref{probdefs}.  Our
+simulation code modeled the notebook independent replications notion.
+We can do a similar thing now, based on the ideas in Section
+\ref{markovnotebook}.
+
+In a time series kind of situation such as Markov chains, since
+we are interested in long-run behavior in the sense of time, our
+simulation is based on (\ref{limprob}).  In other words, we simulate
+the evolution of $X_n$ as $n$ increases, and take long-run averages of
+whatever is of interest.
+
+Here is simulation code for the example in Section \ref{threeinrow},
+caculating the approximate value of the long-run time between wins
+(found to be about 14.1 by mathematical means above):
+
+\begin{lstlisting}
+# simulation of 3-in-a-row coin toss gaem
+
+threeinrow <- function(ntimesteps) {
+   consec <- 0  # number of consec Hs
+   nwins <- 0  # number of wins
+   wintimes <- 0  # total of times to win
+   startplay <- 0  # time step 0
+   for (i in 1:ntimesteps) {
+      if (toss() == 'H') {
+         consec <- consec + 1 
+         if (consec == 3) {
+            nwins <- nwins + 1
+            wintimes <- 
+               wintimes + i - startplay
+            consec <- 0
+            startplay <- i
+         }
+      } else consec <- 0
+   }
+   wintimes / nwins
+}
+
+toss <- function() 
+   if (runif(1) < 0.5) 'H' else 'T'
+\end{lstlisting}l
+
+\section{Example:  ALOHA}
+
+Consider our old friend, the ALOHA network model.  (You
+may wish to review the statement of the model in Section
+\ref{basicprobcomp} before continuing.)  The key point in that system is
+that it was ``memoryless,'' in that the probability of what happens at
+time k+1 depends only on the state of the system at time k.
+
+For instance, consider what might happen at time 6 if $X_5 = 2$.  Recall
+that the latter means that at the end of epoch 5, both of our two
+network nodes were active.  The possibilities for $X_6$ are then
+
+\begin{itemize}
+
+\item $X_6$ will be 2 again, with probability $p^2 + (1-p)^2$
+
+\item $X_6$ will be 1, with probability $2p(1-p)$
+
+\end{itemize}
+
+The central point here is that the past history of the system---i.e. the
+values of $X_1, X_2, X_3, \textrm{ and } X_4$---don't have any impact.
+We can state that precisely:
+
+\begin{quote}
+
+The quantity
+
+\begin{equation}
+\label{condp6}
+P(X_6 = j | X_1 = i_1, X_2 = i_2, X_3 = i_3, X_4 = i_4, X_5 = i)
+\end{equation}
+
+\noindent 
+does not depend on $i_m, m = 1,...,4$.  Thus we can write (\ref{condp6})
+simply as $P(X_6 = j | X_5 = i)$.  
+
+\end{quote}
+
+Furthermore, that probability is the same as $P(X_9 = j | X_8 = i)$ and
+in general $P(X_{k+1} = j | X_k = i)$.  So, we do have a Markov chain.
+
+Since this is a three-state chain, the $p_{ij}$ form a 3x3 matrix:
+
+\begin{equation}
+P = 
+\left (
+\begin{array}{ccc}
+(1-q)^2 + 2q(1-q)p & 
+   2q(1-q)(1-p) + 2q^2p(1-p) & 
+   q^2 [p^2+(1-p)^2] \\
+(1-q) p & 
+   2qp(1-p) + (1-q)(1-p) & 
+   q[p^2+(1-p)^2] \\
+0 & 
+   2p(1-p) & 
+   p^2+(1-p)^2
+\end{array}
+\right )
+\end{equation}
+
+For instance, the element in row 0, column 2, $p_{02}$, is
+$q^2[p^2+(1-p)^2]$, reflecting the fact that to go from state 0 to state
+2 would require that both inactive nodes become active (which has
+probability $q^2$, and then either both try to send or both refrain from
+sending (probability $p^2+(1-p)^2$.
+
+For the ALOHA example here, with p = 0.4 and q = 0.3, the solution is
+$\pi_0 = 0.47$, $\pi_1 = 0.43$ and $\pi_2 = 0.10$.
+
+So we know that in the long run, about 47\% of the epochs will have no
+active nodes, 43\% will have one, and 10\% will have two.  From this we
+see that the long-run average number of active nodes is
+
+\begin{equation}
+0 \cdot 0.47 + 1 \cdot 0.43 + 2 \cdot 0.10 = 0.63
+\end{equation}
+
+By the way, note that every row in a transition matrix must sum to 1.
+(The probability that we go from state i to {\it somewhere} is 1, after
+all, so we must have $\sum_j p_{ij} = 1$.)  That implies that we can
+save some work in writing R code; the last column must be 1 minus the
+others.  In our example above, we would write
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+transmat <- matrix(rep(0,9),nrow=3)
+p1 <- 1 - p
+q1 <- 1 - q
+transmat[1,1] <- q1^2 + 2 * q * q1 *p
+transmat[1,2] <- 2 * q * q1 * p1 + 2 * q^2 * p * p1
+transmat[2,1] <- q1 * p
+transmat[2,2] <- 2 * q * p * p1 + q1 * p1
+transmat[3,1] <- 0
+transmat[3,2] <- 2 * p * p1
+transmat[,3] <- 1 - p[,1] - p[,2]
+findpi1(transmat)
+\end{Verbatim}
+
+Note the vectorized addition and recycling (Section
+\ref{improvingsimcode}). 
+
+\section{Example:  Bus Ridership Problem}
+
+Consider the bus ridership problem in Section \ref{busridership}.  Make
+the same assumptions now, but add a new one:  There is a maximum
+capacity of 20 passengers on the bus.
+
+The random variables $L_i$, i = 1,2,3,... form a Markov chain.  Let's
+look at some of the transition probabilities:
+
+\begin{equation}
+p_{00} = 0.5 
+\end{equation}
+
+\begin{equation}
+p_{01} = 0.4 
+\end{equation}
+
+\begin{equation}
+p_{11} = (1-0.2) \cdot 0.5 + 0.2 \cdot 0.4
+\end{equation}
+
+\begin{equation}
+p_{20} = (0.2)^2 (0.5) = 0.02
+\end{equation}
+
+\begin{equation}
+p_{20,20} = (0.8)^{20} (0.5+0.4+0.1) + 
+\binom{20}{1}
+(0.2)^1 (0.8)^{20-1} (0.4 + 0.1) + 
+\binom{20}{2}
+(0.2)^2 (0.8)^{18} (0.1)
+\end{equation}
+
+(Note that for clarity, there is a comma in $p_{20,20}$, as $p_{2020}$
+would be confusing and in some other examples even ambiguous.  A comma
+is not necessary in $p_{11}$, since there must be two subscripts; the 11
+here can't be eleven.)
+
+After finding the $\pi$ vector as above, we can find quantities such as
+the long-run average number of passengers on the bus,
+
+\begin{equation}
+\label{avgonbus}
+\sum_{i=0}^{20} \pi_i i
+\end{equation}
+
+We can also compute the long-run average number of would-be passengers who
+fail to board the bus.  Denote by $A_i$ denote the number of passengers
+on the bus as it {\it arrives} at stop i. The key point is that since
+$A_i = L_{i-1}$, then (\ref{limntcpy}) and (\ref{limprob}) will give the
+same result, no matter whether we look at the $L_j$ chain or the $A_j$ chain.
+
+Now, armed with that knowledge, let $D_j$ denote the number of
+disappointed people at stop j.  Then
+
+\begin{equation}
+ED_j = 1 \cdot P(D_j = 1) + 2 \cdot P(D_j = 2).
+\end{equation}
+
+That latter probability, for instance, is
+
+\begin{eqnarray}
+P(D_j = 2) 
+&=& 
+P(A_j = 20 \textrm{ and } B_j = 2 \textrm{ and } G_j = 0) \\ 
+&=& P(A_j = 20) ~ P(B_j = 2) ~ P(G_j = 0) \\
+&=& P(A_j = 20) \cdot 0.1 \cdot 0.8^{20}
+\end{eqnarray}
+
+where as before $B_j$ is the number who wish to board at stop j, and
+$G_j$ is the number who get off the bus at that stop.  Using the same
+reasoning, one can find $P(D_j = 1)$. (A number of cases to consider,
+left as an exercise for the reader.)
+
+Taking the limits as $j \rightarrow \infty$, we have the long-run
+average number of disappointed customers on the left, and on the right,
+the terms $P(A_j = 19)$ and $P(A_j = 20)$ go to $\pi_{19}$ and
+$\pi_{20}$, which we have and thus can obtain the value regarding
+disappointed customers.
+
+Let's find the long-run average number of customers who alight from the
+bus.  This can be done by considering all the various cases, but
+(\ref{adamsdiscrete}) really shortens our work:  
+
+\begin{equation}
+\label{eunan}
+EG_n = \sum_{i=0}^{20} P(A_n = i) E(G_n | A_n = i)
+\end{equation}
+
+Given $A_n = i$, $G_n$ has a binomial distribution with i trials and
+success probability 0.2, so 
+
+\begin{equation}
+E(G_n | A_n = i) = i \cdot 0.2
+\end{equation}
+
+So, the right-hand side of \ref{eunan} converges to
+
+\begin{equation}
+\sum_{i=0}^{20} \pi_i i \cdot 0.2
+\end{equation}
+
+In other words, the long-run average number alighting is 0.2 times
+(\ref{avgonbus}).
+
+\section{Example: an Inventory Model}
+
+Consider the following simple inventory model.  A store
+has 1 or 2 customers for a certain item each day, with probabilities v
+and w (v+w = 1).  Each customer is allowed to buy only 1 item.
+
+When the stock on hand reaches 0 on a day, it is replenished to r
+items immediately after the store closes that day.
+
+If at the start of a day the stock is only 1 item and 2 customers wish
+to buy the item, only one customer will complete the purchase, and the
+other customer will leave emptyhanded.
+
+Let $X_n$ be the stock on hand at the end of day n ({\it after}
+replenishment, if any).  Then $X_1, X_2,...$ form a Markov chain, with
+state space 1,2,...,r.
+
+The transition probabilities are easy to find.  Take $p_{21}$, for
+instance.  If there is a stock of 2 items at the end of one day, what
+is the (conditional) probability that there is only 1 item at the end of
+the next day?  Well, for this to happen, there would have to be just 1
+customer coming in, not 2, and that has probability v.  So, $p_{21} =
+v$.  The same reasoning shows that $p_{2r} = w$.
+
+Let's write a function {\bf inventory(v,w,r)} that returns the
+$\pi$ vector for this Markov chain.  It will call {\bf findpi1()},
+similarly to the two code snippets on page \pageref{codesnippets}.
+For convenience, let's assume {\bf r} is at least 3.\footnote{If {\bf
+r} is 2, then the expression 3:2 in the code evaluates to the vector
+(3,2), which would not be what we want in this case.}
+
+\begin{lstlisting}[numbers=left]
+inventory <- function(v,w,r) {
+   tm <- matrix(rep(0,r^2),nrow=r)
+   for (i in 3:r) {
+      tm[i,i-1] <- v
+      tm[i,i-2] <- w
+   }
+   tm[2,1] <- v
+   tm[2,r] <- w
+   tm[1,r] <- 1
+   findpi1(tm)
+}
+\end{lstlisting}
+
+\section{Expected Hitting Times}
+
+Consider an $n$-state Markov chain that is {\it irreducible},
+meaning that it is possible to get from any state $i$ to any other state
+$j$ in some number of steps.  Define the random variable $T_{ij}$ to be
+the time needed to go from state $i$ to state $j$.  (Note that $T_{ii}$
+is NOT 0, though it can be 1 if $p_{ii} > 0$.)
+
+In many applications, we are interested in the mean time to reach a
+certain state, given that we start at some specified state.  In other
+words, we wish to calculate $ET_{ij}$.
+
+The material in Section \ref{iterexp} is useful here.  In
+(\ref{adamsdiscrete}), take $V = T_{ij}$ and take $U$ to be the first
+state we visit after leaving state $i$ (which could be $i$ again).  Then
+
+\begin{equation}
+\label{etij}
+E(T_{ij}) = \sum_{k} p_{ik} E(T_{ij} ~|~ U = k), ~~
+1 \leq i,j \leq n
+\end{equation}
+
+Consider what happens if $U = m \neq j$.  Then we will have already used
+up 1 time step, and {\it still} will need an average of $E_{Tkj}$ more
+steps to get to $j$.  In other words,
+
+\begin{equation}
+E(T_{ij} ~|~ U = k \neq j) = 1 + ET_{kj}
+\end{equation}
+
+Did you notice the Markov property being invoked?
+
+On the other hand, the case $U = j$ is simple:
+
+\begin{equation}
+E(T_{ij} ~|~ U = j) = 1 
+\end{equation}
+
+This then implies that
+
+\begin{equation}
+\label{etij1}
+E(T_{ij}) 
+= 1 + \sum_{k \neq j} p_{ik} E(T_{kj}), ~~
+1 \leq i,j \leq n
+\end{equation}
+
+We'll focus on the case $j = n$, i.e.\ look at how long it takes to get
+to state $n$.  (We could of course do the same analysis for any other
+destination state.)
+Let $\eta_{i}$ denote $E(T_{in})$, and define  $\eta =
+(\eta_1,\eta_2,...,\eta_{n-1})'$.  (Note that $\eta$ has only $n-1$
+components!)  So,
+
+\begin{equation}
+\label{etij2}
+\eta_{i}
+= 1 + \sum_{k < n} p_{ik} \eta_k, ~~
+1 \leq i,j \leq n
+\end{equation}
+
+Equation (\ref{etij2}) is a system of linear equations, which we can
+write in matrix form.  Then the code to solve the system is
+(remember, we have only an $(n-1) \times (n-1)$ system)
+
+\begin{lstlisting}                                                              
+findeta <- function(p) {                                                        
+   n <- nrow(p)                                                                 
+   q <- diag(n) - p                                                             
+   q <- q[1:(n-1),1:(n-1)]                                                      
+   ones <- rep(1,n-1)                                                           
+   solve(q,ones)                                                                
+}                                                                               
+\end{lstlisting}                        
+

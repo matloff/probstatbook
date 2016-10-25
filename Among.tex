@@ -1,0 +1,1677 @@
+\chapter{Relations \underline{Among} Variables}
+\label{chap:among} 
+
+{\it It is a very sad thing that nowadays there is so little useless
+information}---Oscar Wilde, famous 19th century writer
+
+Unlike the case of regression analysis, where the response/dependent
+variable plays a central role, we are now interested in symmetric
+relations among several variables.  Often our goal is {\bf dimension
+reduction}, meaning compressing our data into just a few important
+variables.
+
+Dimension reduction ties in to the Oscar Wilde quote above, which is a
+complaint that there is too {\it much} information of the use{\it ful}
+variety.  We are concerned here with reducing the complexity of that
+information to a more manageable, simple set of variables.
+
+Here we cover two of the most widely-used methods, {\bf principal
+components analysis} for continuous variables, and the {\bf log-linear
+model} for the discrete case.  We also introduce {\bf clustering}.
+
+\section{Principal Components Analysis (PCA)}
+\label{pca}
+
+Consider a random vector $X = (X_1,X_2)'$.  Suppose the two
+components of X are highly correlated with each other.  
+Then for some constants c and d,
+
+\begin{equation}
+\label{onedim}
+X_2 \approx c + d X_1
+\end{equation}
+
+Then in a sense there is really just one random variable here, as the
+second is nearly equal to some linear combination of the first.  The
+second provides us with almost no new information, once we have the
+first.
+
+In other words, even though the vector X roams in two-dimensional space,
+it usually sticks close to a one-dimensional object, namely the line
+(\ref{onedim}).  We saw a graph illustrating this in our chapter on
+multivariate distributions, page \pageref{rho2}.
+
+In general, consider a k-component random vector 
+
+\begin{equation}
+X = (X_1,...,X_k)'
+\end{equation}
+
+We again wish to investigate whether just a few, say w, of the $X_i$ tell
+almost the whole story, i.e. whether most $X_j$ can be expressed
+approximately as linear combinations of these few $X_i$.  In other
+words, even though X is k-dimensional, it tends to stick close to some
+w-dimensional subspace.
+
+Note that although (\ref{onedim}) is phrased in prediction terms, we are
+not (or more accurately, not necessarily) interested in prediction here.
+We have not designated one of the $X^{(i)}$ to be a response variable
+and the rest to be predictors.
+
+Once again, the Principle of Parsimony is key.  If we have, say, 20 or
+30 variables, it would be nice if we could reduce that to, for example,
+three or four.  This may be easier to understand and work with, albeit
+with the complication that our new variables would be linear
+combinations of the old ones.
+
+\subsection{How to Calculate Them}
+
+Here's how it works.  Let $\Sigma$ denote the covariance matrix of X.
+The theory of linear algebra says that since $\Sigma$ is a symmetric
+matrix, it is diagonalizable, i.e. there is a real matrix Q for which 
+
+\begin{equation}
+\label{qsigq}
+Q' \Sigma Q = D
+\end{equation}
+
+where D is a diagonal matrix.  (A related approach is {\bf singular
+value decomposition}.) The columns $C_i$ of Q are the eigenvectors of
+$\Sigma$, and it turns out that they are orthogonal to each other, i.e.
+their dot product is 0.
+
+Let 
+
+\begin{equation}
+W_i = C_i'X, ~ i = 1,...,k
+\end{equation}
+
+so that the $W_i$ are scalar random variables, and set 
+
+\begin{equation}
+W = (W_1,...,W_k)'
+\end{equation}
+
+Then
+
+\begin{equation}
+W = Q' X
+\end{equation}
+
+Now, use the material on covariance matrices from our chapter on
+random vectors, page \pageref{covawaprime},
+
+\begin{equation}
+Cov(W) = Cov(Q'X) = Q' Cov(X) Q = D ~~ \textrm{(from (\ref{qsigq}))}
+\end{equation}
+
+Note too that if X has a multivariate normal distribution (which we are
+not assuming), then W does too.
+
+Let's recap:
+
+\begin{itemize}
+
+\item We have created new random variables $W_i$ as linear combinations
+of our original $X_j$.
+
+\item The $W_i$ are uncorrelated.  Thus if in addition X has a
+multivariate normal distribution, so that W does too, then the $W_i$
+will be independent.
+
+\item The variance of $W_i$ is given by the i$^{th}$ diagonal element of
+D.
+
+\end{itemize}
+
+The $W_i$ are called the {\bf principal components} of the distribution
+of X.
+
+It is customary to relabel the $W_i$ so that $W_1$ has the largest
+variance, $W_2$ has the second-largest, and so on.  We then choose those
+$W_i$ that have the larger variances, and discard the others, because
+the latter, having small variances, are close to constant and thus carry
+no information.  
+
+Note that an alternate definition of the first principal component is a
+value of $u$ that maximizes $u'X$ subject to $u$ having length 1.  The
+second principal component maximizes  $u'X$ subject to $u$ having length
+1 and subject to the second component being orthogonal to the first, and
+so on.
+
+All this will become clearer in the example below.
+
+\subsection{Example:  Forest Cover Data}
+
+Let's try using principal component analysis on the forest cover data
+set we've looked at before.  There are 10 continuous
+variables.\footnote{There are also many discrete ones.}
+
+In my R run, the data set (not restricted to just two forest cover
+types, but consisting only of the first 1000 observations) was in the
+object {\bf f}.  Here are the call and the results:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> prc <- prcomp(f[,1:10])
+> summary(prc)
+Importance of components:
+                            PC1      PC2      PC3      PC4      PC5 PC6
+Standard deviation     1812.394 1613.287 1.89e+02 1.10e+02 96.93455 30.16789
+Proportion of Variance    0.552    0.438 6.01e-03 2.04e-03  0.00158 0.00015
+Cumulative Proportion     0.552    0.990 9.96e-01 9.98e-01  0.99968 0.99984
+                            PC7      PC8 PC9  PC10
+Standard deviation     25.95478 16.78595 4.2 0.783
+Proportion of Variance  0.00011  0.00005 0.0 0.000
+Cumulative Proportion   0.99995  1.00000 1.0 1.000
+\end{Verbatim}
+
+You can see from the variance values here that R has scaled the $W_i$ so
+that their variances sum to 1.0.  (It has not done so for the standard
+deviations, which are for the nonscaled variables.) This is fine, as we
+are only interested in the variances relative to each other, i.e. saving
+the principal components with the larger variances.
+
+What we see here is that eight of the 10 principal components have very
+small variances, i.e. are close to constant.  In other words, though we
+have 10 variables $X_1,...,X_{10}$, there is really only two
+variables' worth of information carried in them.  
+
+So for example if we wish to predict forest cover type from these 10
+variables, we should only use two of them.  We could use $W_1$ and
+$W_2$, but for the sake of interpretability we stick to the original X
+vector.  We can use any two of the $X_i$, though typically it would be
+two that have large coefficients in the top two principal components..
+
+The coefficients of the linear combinations which produce W from X, i.e.
+the Q matrix, are available via {\bf prc\$rotation}.
+
+
+\subsection{Scaling}
+
+If your original variables range quite a bit in variance, you should
+have {\bf prcomp()} scale them first, so they all have standard
+deviation 1.\footnote{And mean 0, though this is irrelevant, as $\Sigma$
+is all that matter.}  The argument name is {\bf scale}, of course.
+
+Without scaling, the proportion-of-total-variance type of analysis
+discussed above may be misleading, as large-variance variables may
+dominate.
+
+\subsection{Scope of Application}
+
+PCA makes no assumptions about the data.  It is strictly an
+exploratory/descriptive tool.
+
+However, it should be noted that the motivation we presented for PCA at
+the beginning of this chapter involved correlations among our original
+variables.  This is further highlighted by the fact that the PCs are
+calculated based on the covariance matrix of the data, which except for
+scale is the same as the correlation matrix.
+
+This in turn implies that each variable is at least {\it ordinal} in
+nature, i.e. that it makes sense to speak of the impact of larger or
+smaller values of a variable.  
+
+Note, though, that an indicator random variable is inherently ordinal!
+So, if you have a {\it categorical} variable, i.e. one that simply codes
+what category an individual falls into (such as Democratic, Republican,
+independent), then you can convert it to a set of indicator variables,
+and potentially get some insight into the relation between this variable
+and others.  
+
+This can be especially valuable if, as is often the case, your data
+consists of a mixture of ordinal and categorical variables.
+
+\subsection{Example:  Turkish Teaching Evaluation Data}
+
+This data, again from the UCI Machine Learning Repository, was
+introduced in Section \ref{turk0}.  Let's try PCA on it:
+
+\begin{lstlisting}
+> tpca <- prcomp(turk,scale=T)
+> summary(tpca)
+Importance of components:
+                          PC1    PC2     PC3     PC4     PC5     PC6
+PC7
+Standard deviation     4.8008 1.1296 0.98827 0.62725 0.59837 0.53828 0.50587
+Proportion of Variance 0.7947 0.0440 0.03368 0.01357 0.01235 0.00999 0.00882
+Cumulative Proportion  0.7947 0.8387 0.87242 0.88598 0.89833 0.90832 0.91714
+                           PC8     PC9    PC10    PC11    PC12    PC13
+PC14
+Standard deviation     0.45182 0.42784 0.41517 0.37736 0.37161 0.36957 0.3450
+Proportion of Variance 0.00704 0.00631 0.00594 0.00491 0.00476 0.00471 0.0041
+Cumulative Proportion  0.92418 0.93050 0.93644 0.94135 0.94611 0.95082 0.9549
+                          PC15    PC16    PC17    PC18    PC19    PC20
+PC21
+Standard deviation     0.34114 0.33792 0.33110 0.32507 0.31687 0.30867 0.3046
+Proportion of Variance 0.00401 0.00394 0.00378 0.00364 0.00346 0.00329 0.0032
+Cumulative Proportion  0.95894 0.96288 0.96666 0.97030 0.97376 0.97705 0.9802
+                          PC22    PC23    PC24    PC25    PC26    PC27
+PC28
+Standard deviation     0.29083 0.29035 0.28363 0.27815 0.26602 0.26023 0.23621
+Proportion of Variance 0.00292 0.00291 0.00277 0.00267 0.00244 0.00234 0.00192
+Cumulative Proportion  0.98316 0.98607 0.98884 0.99151 0.99395 0.99629 0.99821
+                          PC29
+Standard deviation     0.22773
+Proportion of Variance 0.00179
+Cumulative Proportion  1.00000
+\end{lstlisting}
+
+This is remarkable---the first PC accounts for 79\% of the variance of
+the set of 29 variables.  In other words, in spite of the survey asking
+supposedly 29 different aspects of the course, they can be summarized
+largely in just one variable.  Let's see what that variable is:
+
+\begin{lstlisting}
+> tpca$rotation[,1]
+         Q1          Q2          Q3          Q4          Q5          Q6 
+-0.16974120 -0.18551431 -0.18553930 -0.18283025 -0.18973563 -0.18635256 
+         Q7          Q8          Q9         Q10         Q11         Q12 
+-0.18730028 -0.18559928 -0.18344211 -0.19241585 -0.18388873 -0.18184118 
+        Q13         Q14         Q15         Q16         Q17         Q18 
+-0.19430111 -0.19462822 -0.19401115 -0.19457451 -0.18249389 -0.19320936 
+        Q19         Q20         Q21         Q22         Q23         Q24 
+-0.19412781 -0.19335127 -0.19232101 -0.19232914 -0.19554282 -0.19328500 
+        Q25         Q26         Q27         Q28  difficulty 
+-0.19203359 -0.19186433 -0.18751777 -0.18855570 -0.01712709 
+\end{lstlisting}
+
+This is even more remarkable.  Except for the ``difficulty'' variable,
+all the Qi have about the same coefficients (the same {\bf loadings}).
+In other words, just one question would have been enough, and it
+wouldn't matter mcuh which one were used.
+
+The second PC, though only accounting for 4\% of the total variation, is
+still worth a look:
+
+\begin{lstlisting}
+> tpca$rotation[,2]
+         Q1          Q2          Q3          Q4          Q5          Q6 
+ 0.32009850  0.22046468  0.11432028  0.23340347  0.20236372  0.19890471 
+         Q7          Q8          Q9         Q10         Q11         Q12 
+ 0.24025046  0.24477543  0.13198060  0.19239207  0.11064523  0.20881773 
+        Q13         Q14         Q15         Q16         Q17         Q18 
+-0.09943140 -0.15193169 -0.15089563 -0.03494282 -0.26163096 -0.11646066 
+        Q19         Q20         Q21         Q22         Q23         Q24 
+-0.14424468 -0.18729978 -0.21208705 -0.21650494 -0.09349599 -0.05372049 
+        Q25         Q26         Q27         Q28  difficulty 
+-0.20342350 -0.10790888 -0.05928032 -0.20370705 -0.27672177 
+\end{lstlisting}
+
+Here the ``difficulty'' variable now shows up, and some of the Qi become
+unimportant.
+
+\section{Log-Linear Models}
+\label{loglin}
+
+Here we discuss a procedure which is something of an analog of principal
+components for discrete variables, especially {\it nominal} ones, i.e.
+variables we would convert to dummies in a regression setting.
+
+\subsection{The Setting}
+
+Let's consider a variation on the software engineering example in
+Section \ref{examples}.  Assume we have the factors, IDE, Language and
+Education.  One change---{\bf of extreme importance}---is that we will
+now assume that these factors are {\bf random}.  What does this mean?
+
+In the original example described in Section \ref{examples}, programmers
+were {\it assigned} to languages, and in our extensions of that example,
+we continued to assume this.  Thus for example the number of programmers
+who use an IDE and program in Java was fixed; if we repeated the
+experiment, that number would stay the same.  If we were sampling from
+some programmer population, our new sample would have new programmers,
+but the number using and IDE and Java would be the same as before, as
+our study procedure specifies this.
+
+By contrast, let's now assume that we simply sample programmers at
+random, and ask them whether they prefer to use an IDE or not, and which
+language they prefer.\footnote{Other sampling schemes are possible too.}
+Then for example the number of programmers who prefer to use an IDE and
+program in Java will be random, not fixed; if we repeat the experiment,
+we will get a different count.
+
+Suppose we now wish to investigate relations between the factors.
+Are choice of platform and language related to education, for instance?
+
+\subsection{The Data}
+
+Denote our three factors by $X^{(s)}$, s = 1,2,3.\footnote{All the
+examples here will have three factors, but there can be any number.}
+Here $X^{(1)}$, IDE, will take on the values 1 and 2 instead of 1 and 0
+as before, 1 meaning that the programmer prefers to use an IDE, and 2
+meaning not so.  $X^{(3)}$, Education, changes this way too, and
+$X^{(2)}$ will take on the values 1 for C++, 2 for Java and 3 for C.  
+
+Note that we no longer use indicator variables.  Indeed, the log-linear
+model is in contrast to PCA, which as noted above tacitly assumes
+ordinal variables.  Here we are working with strictly categorical
+variables, whose values are merely labels.  We could, for example,
+relabel $X^{(2)}$ to have the value 1 for Java, 2 for C++ and 3 for C,
+and yet we would still have the same results (though the results would
+be relabeled too).
+
+Let $X_r^{(s)}$ denote the value of $X^{(s)}$ for the r$^{th}$
+programmer in our sample, r = 1,2,...,n.  Our data are the counts
+
+\begin{equation}
+N_{ijk} = \textrm{number of r such that } X_r^{(1)} = i, X_r^{(2)} = j
+\textrm{ and } X_r^{(3)} = k
+\end{equation}
+
+For instance, if we sample 100 programmers, our data might look like
+this:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+prefers to use IDE:
+
+                   Bachelor's or less     Master's or more
+           C++                     18                   15
+          Java                     22                   10
+             C                      6                    4
+\end{Verbatim}
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+prefers not to use IDE:
+
+                   Bachelor's or less     Master's or more
+           C++                      7                    4
+          Java                      6                    2
+             C                      3                    3
+\end{Verbatim}
+
+So for example $N_{122} = 10$ and $N_{212} = 4$.
+
+Here we have a three-dimensional {\bf contingency table}.  Each $N_{ijk}$
+value is a {\bf cell} in the table.
+
+\subsection{The Models}
+
+Let $p_{ijk}$ be the population probability of a randomly-chosen
+programmer falling into cell ijk, i.e.
+
+\begin{equation}
+p_{ijk} 
+= P \left ( X^{(1)} = i \textrm{ and } X^{(2)} = j \textrm{ and } X^{(3)} = k \right ) 
+= E(N_{ijk}) / n
+\end{equation}
+
+As mentioned, we are interested in relations among the factors, in the
+form of independence, both full and partial.  Indeed, it is common for
+an analyst to fit successively more refined models to the data, each
+assuming a more complex dependence structure than the last.  This will
+unfold in detail below.
+
+Consider first the model that assumes full independence:
+
+\begin{eqnarray}
+p_{ijk} &=&
+P \left ( X^{(1)} = i \textrm{ and } X^{(2)} = j \textrm{ and } X^{(3)} = k \right ) \\ 
+&=& P \left ( X^{(1)} = i \right )
+\cdot P \left ( X^{(2)} = j \right )
+\cdot P \left ( X^{(3)} = k \right ) 
+\label{fullind}
+\end{eqnarray}
+
+Taking logs of both sides in (\ref{fullind}), we see that independence
+of the three factors is equivalent to saying 
+
+\begin{equation}
+\label{abc}
+\log(p_{ijk}) = a_i + b_j + c_k
+\end{equation}
+
+for some numbers $a_i$, $b_j$ and $c_j$; e.g.
+
+\begin{equation}
+b_2 = \log[P(X^{(2)} = 2)]
+\end{equation}
+
+% The numbers must be nonpositive, and since
+% 
+% \begin{equation}
+% \sum_{m} P(X^{(s)} = m) = 1
+% \end{equation}
+% 
+% we must have, for instance,
+% 
+% \begin{equation}
+% \label{sum1}
+% \sum_{g=1}^2 \exp(c_g) = 1
+% \end{equation}
+
+The point is that (\ref{abc}) looks like our no-interaction linear
+regression models, whose analog of noninteraction here is independence
+of our variables.  On the other hand, if we assume instead that
+Education is independent of IDE and Language but that IDE and Language
+are not independent of each other, our model would include an i-j
+interaction term, as follows.\footnote{In order to simplify the
+discussion below, we will often write i as a shorthand for $X^{(i)}$ and
+so on.}
+
+We would have
+
+\begin{eqnarray}
+p_{ijk} &=& 
+        P \left ( X^{(1)} = i \textrm{ and } X^{(2)} = j \right ) \cdot 
+        P \left ( X^{(3)} = k \right ) 
+\end{eqnarray}
+
+so we would set 
+
+\begin{equation}
+\log(p_{ijk}) =
+a_{ij} + b_k \label{semiindep}
+\end{equation}
+
+Most formal models rewrite this as
+
+\begin{equation}
+\label{anova}
+a_{ij} = u + v_i + w_j + r_{ij}
+\end{equation}
+
+Here we have written $P \left ( X^{(1)} = i \textrm{ and } X^{(2)} = j
+\right )$ as a sum of an ``overall effect'' u, ``main effects'' $v_i$
+and $w_j$, and ``interaction effects,'' $r_{ij}$, again analogous to
+linear regression.  
+
+Note, though, that this actually gives us too many parameters.  For the
+i-j part of the model, we have 2 $\times$ 3 = 6 actual probabilities,
+but 1 + 2 + 3 +  2 $\times$ 3 = 12 parameters (1 for u, 2 for the $v_i$
+and so on).  So the model needs constraints, e.g.
+
+\begin{equation}
+\sum v_i = 0
+\end{equation}
+
+This is similar to classical Analysis of Variance (ANOVA), not covered
+in this book.  We will not state the constraints below, but they are
+used in most if not all software packages for the log-linear model..
+
+Another possible model would have IDE and Language conditionally
+independent, given Education, meaning that at any level of education, a
+programmer's preference to use IDE or not, and his choice of programming
+language, are not related.  We'd write the model this way:
+
+\begin{eqnarray}
+p_{ijk} &=& 
+   P \left ( X^{(1)} = i \textrm{ and } 
+             X^{(2)} = j \textrm{ and } 
+             X^{(3)} = k \right ) \\
+&=& P \left ( X^{(1)} = i \textrm{ and } X^{(2)} = j ~|~ X^{(3)} = k \right)
+    \cdot P \left ( X^{(3)} = k \right ) \\
+&=& P \left ( X^{(1)} = i ~|~ X^{(3)} = k \right ) \cdot
+    P \left ( X^{(2)} = j ~|~ X^{(3)} = k \right) \cdot
+    P \left ( X^{(3)} = k \right ) 
+\label{liketrickcoin}
+\end{eqnarray} 
+
+and thus set
+
+\begin{equation}
+\log(p_{ijk}) =
+= u + a_i + f_{ik} + b_j + h_{jk} + c_k 
+\label{semiindep2}
+\end{equation}
+
+\subsection{Interpretation of Parameters}
+
+Note carefully that the type of independence in (\ref{semiindep2}) has a
+quite different interpretation than that in (\ref{semiindep}).
+Actually, our old trick coin example, Section \ref{oldtrick}, was like
+(\ref{liketrickcoin}); given the choice of coin, the $B_i$ were
+independent.  On the other hand, among people, height and weight are
+correlated but they are presumably independent of preference for flavor
+of ice cream, a situation like (\ref{semiindep}).
+
+This is an excellent example of what can go wrong with mindless use of
+packaged software.  Log-linear analysis is all about distinguishing
+between various kinds of dependence.  Without an understanding of how
+the models reflect this, the software can produce highly misleading
+results.
+
+So, pay close attention to which interactions are in the model, and
+which are not.  In (\ref{semiindep}) we see a two-factor interaction
+between the i and j factors, but no interaction with k.  So i and j
+are being modeled as completely independent of k, though not with each
+other.  On the other hand, in (\ref{semiindep2}), the i and j factors have
+interactions with k, but not with each other.
+
+Now consider the model
+
+\begin{equation}
+\label{harder}
+\log(p_{ijk}) =
+u + a_i + f_{ik} + b_j + h_{jk} + l_{ij} + c_k 
+\end{equation}
+
+Here things are a little harder to interpret.  Given k, i and j are no
+longer modeled as independent.  However, the degree of ``correlation''
+between i and j, given k, is modeled as being independent of k.  In
+other words, the strength of the relation between i and j is the same,
+for all levels of k.
+
+If we had included an $m_{ijk}$ term---which would now make the model
+{\bf full} or {\bf saturated}---then it may be possible that i and j are
+highly related for some values of k, and less related for others.
+
+Clearly, the more variables we have, and the higher the order of
+interactions we include, the harder it is to interpret the model
+
+\subsection{Parameter Estimation}
+
+Remember, whenever we have parametric models, the statistician's ``Swiss
+army knife'' is Maximum Likelihood Estimation (MLE, Section \ref{mle}).
+That is what is most often used in the case of log-linear models.
+
+How, then, do we compute the likelihood of our data, the $N_{ijk}$?
+It's actually quite straightforward, because the $N_{ijk}$ have a
+multinomial distribution (Section \ref{multinompmfsection}).  Then the
+likelihood function is
+
+\begin{equation}
+\label{like}
+L =
+\frac
+{n!}
+{\Pi_{i,j,k} N_{ijk}!}
+p_{ijk}^{N_{ijk}}
+\end{equation}
+
+We then write the $p_{ijk}$ in terms of our model parameters.
+Take for example (\ref{semiindep2}), where we write
+
+\begin{equation}
+\label{xxx}
+p_{ijk} 
+= e^{u + v_i + w_j + r_{ij} + c_k} 
+\end{equation}
+
+We then substitute (\ref{xxx}) in (\ref{like}), and maximize the latter
+with respect to the $a_i$, $b_j$, $d_{ij}$ and $c_k$, subject to
+constraints as mentioned earlier.
+
+The maximization may be messy.  But certain cases have been worked out
+in closed form, and in any case today one would typically do the
+computation by computer.  In R, for example, there is the {\bf loglin()}
+function for this purpose, illustrated below.
+
+Unfortunately, most books and software packages for the log-linear model
+put almost all of their focus on significance testing, rather than point
+estimation and confidence intervals.  In the popular {\bf loglin()}
+package, for instance, the parameter estimates, e.g. $\hat{v}_i$ above,
+are not even reported unless the user requests them.  Even then, no
+standard errors are reported.  This is counter to the universally
+recognized---though unfortunately widely ignored---point that
+significance testing can be quite misleading, especially in large samples
+(Section \ref{whatswrong}).
+
+The tests themselves assess fit.  For instance, say we fit the model
+(\ref{semiindep2}).  The program estimates parameters using maximum
+likelihood, and then tests whether the model is ``correct.''  The actual
+test will either be chi-squared (Section \ref{chisqgof}) or the
+Likelihood Ratio Test (related to MLEs); both test statistics have
+chi-square distributions under $H_0$.  We can call {\bf pchisq()} to
+find the p-value.  Again, note that $H_0$ is that the specified model is
+correct.
+
+\subsection{Example:  Hair, Eye Color}
+
+Here we will look at R's built-in data set {\bf HairEyeColor}.  There
+are variables Hair, Eye and Sex, with 4 levels for hair color and 4 for
+eye color, over 592 people.  Type {\bf ?HairEyeColor} to see the
+details.
+
+This is actually an example from the online help for the function
+{\bf loglin()}, though we'll look at a different model in terms of
+interactions.
+
+\subsubsection{The loglin() Function}
+
+We'll use the built-in R function {\bf loglin()}, whose input data must
+be of class {\bf "table"}.  Let's see first how the latter works.
+
+Say we have two variables, the first having levels 1 and 2, and the
+second having levels 1, 2 and 3.  Suppose our data frame {\bf d} is
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> d
+  V1 V2
+1  1  3
+2  2  3
+3  2  2
+4  1  1
+5  1  2
+\end{Verbatim}
+
+The first person (or other entity) in our dataset has $X^{(1)} = 1$, 
+$X^{(2)} = 3$ and so on.  The function {\bf table()} does what its name
+implies:  It tabulates the counts in each cell:
+
+\begin{lstlisting}
+> table(d)
+   V2
+V1  1 2 3
+  1 1 1 1
+  2 0 1 1
+\end{lstlisting}
+
+This says there was one instance in which $X^{(1)} = 1, X^{(2)} = 3$
+etc., but no instances of $X^{(1)} = 2, X^{(2)} = 1$. 
+
+So, our data is input as an object of type {\bf "table"}, specified in
+the argument {\bf table}.  
+
+Our model is input via the argument {\bf margin}, which is an R list of
+vectors.  For instance {\bf c(1,3)} specifies an interaction between
+variables 1 and 3, and {\bf c(1,2,3)} means a three-way interaction.
+Once a higher-order interaction is specified, we need not specify its
+lower-order ``subset.''  If, say, we specify {\bf c(2,5,6)}, we need not
+specify {\bf c(2,6)}.  On the other hand, if a variable m is involved in
+no interactions, we need to specify it as {\bf c(m)}, in order to keep
+its individual (i.e. non-interaction) effect in the model.
+
+The model used is actually for the cell counts, not the cell
+probabilities.  Thus the constant term, e.g. u in (\ref{harder}) is
+smaller by an amount equal to the log of the total number of
+observations in the table.
+
+\subsection{Hair/Eye Color Analysis}
+
+Let's get an overview of the data first:
+
+\begin{lstlisting}
+> HairEyeColor
+, , Sex = Male
+
+       Eye
+Hair    Brown Blue Hazel Green
+  Black    32   11    10     3
+  Brown    53   50    25    15
+  Red      10   10     7     7
+  Blond     3   30     5     8
+
+, , Sex = Female
+
+       Eye
+Hair    Brown Blue Hazel Green
+  Black    36    9     5     2
+  Brown    66   34    29    14
+  Red      16    7     7     7
+  Blond     4   64     5     8
+\end{lstlisting}
+
+Note that this is a 3-dimensional array, with Hair being rows, Eye being
+columns, and Sex being layers.  The data above show, for instance, that
+there are 25 men with brown hair and hazel eyes.  Let's check this:
+
+\begin{lstlisting}
+> HairEyeColor[2,3,1]
+[1] 25
+\end{lstlisting}
+
+Let's fit a model (as noted, for the $N_{ijk}$ rather than the
+$p_{ijk}$) in which hair and eye color are independent of gender, but
+not with each other, i.e. the model (\ref{anova}):
+
+\begin{lstlisting}
+> fm <- loglin(HairEyeColor, list(c(1, 2),3),param=T,fit=T)
+2 iterations: deviation 5.684342e-14 
+> fm
+$lrt
+[1] 19.85656
+       
+$pearson    
+[1] 19.56712
+
+$df
+[1] 15
+  
+$margin
+$margin[[1]]
+[1] "Hair" "Eye"
+
+$margin[[2]]
+[1] "Sex"
+
+$fit
+, , Sex = Female
+
+       Eye
+Hair        Brown      Blue     Hazel     Green
+  Black 35.952703 10.574324  7.930743  2.643581
+  Brown 62.917230 44.412162 28.550676 15.332770
+  Red   13.746622  8.988176  7.402027  7.402027
+  Blond  3.701014 49.699324  5.287162  8.459459
+
+     
+$param      
+$param$`(Intercept)`
+[1] 2.494748
+
+$param$Hair
+     Black      Brown        Red      Blond 
+-0.3063649  0.9520081 -0.3471908 -0.2984523 
+  
+$param$Eye
+     Brown       Blue      Hazel      Green 
+ 0.3611125  0.5112173 -0.2798778 -0.5924520 
+          
+$param$Sex
+      Male     Female 
+-0.0574957  0.0574957 
+          
+$param$Hair.Eye
+       Eye
+Hair         Brown       Blue      Hazel      Green
+  Black  0.9752132 -0.3986671  0.1047460 -0.6812921
+  Brown  0.2764560 -0.2219556  0.1273068 -0.1818072
+  Red    0.0546279 -0.5203601  0.0765790  0.3891532
+  Blond -1.3062970  1.1409828 -0.3086318  0.4739461
+\end{lstlisting}
+
+The Likelihood Ratio Test, which has a chi-square distribution with 16
+degrees of freedom under $H_0$ here, is not rejected:
+
+\begin{lstlisting}
+> 1 - pchisq(19.85656,16)
+[1] 0.2267507
+\end{lstlisting}
+
+The p-value here is about 0.23.  So, if you allow your analyses to be
+dictated by tests, you would accept the above model (which is plausible
+anyway).  But even if you accept the hypothesis, you should still be
+interested in the magnitudes of the effects, shown above.  Of course,
+for them to make sense, you need to exponentiate them back into
+probabilities, a fair amount of work.
+
+At any rate, one generally entertains several different models for a
+data set, in much the same way as one considers several different sets
+of predictor variables in a regression setting.  If one does not use
+significance testing for this, one goes through a less structured, but
+hopefully more fruitful, process of comparing numerical model results.
+
+Let's again consider the case of brown-haired, hazel-eyed men.  The
+model fit is  
+
+\begin{equation}
+\label{howitworks}
+\exp{(
+\hat{u} + \hat{v}_2 + \hat{w}_3 + \hat{r}_{23}
+)}
+=
+\exp(2.494748 + 0.9520081 - 0.279877 - 0.0574957 + 0.1273068) = 25.44934
+\end{equation}
+
+Actually, we could have gotten this directly, from
+
+\begin{lstlisting}
+> fm$fit[2,3,1]
+[1] 25.44932  
+\end{lstlisting}
+
+(there is a bit of roundoff error above), but you should look at
+(\ref{howitworks}) to make sure you understand what this number 25.44932
+means.  It is the estimate of $E(N_{231})$ under our hypothesized model,
+and (\ref{howitworks}) shows how this breaks down with respect to main
+effects and interactions.
+
+In particular, the interaction term, 0.1273068, is rather small compared
+to most of the other numbers in the sum.  This suggests that although
+there is some relation between hair and eye color, the relation is not
+strong.  Of course, we'd have to browse through the other interaction
+values to make a stronger statement.
+
+\subsection{Obtaining Standard Errors}
+
+It was mentioned above that the output of {\bf loglin()}, being
+significance test-oriented, does not report standard errors for the
+coefficients.  However, there is a ``trick'' one can use to get them, as
+follows.\footnote{At the expense of computation, one can generally use
+the {\bf bootstrap} for obtaining standard errors.  See Section
+\ref{boot}.}
+
+As noted earlier, our cell counts follow a multinomial distribution.
+But there is another model, in which the cell counts are independent,
+each one following a Poisson distribution.  (Note carefully that this is
+not saying that the factors are independent.) The ``trick'' is that it
+turns out that both models, multinomial and Poisson, yield the same
+MLEs.  Thus even if we assume the multinomial model, we can run our
+analyses as if it follows the Poisson model.
+
+The remaining point is to note that R's {\bf glm()} function, used
+before for logistic regression by setting {\bf family=binomial}, can be
+used here with {\bf family=poisson}.  Since {\bf glm()} output reports
+standard errors, this workaround enables us to obtain standard errors
+for log-linear analysis.
+
+
+% \subsection{The Goal:  Parsimony Again}
+% 
+% Again, we'd like ``the simplest model possible, but not simpler.''  This 
+% means a model with as much independence between factors as possible,
+% subject to the model being accurate.
+% 
+% Classical log-linear model procedures do model selection by hypothesis
+% testing, testing whether various interaction terms are 0.  The tests
+% often parallel linear regression testing, with chi-square distributions
+% arising instead of F-distributions.
+
+\section{Clustering}
+
+The {\bf clustering} problem is somewhat like the reverse of the
+classification problem.  In the latter, we our original data to enable
+ourselves to later input new data points and output class identities.
+With clustering, we use our original data to hunt for classes
+themselves.
+
+Clustering is treated as merely a technique for exploration/description,
+for browsing through the data.  It is not generally regarded as
+``estimating'' anything (though we will return to this issue later).
+
+\subsection{K-Means Clustering}
+
+This is probably the oldest clustering method, and it is still in wide
+use.
+
+\subsubsection{The Algorithm}
+
+The method itself is quite simple, using an iterative algorithm.  The
+user specifies {\bf k}, the number of clusters he hopes to find, and at
+any step during the iteration process, the current {\bf k} clusters are
+summarized by their centroids.  (If we have m variables, then the
+centroid of a group is the m-element vector of means of those variables
+within this group.)  We iterate the following:
+
+\begin{itemize}
+
+\item [1.]  For each data point, i.e. each row of our data matrix,
+determine which centroid this point is closest to.
+
+\item [2.]  Add this data point to the group corresponding to that
+centroid.
+
+\item [3.]  After all data points are processed in this manner, update
+the centroids to reflect the current group memberships.
+
+\item [4.]  Next iteration.
+
+\item ]5.]  Iterate until the centroids don't change much from one
+iteration to the next.
+
+\end{itemize}
+
+\subsubsection{Example:  the Baseball Player Data}
+
+We use the R function {\bf kmeans()} here.  Its simplest call form is
+
+\begin{lstlisting}
+kmeans(x,k)
+\end{lstlisting}
+
+where {\bf x} is our data matrix and {\bf k} is as above.
+
+Let's try it on our baseball player data Height, Weight and Age, which
+are in columns 4-6 of our data frame:
+
+\begin{lstlisting}
+> head(baseball)
+             Name Team       Position Height Weight   Age PosCategory 
+1   Adam_Donachie  BAL        Catcher     74    180 22.99     Catcher 
+2       Paul_Bako  BAL        Catcher     74    215 34.69     Catcher 
+3 Ramon_Hernandez  BAL        Catcher     72    210 30.78     Catcher 
+4    Kevin_Millar  BAL  First_Baseman     72    210 35.43   Infielder 
+5     Chris_Gomez  BAL  First_Baseman     73    188 35.71   Infielder 
+6   Brian_Roberts  BAL Second_Baseman     69    176 29.39   Infielder 
+kmb <- kmeans(baseball[,4:6],4)
+\end{lstlisting}
+
+The return value, which we've stored here in {\bf kmb}, is of class (of
+course) {\bf "kmeans"}.  One of its components is the final centroids:
+
+\begin{lstlisting}
+> kmb$centers
+    Height   Weight      Age
+1 73.81267 202.6584 29.00882
+2 72.45013 180.3181 27.90776
+3 74.79147 221.7725 29.48867
+4 76.30000 244.4571 29.04129
+\end{lstlisting}
+
+Cluster 2 seems interesting, consisting of shorter, lighter and younger
+players, while Cluster 4 seems the opposite.  Clusters 1 and 3 are
+similar except in weight.
+
+Let's see if these clusters correlate to player position.  Note that
+we've consolidated the original Position variable into PosCategory,
+which consists of catchers, pitchers, infielders and outfielders.  Let's
+take a look at the relation to the clusters.  The {\bf cluster}
+component of the object returned by the function shows which cluster
+each observations fell into.  Here's are table of the results:
+
+\begin{lstlisting}
+> kmb$size  # number of points in each cluster
+[1] 363 371 211  70
+> baseball$cls <- kmb$cluster  
+> table(baseball$cls,baseball$PosCategory)
+   
+    Catcher Infielder Outfielder Pitcher
+  1      31        69         74     201
+  2      32        42         51     143
+  3       9        84         57     107
+  4       4        15         12      84
+\end{lstlisting}
+
+Clusters 1 and 2 were the largest overall, but there is an interesting
+pattern here.  Catchers were almost entirely in Clusters 1 and 2, while
+the other position categories, especially infielders, were more evenly
+dispersed.
+
+\subsection{Mixture Models}
+\label{mixclust}
+
+Even though k-means and other clustering methods don't claim to be
+estimating anything---again, they are just intended as exploratory
+tools---the basic motivation is that each cluster represents some
+multivariate distribution, e.g. trivariate normal in the baseball
+example above.  Let $q_i$ be the probability that an individual is in
+cluster i.  Then the overall distribution has the form (\ref{hsum})---a
+mixture!
+
+So, we really are modeling the population by a mixture of
+subpopulations, and the EM algorithm for mixtures (Section \ref{emalg})
+can be used to estimate the centroids and the mixture weights $q_i$.  in
+particular, the {\bf mixtools} library includes a function
+{\bf mvnormalmixEM()} which does exactly this.
+
+\subsection{Spectral Models}
+
+The word {\it spectral} here refers in turn to {\it spectrum}, which in
+linear algebra terms is the set of eigenvalues of a matrix.  It turns
+out that this is useful for clustering.
+
+The details are complex, and many variant algorithms exist, but here is
+an overview:
+
+Start with a {\bf similarity matrix} S, calculated from your original
+data matrix X.  $S_{ij}$ is defined in terms of some distance between
+rows i and j in X.  One then computes
+
+\begin{equation}
+L = I - D^{-1/2} S D^{-1/2}
+\end{equation}
+
+where D is a diagonal matrix whose (i,i) element is $\sum_{j} S_{ij}$.
+
+One then finds an eigenvector v corresponding to the second-smallest
+eigenvalue of L.  One then partitions the rows of X according to some
+criterion involving v.
+
+Then one partitions those partitions! The same method is used, and in
+this way, the data points are chopped up into groups, our clusters.
+This is an example of what is called {\bf hierarchical} clustering.
+
+\subsection{Other R Functions}
+
+The CRAN code repository includes a number of clustering packages.  See
+the CRAN Task View: Cluster Analysis \& Finite Mixture
+Models,\footnote{CRAN has a number of these ``task views'' on various
+topics.} \url{http://cran.r-project.org/web/views/Cluster.html}.
+
+\subsection{Further Reading}
+
+UCD professor Catherine Yang is a specialist in clustering.  See for
+instance Segmenting Customer Transactions Using a Pattern-Based
+Clustering Approach, {\it Proceedings of the Thrid IEEE International
+Conference on Data Mining}.
+
+\section{Simpson's (Non-)Paradox}
+
+Every serious user of statistics must keep in mind {\bf Simpson's
+Paradox} at all times.  It's an example of ``what can go wrong'' in
+multivariate studies.  Its central importance is reflected, for
+instance, in an extensive entry in Wikipedia.
+
+And yet...a very simple precaution will enable you to avoid the problem.
+
+So, what is this paradox?  In short, the relation between variables X
+and Y can be positive, conditional on every level of a third variable Z,
+and yet be negative overall.  (Or vice versa, i.e. change from negative
+to positive.)
+
+As you will see below, it arguably is not really a paradox at all.
+Instead, the real problem is a failure to examine the more important
+variables before the less important ones.
+
+\subsection{Example:  UC Berkeley Graduate Admission Data}
+
+This is a very famous data set, much analyzed over the years, well known
+partly because a lawsuit was involved.
+
+\subsubsection{Overview}
+
+The suit claimed that UC Berkeley graduate admissions practices
+discriminated against women.  The plaintiffs pointed out that male
+applicants had a 44\% acceptance rate, compared to only 35\% for women.
+
+On the surface, the claims of discrimination seemed quite plausible.
+Here X, called Admit, was being admitted to graduate school, and Y,
+called Gender, was an indicator variable for being male.  X and Y
+appeared to be positively related.  
+
+However, things changed a lot when a third variable Z, called Dept, was
+brought in.  This coded which department the applicant applied to.  Upon
+closer inspection by UCB statistics professors, it was found that
+conditional on Z, X and Y were actually \underline{negatively} related
+for (almost) every value of Z.  In other words, it turned out that in
+(almost) every department, the women applicants were actually being
+slightly fared better than the men.\footnote{One department was an
+exception, but the difference was small and possibly due to sampling
+variation.  Thus most accounts treat this as an instance of Simpson's
+Paradox, rather than ``almost'' an example.}
+
+\subsubsection{Log-Linear Analysis}
+
+Let's analyze this with a log-linear model.  As it happens, the data is
+one of R's built-in data sets, {\bf UCBAdmissions} (which we will copy
+to a new variable {\bf ucb}, for brevity):
+
+\begin{lstlisting}
+> ucb <- UCBAdmissions
+\end{lstlisting}
+
+As noted, our ``Z,'' is Dept; six departments were represented in the
+data, i.e. six different graduate programs.  
+
+We can easily determine how many applicants there were:
+
+\begin{lstlisting}
+> sum(ucb)
+[1] 4526
+\end{lstlisting}
+
+Since the Admit and Gender variables had two levels each, there were $2
+\times 2 \times 6 = 24$ different cells in the table.  In other words,
+our log-linear analysis is modeling 24 different cell probabilities
+(actually 23, since they must sum to 1.0).
+
+So, even a saturated model would easily satisfy our rule of thumb
+(Section \ref{thumb}) regarding overfitting, which recommended keeping
+the number of parameters below the square root of the sample size.
+
+Let's fit a model that includes all two-way interactions.\footnote{A
+full model was fit, with similar patterns.}
+
+\begin{lstlisting}
+> llout <- loglin(ucb,list(1:2,c(1,3),2:3),param=T)
+2 iterations: deviation 3.552714e-15 
+> llout$param
+$`(Intercept)`
+[1] 4.802457
+
+$Admit
+  Admitted   Rejected 
+-0.3212111  0.3212111 
+
+$Gender
+      Male     Female 
+ 0.3287569 -0.3287569 
+
+$Dept
+          A           B           C           D           E           F 
+ 0.15376258 -0.76516841  0.53972054  0.43021534 -0.02881353 -0.32971651 
+
+$Admit.Gender
+          Gender
+Admit             Male      Female
+  Admitted -0.02493703  0.02493703
+  Rejected  0.02493703 -0.02493703
+
+$Admit.Dept
+          Dept
+Admit
+           A          B          C            D           E          F
+ Admitted  0.6371804  0.6154772  0.005914624 -0.01010004 -0.2324371 -1.016035
+ Rejected -0.6371804 -0.6154772 -0.005914624  0.01010004  0.2324371  1.016035
+
+$Gender.Dept
+        Dept
+Gender           A         B          C          D          E          F
+  Male    0.6954949  1.232906 -0.6370521 -0.2836477 -0.7020726 -0.3056282
+  Female -0.6954949 -1.232906  0.6370521  0.2836477  0.7020726  0.3056282
+\end{lstlisting}
+
+Again, there is a lot here, but it's not hard to spot the salient
+numbesr.  Let's look at the main effects first, labeled {\bf \$Admit}.
+{\bf \$Gender} and {\bf \$Dept}, near the top of the output, reproduced
+here for convenience:
+
+\begin{lstlisting}
+$Admit
+  Admitted   Rejected 
+-0.3212111  0.3212111 
+
+$Gender
+      Male     Female 
+ 0.3287569 -0.3287569 
+
+$Dept
+          A           B           C           D           E           F 
+ 0.15376258 -0.76516841  0.53972054  0.43021534 -0.02881353 -0.32971651 
+\end{lstlisting}
+
+One sees that the main effect for Gender, $\pm$0.3287569, is small
+compared to the main effects for some of the departments.  So some
+departments attract a lot of applicants, notably C, while others such as
+F attract fewer than average.  If this varies by gender, then it's
+important to take department into account in our analysis.
+
+
+
+In view of that latter fact, in viewing the two-way interactions,
+consider the interaction between Admit and Dept.  The Admit values were
+strongly positive for Departments A and B, small for C and D, and
+moderately to strongly negative for E and F.  In other words, A and B
+were especially easy to get into, while E and F were particularly
+difficult.
+
+But now turn to the Gender.Dept interaction, showing the pattern of
+which departments were applied to by which genders.  The men were extra
+likely to apply to Departments A and B, while for the women it was C, D,
+E and F.  In other words, men were more likely to apply to the easier
+departments, while the women were more likely to apply to the difficult
+ones!  No wonder the women seemed to be faring poorly overall in the
+data presented in the lawsuit, which did not break things down by
+department.
+
+The Admit.Gender interaction says it all:  Everything else equal, the
+women were slightly more \underline{likely} to be admitted than men.
+
+\subsection{Toward Making It Simpson's NON-Paradox}
+
+The above example shows that Simpson's Paradox really isn't a paradox at
+all.  The so-called ``anomaly'' occurred simply because an omitted
+variable (department) was a stronger factor than was one of the included
+variables (gender).
+
+Indeed, it can be argued that the ``paradox,'' i.e. the reversal of
+signs, wouldn't occur if one used the correct ordering when bringing
+factors into consideration, as follows.  Let's use the UCB data above to
+make this concrete.
+
+Recall the method of {\it forward stepwise regression} (Section
+\ref{forwardbackward}).  The analog here might be start by considering
+just two of the three variables at a time, before looking at
+three-variable models.  For the UCB data, we would first look at Admit and
+Gender, then look at Admit and Dept.  For example, we would fit the
+latter model by running
+
+\begin{lstlisting}
+> loglin(ucb,list(c(1,3)),param=TRUE)
+\end{lstlisting}
+
+The results are not shown here, but they reveal that indeed Dept has a
+much stronger association with Admit than does Gender.  We would thus
+take Admit-Dept as our "first-step" model, and then add Gender to get
+our second-step model (again, "step" as in the spirit of stepwise
+regression).  That would produce the model we analyzed above, WITH
+NO PARADOXICAL RESULT.
+
+
+% 
+% Here's the Admit and Gender analysis:
+% 
+% \begin{lstlisting}
+% > loglin(ucb,list(c(1,2)),param=T)
+% 2 iterations: deviation 2.273737e-13 
+% $lrt
+% [1] 2163.744
+% 
+% $pearson
+% [1] 1919.241
+% 
+% $df
+% [1] 20
+% 
+% $margin
+% $margin[[1]]
+% [1] "Admit"  "Gender"
+% 
+% 
+% $param
+% $param$`(Intercept)`
+% [1] 5.176383
+% 
+% $param$Admit
+%   Admitted   Rejected 
+% -0.2626551  0.2626551 
+% 
+% $param$Gender
+%       Male     Female 
+%  0.2303337 -0.2303337 
+% 
+% $param$Admit.Gender
+%           Gender
+% Admit            Male     Female
+%   Admitted  0.1525881 -0.1525881
+%   Rejected -0.1525881  0.1525881
+% \end{lstlisting}
+% 
+% And now the Admit and Dept analysis:
+% 
+% \begin{lstlisting}
+% > loglin(ucb,list(c(1,3)),param=T)
+% 2 iterations: deviation 0 
+% $lrt
+% [1] 1405.224
+% 
+% $pearson
+% [1] 1201.405
+% 
+% $df
+% [1] 12
+% 
+% $margin
+% $margin[[1]]
+% [1] "Admit" "Dept" 
+% 
+% 
+% $param
+% $param$`(Intercept)`
+% [1] 5.049374
+% 
+% $param$Admit
+%   Admitted   Rejected 
+% -0.3257818  0.3257818 
+% 
+% $param$Dept
+%          A          B          C          D          E          F 
+%  0.3593440 -0.1004504  0.3398752  0.1846255 -0.2073381 -0.5760562 
+% 
+% $param$Admit.Dept
+%           Dept
+% Admit               A          B           C            D          E         F
+%   Admitted  0.6225118  0.5972143  0.01793724 -0.006653238 -0.2189685 -1.012042
+%   Rejected -0.6225118 -0.5972143 -0.01793724  0.006653238  0.2189685  1.012042
+% \end{lstlisting}
+% 
+% It can immediately be seen that the second model generally has larger
+% coefficients.  In other words, for admissions, department matters more
+% than gender.
+% 
+% The point is that once we note that, our three-variable model seen
+% earlier {\it avoids ``sign reversals''}.  
+
+
+% \subsection{When to Watch for Simpson's}
+% 
+% If some statistical result seems counterintuitive, check for Simpson's
+% Paradox.
+% 
+% A particularly dangerous situation is one in which a regression analysis
+% is performed with a very large number of predictor variables.  In this
+% setting, there are lots of potential ``X, Y and Z'' situations of the
+% type described above.
+% 
+% None of this is to say one should reject any counterintuitive
+% statistical result.  Many such results are genuine.  But do be ccareful.
+
+
+% For example, say X, Y and Z are indicator variables.  We might have
+% 
+% Suppose each individual in a population either possesses or does not
+% possess traits {\it A}, {\it  B} and {\it C}, and that we wish to
+% predict trait {\it A}.  Let $\bar{A}$, $\bar{B}$ and $\bar{C}$ denote
+% the situations in which the individual does not possess the given trait.
+% Simpson's Paradox then describes a situation in which
+% 
+% \begin{equation}
+% P(A|B) > P(A|\bar{B})
+% \end{equation}
+% 
+% \noindent and yet
+% 
+% \begin{equation}
+% P(A|B,C) < P(A|\bar{B},C)
+% \end{equation}
+% 
+% In other words, the possession of trait $B$ seems to have a positive
+% predictive power for $A$ by itself, but when in addition trait $C$ is
+% held constant, the relation between $B$ and $A$ turns negative.
+% 
+% An example is given by Fabris and Freitas,\footnote{C.C. Fabris and A.A.
+% Freitas. Discovering Surprising Patterns by Detecting Occurrences of
+% Simpson's Paradox.  In {\it Research and Development in Intelligent
+% Systems XVI (Proc. ES99, The 19th SGES Int. Conf. on Knowledge-Based
+% Systems  and  Applied Artificial Intelligence)}, 148-160.
+% Springer-Verlag, 1999 } concerning a classic study of tuberculosis
+% mortality in 1910.  Here the attribute $A$ is mortality, $B$ is city
+% (Richmond, with $\bar{B}$ being New York), and $C$ is race
+% (African-American, with $\bar{C}$ being Caucasian).  In probability
+% terms, the data show that (these of course are sample
+% estimates)
+% 
+% \begin{itemize}
+% 
+% \item P(mortality $|$ Richmond) = 0.0022
+% 
+% \item P(mortality $|$ New York) = 0.0019
+% 
+% \item P(mortality $|$ Richmond, black) = 0.0033
+% 
+% \item P(mortality $|$ New York, black) = 0.0056
+% 
+% \item P(mortality $|$ Richmond, white) = 0.0016
+% 
+% \item P(mortality $|$ New York, white) = 0.0018
+% 
+% \end{itemize}
+% 
+% \noindent The data also show that
+% 
+% \begin{itemize}
+% 
+% \item P(black $|$ Richmond) = 0.37
+% 
+% \item P(black $|$ New York) = 0.002
+% 
+% \end{itemize}
+% 
+% \noindent a point which will become relevant below.
+% 
+% At first, New York looks like it did a better job than Richmond.
+% However, once one accounts for race, we find that New York is actually
+% worse than Richmond.  Why the reversal?  The answer stems from the fact
+% that racial inequities being what they were at the time, blacks with the
+% disease fared much worse than whites.  Richmond's population was 37\%
+% black, proportionally far more than New York's 0.2\%.  So, Richmond's
+% heavy concentration of blacks made its overall mortality rate look worse
+% than New York's, even though things were actually much worse in New
+% York.
+% 
+% But is this really a ``paradox''?   Closer consideration of this example
+% reveals that the only reason this example (and others like it) is
+% surprising is that the predictors were used in the wrong order.  One
+% normally looks for predictors one at a time, first finding the best
+% single predictor, then the best pair of predictors, and so on.  If this
+% were done on the above data set, the first predictor variable chosen
+% would be race, not city.  In other words, the sequence of analysis would
+% look something like this: 
+% 
+% \begin{itemize}
+% 
+% \item P(mortality $|$ black) = 0.0048
+% 
+% \item P(mortality $|$ white) = 0.0018
+% 
+% \item P(mortality $|$ black, Richmond) = 0.0033
+% 
+% \item P(mortality $|$ black, New York) = 0.0056
+% 
+% \item P(mortality $|$ white, Richmond) = 0.0016
+% 
+% \item P(mortality $|$ white, New York) = 0.0018
+% 
+% \end{itemize}
+% 
+% The analyst would have seen that race is a better predictor than city,
+% and thus would have chosen race as the best single predictor.  The
+% analyst would then investigate the race/city predictor pair, and
+% would never reach a point in which city alone were in the
+% selected predictor set.  Thus no anomalies would arise.
+
+\startproblemset
+
+% \section{Linear Regression with All Predictors Being Nominal Variables:
+% Analysis of ``Variance''}
+% \label{anova}
+% 
+% (Note to readers:  The material in this section is arguably of lesser
+% value to computer science.  As such, it can easily be skipped.  However,
+% it does provide motivation for our treatment of the log-linear model in
+% Section \ref{loglin}.)
+% 
+% Continuing the ideas in Section \ref{nominal}, suppose in the software
+% engineering study they had kept the project size constant, and instead
+% of $X^{(1)}$ being project size, this variable recorded whether the
+% programmer uses an integrated development environment (IDE).  Say
+% $X^{(1)}$ is 1 or 0, depending on whether the programmer uses the
+% Eclipse IDE or no IDE, respectively.  Continue to assume the study
+% included the nominal Language variable, i.e. assume the study included
+% the indicator variables $X^{(2)}$ (C++) and $X^{(3)}$ (Java).  Now all
+% of our predictors would be nominal/indicator variables.  Regression
+% analysis in such settings is called {\bf analysis of variance} (ANOVA).
+% 
+% Each nominal variable is called a {\bf factor}.  So, in our software
+% engineering example, the factors are IDE and Language.  Note again that
+% in terms of the actual predictor variables, each factor is represented
+% by one or more indicator variables; here IDE has one indicator variables
+% and Language has two.
+% 
+% Analysis of variance is a classic statistical procedure, used heavily in
+% agriculture, for example.  We will not go into details here, but mention
+% it briefly both for the sake of completeness and for its relevance to
+% Sections \ref{interaction} and \ref{loglin}.  (The reader is strongly
+% advised to review Sections \ref{interaction} before continuing.)
+% 
+% \subsection{It's a Regression!}
+% 
+% The term {\it analyisis of variance} is a misnomer.  A more appropriate
+% name would be {\bf analysis of means}, as it is in fact a regression
+% analysis, as follows.
+% 
+% First, note in our software engineering example we basically are talking
+% about six groups, because there are six different combinations of values
+% for the triple $(X^{(1)},X^{(2)},X^{(3)})$.  For instance, the triple
+% (1,0,1) means that the programmer is using an IDE and programming in
+% Java.  Note that triples of the form (w,1,1) are impossible.
+% 
+% So, all that is happening here is that we have six groups with six
+% means.  But that is a regression!  Remember, for variables U and V,
+% $m_{V;U}(t)$ is the mean of all values of V in the subpopulation group
+% of people (or cars or whatever) defined by U = s.  If U is a continuous
+% variable, then we have infinitely many such groups, thus infinitely many
+% means.  In our software engineering example, we only have six groups,
+% but the principle is the same.  We can thus cast the problem in
+% regression terms:
+% 
+% \begin{equation}
+% m_{Y;X}(i,j,k) = E(Y|X^{(1)}=i, X^{(2)}=j, X^{(3)}=k), ~ i,j,k=0,1, j+k
+% \leq 1
+% \end{equation}
+% 
+% Note the restriction $j+k \leq 1$, which reflects the fact that j and k
+% can't both be 1.
+% 
+% Again, keep in mind that we are working with means.  For instance,
+% $m_{Y;X}(0,1,0)$ is the population mean project completion time for
+% the programmers who do not use Eclipse and who program in C++.
+% 
+% Since the triple (i,j,k) can take on only six values, m can be modeled
+% fully generally in the following six-parameter linear form:
+% 
+% \begin{equation}
+% \label{full}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% + \beta_4 ij
+% + \beta_5 ik
+% \end{equation}
+% 
+% where $\beta_4$ and $\beta_5$ are the coefficients of two interaction
+% terms, as in Section \ref{interaction}.  
+% 
+% \subsection{Interaction Terms}
+% 
+% It is crucial to understand the interaction terms.  Without the ij and
+% ik terms, for instance, our model would be
+% 
+% \begin{equation}
+% \label{nointeraction}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% \end{equation}
+% 
+% which would mean (as in Section \ref{interaction}) that the difference
+% between using Eclipse and no IDE is the same for all three programming
+% languages, C++, Java and C.  That common difference would be $\beta_1$.
+% If this condition---the impact of using an IDE is the same across
+% languages---doesn't hold, at least approximately, then we would use the
+% full model, (\ref{full}).  More on this below.
+% 
+% Note carefully that there is no interaction term corresponding to jk,
+% since that quantity is 0, and thus there is no three-way interaction
+% term corresponding to ijk either.  
+% 
+% But suppose we add a third factor, Education, represented by the
+% indicator $X^{(4)}$, having the value 1 if the programmer has a least a
+% Master's degree, 0 otherwise.  Then m would take on 12 values, and the
+% full model would have 12 parameters: 
+% 
+% \begin{equation}
+% \label{full3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% + \beta_{10} ijl
+% + \beta_{11} ikl
+% \end{equation}
+% 
+% Again, there would be no ijkl term, as jk = 0.
+% 
+% Here $\beta_1$, $\beta_2$, $\beta_3$ and $\beta_4$ are called the {\bf
+% main effects}, as opposed to the coefficients of the interaction terms,
+% called of course the {\bf interaction effects}.
+% 
+% The no-interaction version would be
+% 
+% \begin{equation}
+% \label{noint3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% \end{equation}
+% 
+% \subsection{Now Consider Parsimony}
+% 
+% In the three-factor example above, we have 12 groups and 12 means.  Why
+% not just treat it that way, instead of applying the powerful tool of
+% regression analysis?  The answer lies in our desire for parsimony, as
+% noted in Section \ref{overfit}.
+% 
+% If for example (\ref{noint3}) were to hold, at least approximately, we
+% would have a far more satisfying model.  We could for instance then talk
+% of ``the'' effect of using an IDE, rather than qualifying such a
+% statement by stating what the effect would be for each different
+% language and education level.  Moreover, if our sample size is not very
+% large, we would get more accurate estimates of the various subpopulation
+% means, once again due to bias/variance tradeoff.
+% 
+% Or it could be that, while (\ref{noint3}) doesn't hold, a model with only
+% two-way interactions,
+% 
+% \begin{equation}
+% \label{2way}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% \end{equation}
+% 
+% does work well.  This would not be as nice as (\ref{noint3}), but it
+% still would be more parsimonious than (\ref{full3}).
+% 
+% Accordingly, the major thrust of ANOVA is to decide how rich a model is
+% needed to do a good job of describing the situation under study.  There
+% is an implied hierarchy of models of interest here:
+% 
+% \begin{itemize}
+% 
+% \item the full model, including two- and three-way interactions,
+% (\ref{full3})
+% 
+% \item the model with two-factor interactions only, (\ref{2way})
+% 
+% \item the no-interaction model, (\ref{noint3})
+% 
+% \end{itemize}
+% 
+% Traditionally these are determined via hypothesis testing, which
+% involves certain partitionings of sums of squares similar to
+% (\ref{sumsq}).  (This is where the name {\it analysis of variance} stems
+% from.)  The null distribution of the test statistic often turns out to
+% be an F-distribution.  Of course, in this book, we consider hypothesis
+% testing inappropriate, preferring to give some careful thought to the
+% estimated parameters, but it is standard.  Further testing can be done
+% on individual $\beta_1$ and so on.  Often people use simultaneous
+% inference procedures, discussed briefly in Section \ref{simultancis} of
+% our chapter on estimation and testing, since many tests are performed.
+% 
+% \subsection{Reparameterization}
+% 
+% Classical ANOVA uses a somewhat different parameterization than that
+% we've considered here.  For instance, consider a single-factor setting
+% (called {\bf one-way ANOVA}) with three levels.  Our predictors are then
+% $X^{(1)}$ and $X^{(2)}$.  Taking our approach here, we would write
+% 
+% \begin{equation}
+% m_{Y;X}(i,j) = \beta_0 + \beta_1 i + \beta_2 j 
+% \end{equation}
+% 
+% The traditional formulation would be
+% 
+% \begin{equation}
+% \mu_i = \mu + \alpha_i, ~ i = 1,2,3
+% \end{equation}
+% 
+% where
+% 
+% \begin{equation}
+% \mu = \frac{\mu_1+\mu_2+\mu_3}{3}
+% \end{equation}
+% 
+% and 
+% 
+% \begin{equation}
+% \alpha_i = \mu_i - \mu
+% \end{equation}
+% 
+% Of course, the two formulations are equivalent.  It is left to the
+% reader to check that, for instance, 
+% 
+% \begin{equation}
+% \mu = \beta_0 + \frac{\beta_1+\beta_2}{2}
+% \end{equation}
+% 
+% There are similar formulations for ANOVA designs with more than one
+% factor.
+% 
+% Note that the classical formulation overparameterizes the problem.  In
+% the one-way example above, for instance, there are four parameters
+% ($\mu$, $\alpha_1$, $\alpha_2$, $\alpha_3$) but only three groups.
+% This would make the system indeterminate, but we add the constraint
+% 
+% \begin{equation}
+% \sum_{i=1}^3 \alpha_i = 0
+% \end{equation}
+% 
+% Equation (\ref{betahat}) then must make use of {\bf generalized matrix
+% inverses}.
+% 
+% \section{Clustering}
+% 
+% HERE ONE **REALLY* HAS TROUBLE 
+% WITH "WHAT DOES IT MEAN?:
+
+% pdf("CARTBound.pdf")
+% plot(c(0,1),c(0,1),type="n",xlab="s",ylab="t")
+% lines(c(0,0.62),c(0.8,0.8))
+% lines(c(0.62,1),c(0.58,0.58))
+% lines(c(0.62,0.62),c(0.58,0.8))
+% dev.off()
+% 
+% 
+% lines(c(0.62,0.62),c(0,1))
+

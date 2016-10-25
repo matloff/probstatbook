@@ -1,0 +1,3290 @@
+\chapter{Linear Regression}   
+\label{chap:linreg}
+
+In many senses, this chapter and several of the following ones form the
+real core of statistics, especially from a computer science point of
+view.
+
+In this chapter and the next, we are interested in relations between
+variables, in two main senses:
+
+\begin{itemize}
+
+\item In {\bf regression analysis}, we are interested in the relation of
+one variable with one or more others.
+
+\item In other kinds of analyses, such as {\bf principal components
+analysis}, we are interested in relations among several variables,
+symmetrically, i.e. not having one variable play a special role.
+
+\end{itemize}
+
+Note carefully that {\it many types of methods that go by another name
+are actually regression methods}.  Examples are the {\bf classification
+problem}, {\bf discriminant analysis}, {\bf pattern recognition}, {\bf
+machine learning} and so on.  We'll return to this point in Chapter
+\ref{chap:class}.
+
+\section{The Goals:  Prediction and Description}
+\label{goals}
+
+{\it Prediction is difficult, especially when it's about the
+future.}---Yogi Berra\footnote{Yogi Berra (1925-2015) is a former baseball
+player and manager, famous for his malapropisms, such as ``When you
+reach a fork in the road, take it''; ``That restaurant is so crowded
+that no one goes there anymore''; and ``I never said half the things I
+really said.''} 
+
+\bigskip
+
+Before beginning, it is important to understand the typical goals in
+regression analysis.
+
+\begin{itemize}
+
+\item {\bf Prediction:}  Here we are trying to predict one variable from
+one or more others.
+
+\item {\bf Description:}  Here we wish to determine which of several
+variables have a greater effect on (or relation to) a given variable.
+An important special case is that in which we are interested in
+determining the effect of one predictor variable, {\bf after the effects
+of the other predictors are removed.}
+
+\end{itemize}
+
+Denote the {\bf predictor variables} by, $X^{(1)},...,X^{(r)}$, alluding
+to the Prediction goal.  They are also called {\bf independent
+variables} or {\bf explanatory variables} (the latter term highlighting
+the Description goal) The variable to be predicted, Y, is often called
+the {\bf response variable}, or the {\bf dependent variable}.  Note that
+one or more of the variables---whether the predictors or the response
+variable---may be indicator variables (Section \ref{indicator}).
+Another name for response variables of that type is {\bf dummy
+variables}.  
+
+Methodology for this kind of setting is called {\bf regression
+analysis}.  If the response variable Y is an indicator variable, the
+values 1 and 0 to indicate class membership, we call this the {\bf
+classification problem}.  (If we have more than two classes, we need
+several Ys.)
+
+In the above context, we are interested in the relation of a single
+variable Y with other variables $X^{(i)}$.  But in some applications, we
+are interested in the more symmetric problem of relations {\it among}
+variables $X^{(i)}$ (with there being no Y).  A typical tool for the
+case of continuous random variables is {\bf principal components
+analysis}, and a popular one for the discrete case is {\bf log-linear
+model}; both will be discussed later in this chapter.
+
+\section{Example Applications:  Software Engineering, Networks, Text
+Mining}
+\label{examples}
+
+{\bf Example:}  As an aid in deciding which applicants to admit to a
+graduate program in computer science, we might try to predict Y, a
+faculty rating of a student after completion of his/her first year in
+the program, from $X^{(1)}$ = the student's CS GRE score, $X^{(2)}$ = the
+student's undergraduate GPA and various other variables.  Here our goal
+would be Prediction, but educational researchers might do the same thing
+with the goal of Description.  For an example of the latter, see
+Predicting Academic Performance in the School of Computing \& Information
+Technology (SCIT), {\it 35th ASEE/IEEE Frontiers in Education
+Conference}, by Paul Golding and Sophia McNamarah, 2005.
+
+{\bf Example:}  In a paper, Estimation of Network Distances Using
+Off-line Measurements, {\it Computer Communications}, by Prasun Sinha,
+Danny Raz and Nidhan Choudhuri, 2006, the authors wanted to predict Y,
+the round-trip time (RTT) for packets in a network, using the predictor
+variables $X^{(1)}$ = geographical distance between the two nodes,
+$X^{(2)}$ = number of router-to-router hops, and other offline
+variables.  The goal here was primarily Prediction.
+
+{\bf Example:}  In a paper, Productivity Analysis of Object-Oriented
+Software Developed in a Commercial Environment, {\it Software---Practice
+and Experience}, by Thomas E. Potok, Mladen Vouk and Andy Rindos, 1999,
+the authors mainly had an Description goal:  What impact, positive or
+negative, does the use of object-oriented programming have on programmer
+productivity?  Here they predicted Y = number of person-months needed to
+complete the project, from  $X^{(1)}$ = size of the project as measured
+in lines of code,  $X^{(2)}$ = 1 or 0 depending on whether an
+object-oriented or procedural approach was used, and other variables.
+
+{\bf Example:}  Most {\bf text mining} applications are classification
+problems.  For example, the paper Untangling Text Data Mining, {\it
+Proceedings of ACL'99}, by Marti Hearst, 1999 cites, {\it inter alia},
+an application in which the analysts wished to know what proportion of
+patents come from publicly funded research.  They were using a patent
+database, which of course is far too huge to feasibly search by hand.
+That meant that they needed to be able to (reasonably reliably) predict
+Y = 1 or 0, according to whether the patent was publicly funded from a
+number of $X^{(i)}$, each of which was an indicator variable for a given
+key word, such as ``NSF.''  They would then treat the predicted Y values
+as the real ones, and estimate their proportion from them.
+
+{\bf Example:} A major health insurance company wanted to have a tool to
+predict which of its members would be likely to need hospitalization in
+the next year.  Here Y = 1 or 0, according to whether the patient turns
+out to be hospitalized, and the predictor variables were the members'
+demographics, previous medical history and so on.  (Interestingly,
+rather hiring its own data scientist to do the analysis, the company put
+the problem on Kaggle, a site that holds predictive analytics
+competitions, \url{www.kaggle.com}.)
+
+\section{Adjusting for Covariates}
+
+The first statistical consulting engagement I ever worked involved
+something called {\it adjusting for covariates}.  I was retained by the
+Kaiser hospital chain to investigate how heart attack patients fared at
+the various hospitals---did patients have a better chance to survive in
+some hospitals than in others?  There were four hospitals of particular
+interest.
+
+I could have simply computed raw survival rates, say the proportion of
+patients who survive for a month following a heart attack, and then used
+the methods of Section \ref{propcis}, for instance.  This could have
+been misleading, though, because one of the four hospitals served a
+largely elderly population.  A straight comparison of survival rates
+might then unfairly paint that particular hospital as giving lower
+quality of care than the others.
+
+So, we want to somehow adjust for the effects of age.  I did this by
+setting Y to 1 or 0, for survival, $X^{(1)}$ to age, and $X^{(2+i)}$ to be
+an indicator random variable for whether the patient was at hospital i,
+i = 1,2,3.\footnote{Note that there is no i = 4 case, since if the first
+three hospital variables are all 0, that already tells us that this
+patient was at the fourth hospital.}
+
+\section{What Does ``Relationship'' Really Mean?}
+\label{regintro}
+
+Consider the Davis city population example again.  In addition to the
+random variable $W$ for weight, let $H$ denote the person's height.
+Suppose we are interested in exploring the relationship between height
+and weight.
+
+As usual, we must first ask, {\bf what does that really mean}?  What do
+we mean by ``relationship''?  Clearly, there is no exact relationship;
+for instance, a person's weight is not an exact function of his/her
+height.
+
+Effective use of the methods to be presented here requires an
+understanding of what exactly is meant by the term {\it relationship} in
+this context.
+
+\subsection{Precise Definition}
+
+Intuitively, we would guess that mean weight increases with
+height.  To state this precisely, the key word in the previous sentence
+is {\it mean}.
+
+Take Y to be the weight W and $X^{(1)}$ to be the height H, and define
+
+\begin{equation}
+\label{firstreg}
+m_{W;H}(t) = E(W|H = t)
+\end{equation}
+
+This looks abstract, but it is just common-sense stuff.  For example,
+$m_{W;H}(68)$ would be the mean weight of all people in the population
+of height 68 inches.  The value of $m_{W;H}(t)$ varies with t, and we
+would expect that a graph of it would show an increasing trend with t,
+reflecting that taller people tend to be heavier.  
+
+We call $m_{W;H}$ the {\bf regression function of W on H}.  In general,
+$m_{Y;X}(t)$ means the mean of $Y$ among all units in the population for
+which $X = t$.\footnote{The word ``regression'' is an allusion to the
+famous comment of Sir Francis Galton in the late 1800s regarding
+``regression toward the mean.''  This referred to the fact that tall
+parents tend to have children who are less tall---closer to the
+mean---with a similar statement for short parents.  The predictor
+variable here might be, say, the father's height F, with the response
+variable being, say, the son's height S.  Galton was saying that 
+E(S $|$ F) $<$ F.}
+
+Note the word {\it population} in that last sentence.  The function m()
+is a \underline{population} function.
+
+So we have:
+
+\begin{quote}
+{\bf Major Point 1:} When we talk about the {\it relationship} of one
+variable to one or more others, we are referring to the regression function,
+which expresses the mean of the first variable as a function of the
+others.  The key word here is {\it mean}!
+\end{quote}
+
+\subsection{(Rather Artificial) Example:  Marble Problem}
+
+Recall the marble selection example in Section \ref{marblepmf}:  Suppose
+we have a bag containing two yellow marbles, three blue ones and four
+green ones.  We choose four marbles from the bag at random, without
+replacement.  Let Y and B denote the number of yellow and blue marbles
+that we get.  Let's find  $m_{Y;B}(2)$.
+
+For convenience, Table \ref{marblepmf1} shows what we found before for P(Y = i and B = j).
+
+\begin{table}
+\vskip 0.5in
+\vskip 0.5in
+\begin{center}
+\begin{tabular}{|r|r|r|r|r|r|}
+\hline
+i $\downarrow$, j $\rightarrow$ & 0 & 1 & 2 & 3 \\ \hline
+0 & 0.0079 & 0.0952 & 0.1429 & 0.0317 \\ \hline
+1 & 0.0635 & 0.2857 & 0.1905 & 0.1587 \\ \hline
+2 & 0.0476 & 0.0952 & 0.0238 & 0.000 \\ \hline
+\end{tabular}
+\end{center}
+\caption{Bivariate pmf for the Marble Problem}
+\label{marblepmf1}
+\end{table}
+
+
+Now keep in mind that since $m_{Y;B}(t)$ is the conditional mean of Y
+given B, we need to use conditional probabilities to compute it.  For
+our example here of $m_{Y;B}(2)$, we need the probabilities $P(Y = k | B
+= 2)$.  For instance,
+
+\begin{eqnarray}
+P( Y = 1 | B = 2) &=& \frac{p_{Y,B}(1,2)}{p_B(2)} \\ 
+&=& \frac{0.1905}{0.1492 + 0.1905 + 0.0238} \\
+&=& 0.5333
+\end{eqnarray}
+
+The other conditional $P(Y = k | B = 2)$ are then found to be 
+0.1429/0.3572 = 0.4001 for k = 0 and
+0.0238/0.3572 = 0.0667 for k = 2. 
+
+\begin{equation}
+m_{Y;B}(2) = 0.4001 \cdot 0 + 0.5333 \cdot 1 + 0.0667 \cdot 2 = 0.667
+\end{equation}
+
+\section{Estimating That Relationship from Sample Data}
+\label{estfromsample}
+
+The marble example in the last section was rather artificial, in that
+the exact distribution of the variables was known (Table
+\ref{marblepmf1}).  In real applications, we don't know this
+distribution, and must estimate it from sample data.
+
+As noted, $m_{W;H}(t)$ is a \underline{population} function,
+dependent on \underline{population} distributions.  How can we estimate
+this function from sample data?
+
+Toward that end, let's again suppose we have a random sample of 1000
+people from Davis, with 
+
+\begin{equation}
+(H_1,W_1),...,(H_{1000},W_{1000})
+\end{equation}
+
+being their heights and weights.  We again wish to use this data to
+estimate population values, meaning the population regression function
+of W on H, $m_{W;H}(t)$.  But the difference here is that we are
+estimating a whole function now, the whole curve $m_{W;H}(t)$.  That
+means we are estimating infinitely many values, with one $m_{W;H}(t)$
+value for each t.\footnote{Of course, the population of Davis is finite,
+but there is the conceptual population of all people who {\it could}
+live in Davis.} How do we do this?
+
+One approach would be as follows.  Say we wish to find
+$\widehat{m}_{W;H}(t)$ (note the hat, for ``estimate of''!) at t = 70.2.
+In other words, we wish to estimate the mean weight---in the
+population---among all people of height 70.2.  What we could do is look
+at all the people in our sample who are within, say, 1.0 inch of 70.2,
+and calculate the average of all their weights.  This would then be our
+$\widehat{m}_{W;H}(t)$. 
+
+\subsection{Parametric Models for the Regression Function m()}
+
+There are many methods like the above (Chapter \ref{chap:nonparregclass}),
+but the traditional method is to choose a parametric model for the
+regression function.  That way we estimate only a finite number of
+quantities instead of an infinite number.  This would be good in light
+of Section \ref{dfd}.
+
+Typically the parametric model chosen is linear, i.e.  we assume that
+$m_{W;H}(t)$ is a linear function of t:
+
+\begin{equation}
+\label{par}
+m_{W;H}(t) = ct+d
+\end{equation}
+
+for some constants c and d.  If this assumption is reasonable---meaning
+that though it may not be exactly true it is reasonably close---then it
+is a huge gain for us over a nonparametric model.  Do you see why?
+Again, the answer is that instead of having to estimate an infinite
+number of quantities, we now must estimate only two quantities---the
+parameters c and d.
+
+Equation (\ref{par}) is thus called a {\bf parametric} model of
+$m_{W;H}()$.  The set of straight lines indexed by c and d is a
+two-parameter family, analogous to parametric families of distributions,
+such as the two-parametric gamma family; the difference, of course, is
+that in the gamma case we were modeling a density function, and here we
+are modeling a regression function.
+
+Note that c and d are indeed population parameters in the same sense
+that, for instance, r and $\lambda$ are parameters in the gamma
+distribution family.  We must estimate c and d from our sample data.
+
+So we have:
+
+\begin{quote}
+{\bf Major Point 2:}  The function $m_{W;H}(t)$ is a population entity,
+so we must estimate it from our sample data.  To do this, we have a 
+choice of either assuming that $m_{W;H}(t)$ takes on some parametric 
+form, or making no such assumption.
+
+If we opt for a parametric approach, the most common model is linear,
+i.e. (\ref{par}).  Again, the quantities c and d in (\ref{par}) are
+population values, and as such, we must estimate them from the data.
+
+\end{quote}
+
+\subsection{Estimation in Parametric Regression Models}
+
+So, how can we estimate these population values c and d?  We'll go into
+details in Section \ref{parest}, but here is a preview:
+
+\label{optimpred}
+Using the result on page \pageref{mingcpage}, together with the
+principle of iterated expectation, (\ref{adamsdiscrete}) and
+(\ref{adamscontin}), we can show that the minimum value of the quantity
+
+\begin{equation}
+E \left [ \left ( W - g(H) \right )^2 \right ]
+\end{equation}
+
+overall all possible functions $g(H)$, is attained by setting
+
+\begin{equation}
+g(H) = m_{W;H}(H)
+\end{equation}
+
+In other words, $m_{W;H}(H)$ is the optimal predictor of W among all
+possible functions of H, in the sense of minimizing mean squared
+prediction error.\footnote{But if we wish to minimize the mean absolute
+prediction error, $E \left ( | W - g(H) | \right )$, the best function
+turns out to be is $g(H) = \textrm{median}(W|H)$.}  
+
+Since we are assuming the model (\ref{par}), this in turn means that:
+
+\begin{quote}
+
+The quantity 
+
+\begin{equation}
+\label{rspe}
+E \left [ \left ( W - (uH+v) \right )^2 \right ]
+\end{equation}
+
+is minimized by setting u = c and v = d.  
+
+\end{quote}
+
+This then gives us a clue as to how to estimate c and d from our data,
+as follows.
+
+If you recall, in earlier chapters we've often chosen estimators by
+using sample analogs, e.g.  $s^2$ as an estimator of $\sigma^2$.  Well,
+the sample analog of (\ref{rspe}) is
+
+\begin{equation}
+\label{srspe}
+\frac{1}{n} \sum_{i=1}^n \left [ W_i - (uH_i + v) \right ]^2
+\end{equation}
+
+Here (\ref{rspe}) is the mean squared prediction error using u and v in
+the population, and (\ref{srspe}) is the mean squared prediction error
+using u and v in our sample.  Since u = c and v = d minimize
+(\ref{rspe}), it is natural to estimate c and d by the u and v that
+minimize (\ref{srspe}).  
+
+Using the ``hat'' notation common for estimators, we'll denote the u and
+v that minimize (\ref{srspe}) by $\hat{c}$ and $\hat{d}$, respectively.
+These numbers are then the classical {\bf least-squares
+estimators} of the population values c and d.
+
+\begin{quote}
+{\bf Major Point 3:}  In statistical regression analysis, one uses a
+linear model as in (\ref{par}), estimating the coefficients by
+minimizing (\ref{srspe}).
+\end{quote}
+
+We will elaborate on this in Section \ref{parest}.
+
+\subsection{More on Parametric vs. Nonparametric Models}
+
+Suppose we're interested in the distribution of battery lifetimes, and
+we have a sample of them, say $B_1,...,B_{100}$.  We wish to estimate
+the density of lifetimes in the population of all batteries of this
+kind, $f_B(t)$.
+
+We have two choices:
+
+\begin{itemize}
+
+\item [(a)] We can simply plot a histogram of our data, which we found
+in Chapter \ref{chap:nonpardens} is actually a density estimator.  We
+are estimating infinitely many population quantities, namely the heights
+of the curve $f_B(t)$ at infinitely many values of t.
+
+\item [(b)] We could postulate a model for the distribution of battery
+lifetime, say using the gamma family (Section \ref{gammafam}).  Then we
+would estimate just two parameters, $\lambda$ and $r$.
+
+\end{itemize}
+
+What are the pros and cons of (a) versus (b)?  The approach (a) is nice,
+because we don't have to make any assumptions about the form of the
+curve $f_B(t)$; we just estimate it directly, with the histogram or
+other method from Chapter \ref{chap:nonpardens}.  But we are, in
+essence, using a finite amount of data to estimate an infinite values.
+
+As to (b), it requires us to estimate only two parameters, which is
+nice.  Also, having a nice, compact parametric form for our estimate is
+appealing.  But we have the problem of having to make an assumption
+about the form of the model.  We then have to see how well the model
+fits the data, say using the methods in Chapter \ref{chap:mod}.  If it
+turns out not to fit well, we may try other models (e.g. from the
+Weibull family, not presented in this book).
+
+The above situation is exactly parallel to what we are studying in the
+present chapter.  The analogy here of estimating a density function is
+estimating a regression function.  The analog of the histogram in (a) is
+the ``average the people near a given height'' method.  The analog here
+of using a parametric family of densities, such as the gamma, is using a
+parametric family of straight lines.  And the analog of comparing
+several candidate parametric density models is to compare several
+regression models, e.g. adding quadratic or cubic terms ($t^2$, $t^3$)
+for height in (\ref{par}).  (See Section \ref{diags} for reading on
+model assessment methods.)
+
+Most statistical analysts prefer parameteric models, but nonparametric
+approaches are becoming increasingly popular.
+
+\section{Example:  Baseball Data}
+\label{baseball1}
+
+Let's do a regression analysis of weight against height in the baseball
+player data introduced in Section \ref{baseball0}.
+
+\subsection{R Code}
+
+I ran R's {\bf lm()} (``linear model'') function to perform the
+regression analysis:
+
+\begin{lstlisting}
+> summary(lm(players$Weight ~ players$Height))
+
+Call:
+lm(formula = players$Weight ~ players$Height)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-51.988 -13.147   1.218  11.694  70.012 
+
+Coefficients:
+               Estimate Std. Error t value Pr(>|t|)    
+(Intercept)    -155.092     17.699  -8.763   <2e-16 ***
+players$Height    4.841      0.240  20.168   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 17.78 on 1031 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared: 0.2829,	Adjusted R-squared: 0.2822 
+F-statistic: 406.7 on 1 and 1031 DF,  p-value: < 2.2e-16 
+\end{lstlisting}
+
+\label{asterisksexample}
+
+This illustrates the {\bf polymorphic} nature of R:  The same
+function can be applied to different classes of objects.  Here {\bf
+summary()} is such a function; another common one is {\bf plot()}.  So,
+we can call {\bf summary()} on an object of any class, at least, any one
+for which a {\bf summary()} function has been written.  In the above R
+output, we called {\bf summary()} on an object of type {\bf "lm"}; the R
+interpreter checked the class of our object, and then accordingly called
+{\bf summary.lm()}.  But it's convenient for us, since we ignore all
+that and simply call {\bf summary()} no matter what our object is.
+
+The call \lstinline{lm(players$Weight ~ players$Height)} specified that
+my response and predictor variables were the Weight and Height columns
+in the {\bf players} data frame.  
+
+{\bf Note:}  The variables here are specified in an R data frame.  One
+can also specify via a matrix, which gives more flexibility.  For
+example, 
+
+\begin{lstlisting}
+lm(y ~ x[,c(2,3,7)])
+\end{lstlisting}
+
+to predict {\bf y} from columns 2, 3 and 7 of {\bf x}.
+
+\subsection{A Look through the Output}
+
+Next, note that {\bf lm()} returns a lot of information (even more than
+shown above), all packed into an object of type {\bf "lm"}.\footnote{R
+class names are quoted.}  By calling {\bf summary()} on that object, I
+got some of the information.  It gave me more than we'll cover for
+now, but the key is that it told me that the sample estimates of c and d
+are 
+
+\begin{equation}
+\hat{d} = -155.092
+\end{equation}
+
+\begin{equation}
+\hat{c} = 4.841
+\end{equation}
+
+In other words, our estimate for the function giving mean weight in
+terms of height is
+
+\begin{lstlisting}
+mean weight = -155.092 + 4.841 height
+\end{lstlisting} 
+
+Do keep in mind that this is just an estimate, based on the sample data;
+it is not the population mean-weight-versus-height function.  So for
+example, our {\it sample estimate} is that an extra inch in height
+corresponds on average to about 4.8 more pounds in weight.  
+
+We can form a confidence interval to make that point clear, and get an
+idea of how accurate our estimate is.  The R output tells us that the
+standard error of $\hat{d}$ is 0.240.  Making use of Section \ref{stderrest},
+we add and subtract 1.96 times this number to $\hat{d}$ to get our interval:
+(4.351,5.331).  So, we are about 95\% confident that the true slope, c,
+is in that interval.
+
+Note the column of output labled ``t value.''  This is again a Student-t
+test, with the p-value given in the last column, labeled ``$Pr( >
+|t|)$.''  Let's discuss this.  In the row of the summary above regarding
+the Height variable, for example, we are testing
+
+\begin{equation}
+\label{h0c}
+H_0:  c = 0
+\end{equation}
+
+R is using a Student-t distribution for this, while we have been using the
+the N(0,1) distribution, based on the Central Limit Theorem
+approximation.  For all but the smallest samples, the difference is
+negligible.  Consider:
+
+Using (\ref{genz}), we would test (\ref{h0c}) by forming the quotient
+
+\begin{equation}
+\frac{4.841 - 0}{0.240} = 20.17
+\end{equation}
+
+This is essentially the same as the 20.168 we see in the above summary.
+In other words, don't worry that R uses the Student-t distribution while
+we use (\ref{genz}).
+
+At any rate, 20.17 is way larger than 1.96, thus resulting in rejection
+of $H_0$.  The p-value is then the area to the left of -20.17 and to the
+right of 20.17, which we could compute using {\bf pnorm()}.  But R has
+already done this for us, reporting that the p-value is $2 \times
+10^{-16}$.
+
+What about the {\bf residuals}?  Here we go back to the original
+$(H_i,W_i)$ data with our slope and intercept estimates, and ``predict''
+each $W_i$ from the corresponding $H_i$.  The residuals are the
+resulting prediction errors.  In other words, the i$^{th}$ residual is
+
+\begin{equation}
+W_i - (\hat{d} + \hat{c} H_i)
+\end{equation}
+
+You might wonder why we would try to predict the data that we already
+know!  But the reason for doing this is to try to assess how well we can
+predict future cases, in which we know height but not weight.  If we can
+``predict'' well in our known data, maybe we'll do well later with
+unknown data.  This will turn out to be somewhat overoptimistic, we'll
+see, but again, the residuals should be of at least {\it some} value in
+assessing the predictive ability of our model.  So, the R output reports
+to us what the smallest and largest residual values were.
+
+The $R^2$ values will be explained in Section \ref{varsel}.
+
+Finally, the F-test is a significance test that c = d = 0.  Since this
+book does not regard testing as very useful, this aspect will not be
+pursued here.
+
+% \checkpoint
+
+\section{Multiple Regression:  More Than One Predictor Variable}
+
+Note that $X$ and t could be vector-valued.  For instance, we could have
+$Y$ be weight and have $X$ be the pair 
+
+\begin{equation}
+X = \left ( X^{(1)},X^{(2)} \right ) = (H,A) = \textrm{(height, age)} 
+\end{equation}
+
+so as to study the relationship of weight with height and age.  If we
+used a linear model, we would write for $t = (t_1,t_2)$,
+
+\begin{equation}
+\label{heightage}
+m_{W;H,A}(t) = \beta_0 + \beta_1 t_1 + \beta_2 t_2
+\end{equation}
+
+In other words
+
+\begin{equation}
+\label{wthtage}
+\textrm{mean weight} = \beta_0 + \beta_1 \textrm{ height} + 
+\beta_2 \textrm{ age}
+\end{equation}
+
+Once again, keep in mind that (\ref{heightage}) and (\ref{wthtage}) are
+models for the \underline{population}.  We assume that
+(\ref{heightage}), (\ref{wthtage}) or whichever model we use is an exact
+representation of the relation in the population.  And of course, our
+derivations below assume our model is correct.
+
+(It is traditional to use the Greek letter $\beta$ to name the
+coefficients in a linear regression model.)
+
+So for instance $m_{W;H,A}(68,37.2)$ would be the mean weight in the
+population of all people having height 68 and age 37.2.
+
+In analogy with (\ref{srspe}), we would estimate the $\beta_i$ by
+minimizing
+
+\begin{equation}
+\label{srspe2}
+\frac{1}{n} \sum_{i=1}^n \left [ W_i - (u+vH_i+wA_i) \right ]^2
+\end{equation}
+
+with respect to u, v and w.  The minimizing values would be denoted
+$\widehat{\beta}_0$, $\widehat{\beta}_1$ and $\widehat{\beta}_2$.
+
+We might consider adding a third predictor, gender:
+
+\begin{equation}
+\label{wthtagegender}
+\textrm{mean weight} = \beta_0 + \beta_1 \textrm{ height} + 
+\beta_2 \textrm{ age} + \beta_3 \textrm{ gender}
+\end{equation}
+
+where {\bf gender} is an indicator variable, 1 for male, 0 for female.
+Note that we would not have two gender variables, since knowledge of the
+value of one such variable would tell us for sure what the other one is.
+(It would also make a certain matrix noninvertible, as we'll discuss
+later.)
+
+\section{Example:  Baseball Data (cont'd.)}
+\label{baseball2}
+
+So, let's regress weight against height and age:
+
+\begin{lstlisting}
+> summary(lm(players$Weight ~ players$Height + players$Age))
+
+Call:
+lm(formula = players$Weight ~ players$Height + players$Age)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-50.794 -12.141  -0.304  10.737  74.206 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)    -192.6564    17.8905 -10.769  < 2e-16 ***
+players$Height    4.9746     0.2341  21.247  < 2e-16 ***
+players$Age       0.9647     0.1249   7.722  2.7e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 17.3 on 1030 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared: 0.3221,	Adjusted R-squared: 0.3208 
+F-statistic: 244.8 on 2 and 1030 DF,  p-value: < 2.2e-16 
+\end{lstlisting}
+
+So, our regression function coefficient estimates are
+$\hat{\beta}_0 = -192.6564$,
+$\hat{\beta}_1 = 4.9746$ and
+$\hat{\beta}_2 = 0.9647$.
+For instance, we estimate from our sample data that
+10 years' extra age results, on average, of a weight gain about about
+9.6 pounds---for people of a given height.  This last condition is very
+important.
+
+\section{Interaction Terms}
+\label{interaction}
+
+Equation (\ref{heightage}) implicitly says that, for instance, the
+effect of age on weight is the same at all height levels.  In other
+words, the difference in mean weight between 30-year-olds and
+40-year-olds is the same regardless of whether we are looking at tall
+people or short people.  To see that, just plug 40 and 30 for age in
+(\ref{heightage}), with the same number for height in both, and
+subtract; you get $10 \beta_2$, an expression that has no height term.
+
+That assumption is not a good one, since the weight gain in aging
+tends to be larger for tall people than for short ones.  If we don't
+like this assumption, we can add an {\bf interaction term} to
+(\ref{heightage}), consisting of the product of the two original
+predictors.  Our new predictor variable $X^{(3)}$ is equal to $X^{(1)}
+X^{(2)}$, and thus our regression function is
+
+\begin{equation}
+\label{heightage2}
+m_{W;H}(t) = \beta_0 + \beta_1 t_1 + \beta_2 t_2 + \beta_3 t_1 t_2
+\end{equation}
+
+If you perform the same subtraction described above, you'll see that
+this more complex model does not assume, as the old did, that the
+difference in mean weight between 30-year-olds and 40-year-olds is the
+same regardless of we are looking at tall people or short people.  
+
+Recall the study of object-oriented programming in Section \ref{goals}.
+The authors there set $X^{(3)} = X^{(1)} X^{(2)}$.  The reader should
+make sure to understand that without this term, we are basically saying
+that the effect (whether positive or negative) of using object-oriented
+programming is the same for any code size.
+
+Though the idea of adding interaction terms to a regression model is
+tempting, it can easily get out of hand.  If we have k basic predictor
+variables, then there are 
+$ 
+\left ( 
+\begin{array}{c} 
+k \\ 
+2 
+\end{array}
+\right )
+$
+potential two-way interaction terms, 
+$ 
+\left ( 
+\begin{array}{c} 
+k \\ 
+3
+\end{array}
+\right )
+$ three-way terms and so on.  Unless we have a very large amount of data, 
+we run a big risk of overfitting (Section \ref{overfit}).  And with 
+so many interaction terms, the model would be difficult to interpret.
+
+We can add even more interaction terms by introducing powers of
+variables, say the square of height in addition to height.  Then 
+(\ref{heightage2}) would become
+
+\begin{equation}
+\label{heightage2a}
+m_{W;H}(t) = \beta_0 + \beta_1 t_1 + \beta_2 t_2 + \beta_3 t_1 t_2 +
+\beta_4 t^2_1
+\end{equation}
+
+This
+square is essentially the ``interaction'' of height with itself.  If we
+believe the relation between weight and height is quadratic, this might
+be worthwhile, but again, this means more and more predictors.
+
+So, we may have a decision to make here, as to whether to introduce
+interaction terms.  For that matter, it may be the case that age is
+actually not that important, so we even might consider dropping that
+variable altogether.  These questions will be pursued in Section
+\ref{regmodsel}.
+
+% \checkpoint
+
+% \section{Preview of Linear Regression Analysis with R}
+% 
+% There is a downloadable R library called {\bf ISwR} that contains a
+% number of useful real data sets.  One of them is {\bf bp.obese}, data on
+% a set of 102 adults, on the variables gender, obesity and systolic blood
+% pressure.  Here obesity is measure relative to the ideal weight for a
+% given height, and thus is centered around 1.00.  Gender is 1 for male, 0
+% for female.  Let's run the regression analysis:
+% 
+% \begin{lstlisting}
+% > library(ISwR)  # load ISwR library; must install first
+% > bpvob <- lm(bp.obese$bp ~ bp.obese$obese)
+% \end{lstlisting}
+% 
+% Here we use R's {\bf lm()} (``linear model'') function, using the
+% variables {\bf bp} and {\bf obese} in the data set {\bf bp.obese}.
+% R uses a dollar sign to denote members of class objects, so here for
+% example {\bf bp.obese\$bp} means the {\bf bp} member of the object {\bf
+% bp.obese}.  
+% 
+% We could have also used the matrix-like notation that R data frames
+% allow:
+% 
+% \begin{lstlisting}
+% > bpvob <- lm(bp.obese[,3] ~ bp.obese[,2])
+% \end{lstlisting}
+% 
+% referring to columns 3 and 2 of {\bf bp.obese}.  But if the columns have
+% names, as they do here, it's clearer to use them.
+% 
+% The tilde, \~, in the call to {\bf lm()} indicates what is predicting
+% what.  Here the {\bf obese} variable is predicting the {\bf bp}
+% variable.  In other words, our model is
+% 
+% \begin{equation}
+% mean ~~ blood~~  pressure = \beta_0 + \beta_1 ~~ obese
+% \end{equation},
+% 
+% The result returned by the call is another class object, an instance of
+% the {\bf "lm"} class.  (All R classes have quoted names.)  We've stored
+% it in a variable we've named {\bf bpvob}, for ``blood pressure versus
+% obesity.'' 
+% 
+% An object of the {\bf "lm"} class has many, many members.  The more
+% central ones can be listed by calling the {\bf summary()} function:
+% 
+% \begin{lstlisting}
+% > summary(bpvob)
+% 
+% Call:
+% lm(formula = bp.obese$bp ~ bp.obese$obese)
+% 
+% Residuals:
+%     Min      1Q  Median      3Q     Max 
+% -27.570 -11.241  -2.400   9.116  71.390 
+% 
+% Coefficients:
+%                Estimate Std. Error t value Pr(>|t|)    
+% (Intercept)      96.818      8.920   10.86  < 2e-16 ***
+% bp.obese$obese   23.001      6.667    3.45 0.000822 ***
+% ---
+% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+% 
+% Residual standard error: 17.28 on 100 degrees of freedom
+% Multiple R-squared: 0.1064,	Adjusted R-squared: 0.09743 
+% F-statistic:  11.9 on 1 and 100 DF,  p-value: 0.0008222 
+% \end{lstlisting}
+% 
+% The {\it residuals} are the differences between the actual and predicted
+% values of the response variable.  These are useful in advanced model
+% fitting.
+% 
+% Look at the Coefficients section.  We see that $\widehat{\beta_0} =
+% 96.818$ and $\widehat{\beta_1} = 23.001$.  Remember, these are just
+% estimates of the true population $\beta_i$, so we might consider
+% confidence intervals and significance test regarding them, especially
+% for $\beta_1$.  
+% 
+% Using the standard errors listed above, and recalling Section
+% \ref{stderrest}, we have that an approximate 95\% confidence interval
+% for $\beta_1$ is
+% 
+% \begin{equation}
+% 96.818 \pm 1.96 \cdot 7.172 = (14.981,43.095)
+% \end{equation}
+% 
+% So obesity does seem to have a substantial effect on blood pressure,
+% with the latter rising somewhere between 8 to 11 points for each rise of
+% 0.1 in obesity.
+% 
+% For significance tests on the $\beta_i$, R conveniently provides with
+% p-values, in the ``Pr($>|t|$)'' column.
+% 
+% The $R^2$ and adjusted $R^2$ values measure how well the predictor
+% variables predict the response variable.  More on this in Section
+% \ref{varsel}.
+% 
+% Now let's bring in the gender variable:
+% 
+% \begin{lstlisting}
+% > summary(lm(bp.obese$bp ~ bp.obese$obese + bp.obese$sex))
+% 
+% Call:
+% lm(formula = bp.obese$bp ~ bp.obese$obese + bp.obese$sex)
+% 
+% Residuals:
+%     Min      1Q  Median      3Q     Max 
+% -24.263 -11.613  -2.057   6.424  72.207 
+% 
+% Coefficients:
+%                Estimate Std. Error t value Pr(>|t|)    
+% (Intercept)      93.287      8.937  10.438  < 2e-16 ***
+% bp.obese$obese   29.038      7.172   4.049 0.000102 ***
+% bp.obese$sex     -7.730      3.715  -2.081 0.040053 *  
+% ---
+% Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+% 
+% Residual standard error: 17 on 99 degrees of freedom
+% Multiple R-squared: 0.1438,	Adjusted R-squared: 0.1265 
+% F-statistic: 8.314 on 2 and 99 DF,  p-value: 0.0004596 
+% \end{lstlisting}
+% 
+% In the model specification,
+% 
+% \begin{lstlisting}
+% bp.obese$bp ~ bp.obese$obese + bp.obese$sex
+% \end{lstlisting}
+% 
+% the + doesn't mean addition; it simply is a delimiter in the list of the
+% predictors.  (Actually, if we use * instead of +, this is a signal to R
+% that we also want interaction terms included.)
+% 
+% Note that the estimated value of the coefficient for gender is negative.
+% Since our coding had 1 for male, 0 for female, this means that men of
+% any given obesity level on average have a lower blood pressure than do
+% women of the same level of obesity, around 8 points.  
+% 
+% Note, though that a confidence interval for that quantity would range
+% from about 15.2 points to 0.2 points, so the gender difference might
+% actually be small.  Of course, the significance test is much less
+% subtle, and simply says that men have ``significantly'' lower blood
+% pressures than women, a bit of an overstatement.
+% 
+% Note too that the $R^2$ and adjusted $R^2$ value increased by about 40\%
+% when we added the gender variable.  However, they are still rather low
+% (their maximum possible values 1.00), indicating that there are lots of
+% other factors in blood pressure that are not measured in our data, say
+% age, physical activity, diet and so on.
+
+\section{Parametric Estimation of Linear Regression Functions}
+\label{parest}
+
+So, how did R compute those estimated regression coefficients?  Let's
+take a look.
+
+\subsection{Meaning of ``Linear''}
+\label{whatmeans}
+
+Here we model $m_{Y;X}$ as a linear function of $X^{(1)},...,X^{(r)}$:
+
+\begin{equation}
+\label{linmod}
+m_{Y;X}(t) = \beta_0 + \beta_1 t^{(1)} + ... + \beta_r t^{(r)}
+\end{equation}
+
+Note that the term {\bf linear regression} does NOT necessarily mean
+that the graph of the regression function is a straight line or a plane.
+We could, for instance, have one predictor variable set equal to the
+square of another, as in (\ref{heightage2a}).
+
+Instead, the word {\it linear} refers to the regression function being
+linear in the parameters.  So, for instance, (\ref{heightage2a}) is a
+linear model; if for example we multiple $\beta_0$, $\beta_1$ and
+$\beta_2$ by 8, then $m_{A;b}(s)$ is multiplied by 8.
+
+A more literal look at the meaning of ``linear'' comes from the matrix
+formulation (\ref{genlinmodel}) below.
+
+% \checkpoint
+
+\subsection{Random-X and Fixed-X Regression}
+
+Consider our earlier example of estimating the regression function of
+weight on height.  To make things, simple, say we sample only 5 people,
+so our data is $(H_1,W_1),...,(H_5,W_5)$. and we measure height to the
+nearest inch.
+
+In our ``notebook'' view, each line of our notebook would have 5 heights
+and 5 weights.  Since we would have a different set of 5 people on each
+line, in the $H_1$ column will generally have different values from line
+to line, though occasionally two consecutive lines will have the same
+value.  $H_1$ is a random variable.  We can regression analysis in this
+setting {\bf random-X} regression.
+
+We could, on the other hand, set up our sampling plan so that we sample
+one person each of heights 65, 67, 69, 71 and 73.  These values would
+then stay the same from line to line.  The $H_1$ column, for instance,
+would consist entirely of 65s.  This is called {\bf fixed-X regression}.
+
+So, the probabilistic structure of the two settings is different.
+However, it turns out not to matter much, for the following reason.
+
+Recall that the definition of the regression function, concerns the {\it
+conditional} distribution of W given H.  So, our analysis below will
+revolve around that conditional distribution, in which case H becomes
+nonrandom anyway.
+
+\subsection{Point Estimates and Matrix Formulation}
+\label{howestbeta}
+
+So, how do we estimate the $\beta_i$?  Keep in mind that the $\beta_i$
+are population values, which we need to estimate them from our data.
+How do we do that?  For instance, how did R compute the
+$\widehat{\beta_i}$ in Section \ref{baseball1}?  As previewed in Section
+\ref{estfromsample}, the usual method is least-squares.  Here we will go
+into the details.
+
+For concreteness, think of the baseball data, and let $H_i$, $A_i$ and
+$W_i$ denote the height, age and weight of the i$^{th}$ player in our
+sample, i = 1,2,...,1033.  As in (\ref{srspe}), the estimation
+methodology involves finding the values of $u_i$ which
+minimize the sum of squared differences between the actual W values and
+their predicted values using the $u_i$:
+
+\begin{equation}
+\label{sumsq}
+\sum_{i=1}^{1033} [W_i - (u_0 + u_1 H_i + 
+u_2 A_i)]^2 
+\end{equation}
+
+When we find the minimizing $u_i$, we will set our estimates for the
+population regression coefficients $\beta_i$ in (\ref{linmod}):
+
+\begin{equation}
+\widehat{\beta_0} = u_0
+\end{equation}
+\begin{equation}
+\widehat{\beta_1} = u_1
+\end{equation}
+\begin{equation}
+\widehat{\beta_2} = u_2
+\end{equation}
+
+Obviously, this is a calculus problem.  We set the partial derivatives of
+(\ref{sumsq}) with respect to the $u_i$ to 0, giving use three
+linear equations in three unknowns, and then solve.
+
+In linear algebra terms, define
+
+\begin{equation}
+V =
+\left (
+\begin{array}{l}
+W_1 \\
+W_2 \\
+... \\
+W_{1033}\\
+\end{array}
+\right ),
+\end{equation}
+
+\begin{equation}
+% \widehat{u} =
+u = 
+\left (
+\begin{array}{r}
+u_0 \\
+u_1 \\
+u_2 \\
+\end{array}
+\right )
+\end{equation}
+
+and
+
+\begin{equation}
+Q =
+\left (
+\begin{array}{lll}
+1 & H_1 & A_1 \\
+1 & H_2 & A_2 \\
+... \\
+1 & H_{1033} & A_{1033} \\
+\end{array}
+\right )
+\end{equation}
+
+Then 
+
+\begin{equation}
+\label{evq}
+E(V ~|~ Q) = Q \beta
+\end{equation}
+
+To see this, look at the first player, of height 74 and age 22.99
+(Section \ref{baseball0}).  We are modeling the mean weight in the
+population for all players of that height and weight as
+
+\begin{equation}
+\label{thatsit}
+\textrm{mean weight} = \beta_0 + \beta_1 ~ 74 +
+\beta_2 ~ 22.99
+\end{equation} 
+
+The top row of Q will be (1,74,22.99), so the top row of $Q \beta$ will be
+$\beta_0 + \beta_1 ~ 74 + \beta_2 ~ 22.99$ --- which exactly matches
+(\ref{thatsit}).  Note the need for the 1s column in Q.
+
+we can write (\ref{sumsq}) as
+
+\begin{equation}
+\label{matrixformulation}
+% (V - Q\hat{\beta})' (V-Q\hat{u})
+(V - Qu)' (V-Qu)
+\end{equation}
+
+Whatever vector u minimizes (\ref{matrixformulation}), we set our
+estimated $\beta$ vector $\widehat{\beta} = (\widehat{\beta_0},
+\widehat{\beta_1}, \widehat{\beta_2})' $ to that u.
+
+Then it can be shown that, after all the partial derivatives are taken
+and set to 0, the solution is
+
+\begin{equation}
+\label{betahat}
+\hat{\beta} = (Q'Q)^{-1} Q'V
+\end{equation}
+
+For the general case (\ref{linmod}) with n observations (n = 1033 in the
+baseball data), the matrix Q has n rows and r+1 columns.  Column i+1 has
+the sample data on predictor variable i.  
+
+Note that we are conditioning on Q in (\ref{evq}).  This is the standard
+approach, especially since there is the case of nonrandom X.  Thus we
+will later get conditional confidence intervals, which is fine.  To
+avoid clutter, I will sometimes not show the conditioning explicitly,
+and thus for instance will write, for example, Cov(V) instead of
+Cov(V$|$Q).
+
+It turns out that $\hat{\beta}$ is an unbiased estimate of $\beta$:\footnote
+{Note that here we are taking the expected value of a vector, as in
+Chapter \ref{randvec}.} 
+
+\begin{eqnarray}
+E\hat{\beta} &=& E[(Q'Q)^{-1} Q'V] ~ \textrm{  (\ref{betahat})} \\
+&=& (Q'Q)^{-1} Q'EV ~ \textrm{  (linearity of E())} \\
+&=& (Q'Q)^{-1} Q'\cdot Q\beta ~ \textrm{  (\ref{genlinmodel}) } \\
+&=& \beta
+\end{eqnarray}
+
+In some applications, we assume there is no constant term $\beta_0$ 
+in (\ref{linmod}).  This means that our Q matrix no longer has the
+column of 1s on the left end, but everything else above is valid.
+
+% \subsection{Back to Our ALOHA Example}
+% \label{quartic}
+% 
+% In our weight/height/age example above, all three variables are random.
+% If we repeat the ``experiment,'' i.e. we choose another sample of 1000
+% people, these new people will have different weights, different heights
+% and different ages from the people in the first sample.
+% 
+% But we must point out that the function $m_{Y;X}$  for the regression
+% function of Y and X makes sense even if $X$ is nonrandom.  To illustrate
+% this, let's look at the ALOHA network example in our introductory
+% chapter on discrete probability, Section \ref{aloha}.
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+% # simulation of simple form of slotted ALOHA
+% 
+% # a node is active if it has a message to send (it will never have more
+% # than one in this model), inactive otherwise
+% 
+% # the inactives have a chance to go active earlier within a slot, after
+% # which the actives (including those newly-active) may try to send; if
+% # there is a collision, no message gets through
+% 
+% # parameters of the system:
+% # s = number of nodes
+% # b = probability an active node refrains from sending
+% # q = probability an inactive node becomes active
+% 
+% # parameters of the simulation:
+% # nslots = number of slots to be simulated
+% # nb = number of values of b to run; they will be evenly spaced in (0,1)
+% 
+% # will find mean message delay as a function of b; 
+% 
+% # we will rely on the "ergodicity" of this process, which is a Markov
+% # chain (see http://heather.cs.ucdavis.edu/~matloff/132/PLN/Markov.tex), 
+% # which means that we look at just one repetition of observing the chain
+% # through many time slots
+% 
+% # main loop, running the simulation for many values of b
+% alohamain <- function(s,q,nslots,nb) {
+%    deltab = 0.7 / nb  # we'll try nb values of b in (0.2,0.9)
+%    md <- matrix(nrow=nb,ncol=2)
+%    b <- 0.2
+%    for (i in 1:nb) {
+%       b <- b + deltab
+%       w <- alohasim(s,b,q,nslots)
+%       md[i,] <- alohasim(s,b,q,nslots)
+%    }
+%    return(md)
+% }
+% 
+% # simulate the process for h slots
+% alohasim <- function(s,b,q,nslots) {  
+%    # status[i,1] = 1 or 0, for node i active or not
+%    # status[i,2] = if node i active, then epoch in which msg was created
+%    # (could try a list structure instead a matrix)
+%    status <- matrix(nrow=s,ncol=2)
+%    # start with all active with msg created at time 0
+%    for (node in 1:s) status[node,] <- c(1,0)
+%    nsent <- 0  # number of successful transmits so far
+%    sumdelay <- 0  # total delay among successful transmits so far
+%    # now simulate the nslots slots
+%    for (slot in 1:nslots) {
+%       # check for new actives
+%       for (node in 1:s) {
+%          if (!status[node,1])  # inactive
+%             if (runif(1) < q) status[node,] <- c(1,slot)
+%       }
+%       # check for attempted transmissions
+%       ntrysend <- 0
+%       for (node in 1:s) {
+%          if (status[node,1])  # active
+%             if (runif(1) > b) {
+%                ntrysend <- ntrysend + 1
+%                whotried <- node
+%             }
+%       }
+%       if (ntrysend == 1) {  # something gets through iff exactly one tries
+%          # do our bookkeeping
+%          sumdelay <- sumdelay + slot - status[whotried,2]
+%          # this node now back to inactive
+%          status[whotried,1] <- 0
+%          nsent <- nsent + 1
+%       }
+%    }
+%    return(c(b,sumdelay/nsent))
+% }
+% \end{Verbatim}
+% 
+% A minor change is that I replaced the probability p, the probability
+% that an active node would send in the original example to b, the
+% probability of {\it not} sending (b for ``backoff'').  Let A denote the
+% time A (measured in slots) between the creation of a message and the
+% time it is successfully transmitted.  
+% 
+% We are interested in mean delay, i.e. the mean of A.  (Note that our
+% $Y_i$ here are sample mean values of A, whereas we want to draw
+% inferences about the population mean value of A.) We are particularly
+% interested in the effect of b here on that mean.  Our goal here, as
+% described in Section \ref{goals}, could be Prediction, so that we could
+% have an idea of how much delay to expect in future settings.  Or, we may
+% wish to explore finding an optimal b, i.e. one that minimizing the mean
+% delay, in which case our goal would be more in the direction of
+% Understanding.
+% 
+% I ran the program with certain arguments, and then plotted the data:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > md <- alohamain(4,0.1,1000,100)
+% > plot(md,cex=0.5,xlab="b",ylab="A")
+% \end{Verbatim}
+% 
+% The plot is shown in Figure \ref{scatter}.
+% 
+% \begin{figure}[tb]
+% \centerline{
+% \includegraphics[width=5.0in]{Aloha1.pdf}
+% }
+% \caption{Scatter Plot}
+% \label{scatter}
+% \end{figure}
+% 
+% Note that though our values b here are nonrandom, the A values are
+% indeed random.  To dramatize that point, I ran the program again.
+% (Remember, unless you specify otherwise, R will use a different seed for
+% its random number stream each time you run a program.)  I've
+% superimposed this second data set on the first, using filled circles
+% this time to represent the points:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% md2 <- alohamain(4,0.1,1000,100)
+% points(md2,cex=0.5,pch=19)
+% \end{Verbatim}
+% 
+% The plot is shown in Figure \ref{scatter2}.
+% 
+% \begin{figure}[tb]
+% \centerline{
+% \includegraphics[width=5.0in]{Aloha1a.pdf}
+% }
+% \caption{Scatter Plot, Two Data Sets}
+% \label{scatter2}
+% \end{figure}
+% 
+% We do expect some kind of U-shaped relation, as seen here.  For b too
+% small, the nodes are clashing with each other a lot, causing long delays
+% to message transmission.  For b too large, we are needlessly backing off
+% in many cases in which we actually would get through.
+% 
+% So, a model that expresses mean A to be a linear function of b, as in
+% our height-weight example, is clearly inappropriate.  However, you may
+% be surprised to know that we can \underline{still} use a linear
+% regression model!  And this is common.  Here are the details:
+% 
+% This looks like a quadratic relationship, meaning the following.  Take
+% our response variable Y to be A, take our first predictor $X^{(1)}$ to
+% be b, and take our second predictor $X^{(2)}$ to be $b^2$.  Then when we
+% say A and b have a quadratic relationship, we mean
+% 
+% \begin{equation}
+% \label{quad}
+% m_{A;b}(b) = \beta_0 + \beta_1 b + \beta_2 b^2
+% \end{equation}
+% 
+% for some constants $\beta_0, \beta_1, \beta_2$.  So, we are using a
+% three-parameter family for our model of $m_{A;b}$.  No model is exact,
+% but our data seem to indicate that this one is reasonably good, and if
+% further investigation confirms that, it provides for a nice compact
+% summary of the situation.  
+% 
+% As mentioned, this is a {\it linear} model, in the sense that the $\beta_i$
+% enter into (\ref{quad}) is a linear manner.  The fact that that equation
+% is quadratic in b is irrelevant.  By the way, one way to look at the
+% degree-2 term is to consider it to model the ``interaction'' of b with
+% itself.
+% 
+% Again, we'll see how to estimate the $\beta_i$ in Section \ref{parest}.
+% 
+% We could also try adding two more predictor variables, consisting of
+% $X^{(3)} = q$ and  $X^{(4)} = s$, the node activation probability and
+% number of nodes, respectively.  We would collect more data, in which we
+% varied the values of q and s, and then could entertain the model
+% 
+% \begin{equation}
+% \label{quadmore}
+% m_{A;b,q}(u,v,w) = \beta_0 + \beta_1 u + \beta_2 u^2 + \beta_3 v + \beta_4 w
+% \end{equation}
+% 
+% R or any other statistical package does the work for us.  In R, we can
+% use the {\bf lm()} (``linear model'') function:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > md <- cbind(md,md[,1]^2)
+% > lmout <- lm(md[,2] ~ md[,1] + md[,3])
+% \end{Verbatim}
+% 
+% First I added a new column to the data matrix, consisting of
+% $b^2$.  I then called {\bf lm()}, with the argument
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% md[,2] ~ md[,1] + md[,3]
+% \end{Verbatim}
+% 
+% R documentation calls this model specification argument the {\bf
+% formula}.  It states that I wish to use the first and third columns of
+% {\bf md}, i.e. $b$ and $b^2$, as predictors, and use A, i.e. second
+% column, as the response variable.\footnote{Unfortunately, R did not
+% allow me to put the squared column directly into the formula, forcing me
+% to use {\bf cbind()} to make a new matrix.}
+% 
+% The return value from this call, which I've stored in {\bf lmout}, is an
+% object of class {\bf lm}.  One of the member variables of that class,
+% {\bf coefficients}, is the vector $\widehat{\beta}$:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > lmout$coefficients
+% (Intercept)     md[, 1]     md[, 3]
+%    27.56852   -90.72585    79.98616
+% \end{Verbatim}
+% 
+% So, $\widehat{\beta}_0 = 27.57$ and so on.
+% 
+% The result is
+% 
+% \begin{equation}
+% \label{quadest}
+% \widehat{m}_{A,b}(t) = 27.57 - 90.73 t + 79.99 t^2
+% \end{equation}
+% 
+% (Do you understand why there is a hat about the m?)
+% 
+% Another member variable in the {\bf lm} class is {\bf fitted.values}.
+% This is the ``fitted curve,'' meaning the values of (\ref{quadest}) at
+% $b_1,...,b_{100}$.  In other words, this is (\ref{quadest}).  I plotted
+% this curve on the same graph, 
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > lines(cbind(md[,1],lmout$fitted.values))
+% \end{Verbatim}
+% 
+% See Figure \ref{qc}.  As you can see, the fit looks fairly good.  What
+% should we look for?
+% 
+% {\bf Remember, we don't expect the curve to go through the points---we
+% are estimating the \underline{mean} of A for each b, not the A values
+% themselves.}  There is always variation around the mean.  If for
+% instance we are looking at the relationship between people heights and
+% weights, the mean weight for people of height 70 inches might be, say,
+% 160 pounds, but we know that some 70-inch-tall people weigh more than
+% this and some weigh less.
+% 
+% However, there seems to be a tendency for our estimates of
+% $\widehat{m}_{A,b}(t)$ to be too low for values in the middle range of
+% t, and possible too high for t around 0.3 or 0.4.  {\bf However, with a
+% sample size of only 100, it's difficult to tell.} It's always important
+% to keep in mind that the data are random; a different sample may show
+% somewhat different patterns.  Nevertheless, we should consider a more
+% complex model.
+% 
+% \begin{figure}[tb] 
+% \centerline{
+% \includegraphics[width=5.0in]{AlohaFitted.pdf}
+% }
+% \caption{Quadratic Fit Superimposed}
+% \label{qc}
+% \end{figure}
+% 
+% So I tried a quartic, i.e. fourth-degree, polynomial model.  I added
+% third- and fourth-power columns to {\bf md}, calling the result {\bf
+% md4}, and invoked the call
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% lm(md4[,2] ~ md4[,1] + md4[,3] + md4[,4] + md4[,5])
+% \end{Verbatim}
+% 
+% The result was 
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > lmout$coefficients
+% (Intercept)    md4[, 1]    md4[, 3]    md4[, 4]    md4[, 5]
+%    95.98882  -664.02780  1731.90848 -1973.00660   835.89714
+% \end{Verbatim}
+% 
+% In other words, we have an estimated regression function of
+% 
+% \begin{equation}
+% \label{fourest}
+% \widehat{m}_{A,b}(t) = 
+% 95.98882  - 664.02780 ~ t  + 1731.90848 ~ t^2 - 1973.00660 ~ t^3  +
+% 835.89714 ~ t^4
+% \end{equation}
+% 
+% The fit is shown in Figure \ref{fourc}.  It looks much better.  On the
+% other hand, we have to worry about overfitting.  We return to this issue
+% in Section \ref{overfit}). 
+% 
+% % \checkpoint
+% 
+% \begin{figure}[tb] 
+% \centerline{
+% \includegraphics[width=5.0in]{AlohaFitted4.pdf}
+% }
+% \caption{Fourth Degree Fit Superimposed}
+% \label{fourc}
+% \end{figure}
+
+\subsection{Approximate Confidence Intervals}
+\label{regappcis}
+
+As noted, R gives you standard errors for the estimated coefficients.
+Where do they come from?
+
+As usual, we should not be satisfied with just point estimates, in this
+case the $\widehat{\beta}_i$.  We need an indication of how accurate
+they are, so we need confidence intervals.  In other words, we need to
+use the $\widehat{\beta}_i$ to form confidence intervals for the
+$\beta_i$.
+
+For instance, recall the study on object-oriented programming in Section
+\ref{goals}.  The goal there was primarily Description, specifically
+assessing the impact of OOP.  That impact is measured by $\beta_2$.
+Thus, we want to find a confidence interval for $\beta_2$.
+
+Equation (\ref{betahat}) shows that the $\widehat{\beta}_i$ are sums of
+the components of V, i.e. the $W_j$.  So, the Central Limit Theorem
+implies that the $\widehat{\beta}_i$ are approximately normally
+distributed.  That in turn means that, in order to form confidence
+intervals, we need standard errors for the $\beta_i$.  How will we get
+them?
+
+Note carefully that so far we have made NO assumptions other than
+(\ref{linmod}).  Now, though, we need to add an
+assumption:\footnote{Actually, we could derive some usable, though
+messy,standard errors without this assumption.}
+
+\begin{equation}
+\label{hmsced}
+Var(Y|X=t) = \sigma^2 
+\end{equation}
+
+for all t.  Note that this and the independence of the sample
+observations (e.g. the various people sampled in the Davis height/weight
+example are independent of each other) implies that
+
+\begin{equation}
+\label{samevar}
+Cov(V|Q) = \sigma^2 I
+\end{equation}
+
+where I is the usual identiy matrix (1s on the diagonal, 0s off
+diagonal).
+
+Be sure you understand what this means.  In the Davis weights example,
+for instance, it means that the variance of weight among 72-inch tall
+people is the same as that for 65-inch-tall people.  That is not quite
+true---the taller group has larger variance---but research into this has
+found that as long as the discrepancy is not too bad, violations of this
+assumption won't affect things much.
+
+% \checkpoint
+
+We can derive the covariance matrix of $\hat{\beta}$ as follows.  Again
+to avoid clutter, let $B = (Q'Q)^{-1}$.  A theorem from linear algebra
+says that Q'Q is symmetric and thus B is too.  Another theorem says that
+for any conformable matrices U and V, then (UV)' = V'U'.  Armed with
+that knowledge, here we go:
+
+\begin{eqnarray}
+Cov(\hat{\beta}) &=& 
+Cov (
+BQ'V
+) ~ \textrm{((\ref{betahat}))} \\ 
+&=& BQ' Cov(V) (BQ')' ~ \textrm{(\ref{covawaprime})} \\
+&=& BQ' \sigma^2 I (BQ')' ~ \textrm{(\ref{samevar})} \\
+&=& \sigma^2 BQ' QB ~ \textrm{(lin. alg.)} \\
+&=& \sigma^2 (Q'Q)^{-1} ~ \textrm{(def. of B)} \label{betahatcov}
+\end{eqnarray}
+
+
+Whew!  That's a lot of work for you, if your linear algebra is rusty.
+But it's worth it, because (\ref{betahatcov}) now gives us what we need
+for confidence intervals.  Here's how:
+
+First, we need to estimate $\sigma^2$.  Recall first that for any 
+random variable U, $Var(U) = E[(U-EU)^2]$, we have
+
+\begin{eqnarray}
+\sigma^2 &=& Var(Y|X=t) \\
+&=& Var(Y|X^{(1)}=t_1,...,X^{(r)}=t_r) \\
+&=& E \left [ \{ Y - m_{Y;X}(t) \}^2 \right ] \\
+&=& E \left [ (Y - \beta_0 - \beta_1 t_1 - ...  - \beta_r t_r)^2 \right ]
+\end{eqnarray}
+
+Thus, a natural estimate for $\sigma^2$ would be the sample analog,
+where we replace E() by averaging over our sample, and replace
+population quantities by sample estimates:
+
+\begin{equation}
+s^2 = \frac{1}{n} \sum_{i=1}^{n} 
+(Y_i - \hat{\beta_0} - \hat{\beta_1} X_i^{(1)} - ...
+- \hat{\beta_r} X_i^{(r)})^2 
+\end{equation}
+
+As in Chapter \ref{chap:est}, this estimate of $\sigma^2$ is biased, and
+classicly one divides by n-(r+1) instead of n.  But again, it's not an
+issue unless r+1 is a substantial fraction of n, in which case you are
+overfitting and shouldn't be using a model with so large a value of r.
+
+So, the estimated covariance matrix for $\hat{\beta}$ is
+
+\begin{equation}
+\label{vcov}
+\widehat{Cov}(\hat{\beta}) = s^2 (Q'Q)^{-1} 
+\end{equation}
+
+The diagonal elements here are the squared standard errors (recall that
+the standard error of an estimator is its estimated standard deviation)
+of the $\beta_i$.  (And the off-diagonal elements are the estimated
+covariances between the $\beta_i$.)  Since the first standard errors you
+ever saw, in Section \ref{stderrest}, included factors like
+$1/\sqrt{n}$, you might wonder why you don't see such a factor in
+(\ref{vcov}).
+
+The answer is that such a factor is essentially there, in the following
+sense.  Q'Q consists of various sums of products of the X values, and
+the larger n is, then the larger the elements of Q'Q are. So,
+$(Q'Q)^{-1}$ already has something like a ``1/n'' factor in it.
+
+R's {\bf vcov()} function, applied to the output of {\bf lm()} will give
+you (\ref{vcov}) (subject to a bias correction factor that we'll discuss
+in Section \ref{exactlinreg}, but that we'll dismiss as unimportant.
+
+\section{Example:  Baseball Data (cont'd.)}
+
+Let us use {\bf vcov()} to obtain the estimated covariance
+matrix of the vector $\widehat{\beta}$ for our baseball data.
+
+\begin{lstlisting}
+> lmout <- lm(players$Weight ~ players$Height + players$Age)
+> vcov(lmout)
+               (Intercept) players$Height  players$Age
+(Intercept)    320.0706223   -4.102047105 -0.607718793
+players$Height  -4.1020471    0.054817211  0.002160128
+players$Age     -0.6077188    0.002160128  0.015607390
+\end{lstlisting}
+
+The first command saved the output of {\bf lm()} in a variable that
+we chose to name {\bf lmout}; we then called {\bf vcov()} on that
+object.
+
+For instance, the estimated variance of $\widehat{\beta}_1$ is
+0.054817211.  Actually, we already knew this, because the standard error
+of $\widehat{\beta}_1$ was reported earlier to be 0.2341, and
+$0.2341^2 = 0.054817211$.  
+
+But now we can find more.  Say we wish to compute a confidence interval
+for the population mean weight of players who are 72 inches tall and age
+30.  That quantity is equal to 
+
+\begin{equation}
+\beta_0 + 72 \beta_1 + 30 \beta_2 = (1,72,30) \beta
+\end{equation}
+
+which we will estimate by
+
+\begin{equation}
+(1,72,30) \widehat{\beta}
+\end{equation}
+
+Thus, using (\ref{quadform2}), we have
+
+\begin{equation}
+\label{cifor7230}
+\widehat{Var}(\widehat{\beta}_0 + 72 \widehat{\beta}_1 + 30 \widehat{\beta}_2) =
+(1,72,30) A 
+\left (
+\begin{array}{r}
+1 \\
+72 \\
+30
+\end{array}
+\right )
+\end{equation}
+
+where A is the matrix in the R output above.
+
+The square root of this quantity is the standard error of
+$\widehat{\beta}_0 + 72 \widehat{\beta}_1 + 30 \widehat{\beta}_2$.  We
+add and subtract 1.96 times that square root to $\widehat{\beta}_0 + 72
+\widehat{\beta}_1 + 30 \widehat{\beta}_2$, and then have an approximate
+95\% confidence interval for the population mean weight of players who
+are 72 inches tall and age 30.  
+
+\section{Dummy Variables}
+\label{nominal}
+
+Recall our example in Section \ref{examples} concerning a study of
+software engineer productivity.  To review, the authors of the study
+predicted $Y$ = number of person-months needed to complete the project,
+from  $X^{(1)}$ = size of the project as measured in lines of code,
+$X^{(2)}$ = 1 or 0 depending on whether an object-oriented or procedural
+approach was used, and other variables.
+
+As mentioned at the time, $X^{(2)}$ is an indicator variable, often
+called a ``dummy'' variable in the regression context.
+
+Let's generalize that a bit.  Suppose we are comparing two different
+object-oriented languages, C++ and Java, as well as the procedural
+language C.  Then we could change the definition of $X^{(2)}$ to have
+the value 1 for C++ and 0 for non-C++, and we could add another
+variable, $X^{(3)}$, which has the value 1 for Java and 0 for non-Java.
+Use of the C language would be implied by the situation $X^{(2)} =
+X^{(3)} = 0$.
+
+Note that we do NOT want to represent Language by a single value having
+the values 0, 1 and 2, which would imply that C has, for instance,
+double the impact of Java.
+
+\section{Example:  Baseball Data (cont'd.)}
+\label{baseball3}
+
+Let's now bring the Position variable into play.  First, what is
+recorded for that variable?
+
+\begin{lstlisting}
+> levels(players$Position)
+[1] "Catcher"           "Designated_Hitter" "First_Baseman"    
+[4] "Outfielder"        "Relief_Pitcher"    "Second_Baseman"   
+[7] "Shortstop"         "Starting_Pitcher"  "Third_Baseman"    
+\end{lstlisting}
+
+So, all the outfield positions have been simply labeled ``Outfielder,''
+though pitchers have been separated into starters and relievers.
+
+Technically, this variable, {\bf players\$Position}, is an R {\bf
+factor}.  This is a fancy name for an integer vector with labels, such
+that the labels are normally displayed rather than the codes.  So
+actually catchers are coded 1, designated hitters 2, first basemen 3 and
+so on, but in displaying the data frame, the labels are shown rather
+than the codes.
+
+The designated hitters are rather problematic, as they only exist in the
+American League, not the National League.  Let's restrict our analysis
+to the other players:
+
+\begin{lstlisting}
+> nondh <- players[players$Position != "Designated_Hitter",]
+> nrow(players)
+[1] 1034
+> nrow(nondh)
+[1] 1016
+\end{lstlisting}
+
+This requires some deconstruction.  The expression
+\lstinline{players$Position != "Designated_Hitter"} gives us a vector of
+True and False values.  Then
+\lstinline{players[players$Position != "Designated_Hitter",]} consists
+of all rows of {\bf players} corresponding to a True value.  Result:
+We've deleted the designated hitters, assigning the result to {\bf
+nondh}.  A comparison of numbers of rows show that there were only 18
+designated hitters in the data set anyway.
+
+Let's consolidate into four kinds of positions:  infielders,
+outfielders, catchers and pitchers.  First, switch to numeric codes, in
+a vector we'll name {\bf poscodes}:
+
+\begin{lstlisting}
+> poscodes <- as.integer(nondh$Position)
+> head(poscodes)
+[1] 1 1 1 3 3 6
+> head(nondh$Position)
+[1] Catcher        Catcher        Catcher        First_Baseman  First_Baseman 
+[6] Second_Baseman
+9 Levels: Catcher Designated_Hitter First_Baseman ... Third_Baseman
+\end{lstlisting}
+
+Now consolidate into three dummy variables:
+
+\begin{lstlisting}
+> infld <- as.integer(poscodes==3 | poscodes==6 | poscodes==7 | poscodes==9)
+> outfld <- as.integer(poscodes==4)
+> pitcher <- as.integer(poscodes==5 | poscodes==8)
+\end{lstlisting}
+
+Again, remember that catchers are designated via the other three dummies
+being 0.
+
+So, let's run the regression:
+
+\begin{lstlisting}
+> summary(lm(nondh$Weight ~ nondh$Height + nondh$Age + infld + outfld + pitcher))
+
+Call:
+lm(formula = nondh$Weight ~ nondh$Height + nondh$Age + infld + 
+    outfld + pitcher)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-49.669 -12.083  -0.386  10.410  75.081 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -193.2557    19.0127 -10.165  < 2e-16 ***
+nondh$Height    5.1075     0.2520  20.270  < 2e-16 ***
+nondh$Age       0.8844     0.1251   7.068 2.93e-12 ***
+infld          -7.7727     2.2917  -3.392 0.000722 ***
+outfld         -6.1398     2.3169  -2.650 0.008175 ** 
+pitcher        -8.3017     2.1481  -3.865 0.000118 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 17.1 on 1009 degrees of freedom
+  (1 observation deleted due to missingness)
+Multiple R-squared: 0.3286,	Adjusted R-squared: 0.3253 
+F-statistic: 98.76 on 5 and 1009 DF,  p-value: < 2.2e-16 
+\end{lstlisting}
+
+The estimated coefficients for the position variables are all negative.
+For example, for a given height and age, pitchers are on average about
+8.3 pounds lighter than catchers, while outfielders are about 6.1 pounds
+lighter than catchers.
+
+What if we want to compare infielders and outfielders, say form a
+confidence interval for $\beta_3 - \beta_4$?  Then we'd do a computation
+like (\ref{cifor7230}), with a vector (0,0,0,1,-1,0) instead of
+(1,72,30).
+
+\section{What Does It All Mean?---Effects of Adding Predictors}
+
+Keep in mind the twin goals of regression analysis, Prediction and
+Description.  In applications in which Description is the goal, we
+are keenly interested in the signs and magnitudes of the
+$\beta_i$,\footnote{As estimated from the $\widehat{\beta}_i$.}
+especially their signs.  We do need to be careful, just as we saw in
+Section \ref{whatswrong}; the sign of a coefficient usually won't be of
+much interest if the magnitude is near 0.  Subject to that caution,
+discussion of regression results often centers on the sign of a
+coefficient:  Is there a positive relationship between the response
+variable and a predictor, holding the other predictors constant?
+
+That latter phrase, {\it holding the other predictors constant}, is key.
+Recall for example our example at the start of this chapter on a study
+of the effects of using the object-oriented programming paradigm.  Does
+OOP help or hurt productivity?  Since longer programs often take longer
+to write, the researchers wanted to correct for program length, so they
+used that as a predictor, in addition to a dummy variable for OOP.  In
+other words, they wanted to know the impact of OOP on productivity,
+holding program length constant.
+
+So, in studying a predictor variable, it may matter greatly which other
+predictors one is using.  Let's examine the baseball data in this
+regard.
+
+In Section \ref{baseball2}, we added the age variable as our second
+predictor, height being the first.  This resulted in the coefficient of
+height increasing from 4.84 to 4.97.  This is not a large change, but
+what does it tell us?  It suggests that older players tend to be
+shorter.  No, this doesn't mean the players shrink with age---shrinkage
+does occur among the elderly, but likely not here---but rather that
+other phenomena are at work.  It could be, for instance, that shorter
+players tend to have longer careers.  This in turn might be due to a
+situation in which certain positions whose players tend to be tall have
+shorter careers.  All of this could be explored, say starting with
+calculating the correlation between height and age.\footnote{The R
+function {\bf cor()} computes the correlation between its first two
+arguments if they are vectors.}
+
+To develop some intuition on this, consider the following artificial
+population of eight people:
+
+\bigskip
+
+\begin{tabular}{|r|r|r|}
+\hline
+gender & height & weight \\ \hline 
+male & 66 & 150 \\ \hline 
+male & 70 & 165 \\ \hline 
+male & 70 & 175 \\ \hline 
+male & 70 & 185 \\ \hline 
+female & 66 & 120 \\ \hline 
+female & 66 & 130 \\ \hline 
+female & 66 & 140 \\ \hline 
+female & 70 & 155 \\ \hline 
+\end{tabular}
+
+\bigskip
+
+Here is the weight-height relationship for men, i.e. the mean weight for
+each height group:
+
+\bigskip
+
+men:
+
+\begin{tabular}{|r|r|}
+\hline
+height & mean weight \\ \hline 
+66 & 150 \\ \hline 
+70 & 175 \\ \hline 
+\end{tabular}
+
+\begin{equation}
+\beta_{height} = (175-150) / 4 = 6.25
+\end{equation}
+
+women:
+
+\begin{tabular}{|r|r|}
+\hline
+height & mean weight \\ \hline 
+66 & 130 \\ \hline 
+70 & 155 \\ \hline 
+\end{tabular}
+
+\begin{equation}
+\beta_{height} = (155-130) / 4 = 6.25
+\end{equation}
+
+\bigskip
+
+The coefficient of height is the same for both gender subpopulations.
+
+But look what happens when we remove gender from the analysis:
+
+\bigskip
+
+all:
+
+\begin{tabular}{|r|r|}
+\hline
+height & mean weight \\ \hline 
+66 & 135 \\ \hline 
+70 & 170 \\ \hline 
+\end{tabular}
+
+\begin{equation}
+\beta_{height} = (170-135) / 4 = 8.75
+\end{equation}
+
+In other words, the beta coefficient for height is 8.75 if gender is not
+in the equation, but is only 6.25 if we add in gender.  For a given
+height, men in this population tend to be heavier, and since the men
+tend to be taller, that inflated the height coefficient in the
+genderless analysis.
+
+Returning to the baseball example, recall that in in Section
+\ref{baseball3}, we added the position variables to height and age as
+predictors.  The coefficient for height, which had increased when we
+added in the age variable, now increased further, while the coefficient
+for age decreased, compared to the results in Section \ref{baseball2}.
+Those heavy catchers weren't separated out from the other players in our
+previous analysis, and now that we are separating them from the rest,
+the relationship of weight versus height and age is now clarified.
+
+Such thinking was central to another baseball example, in {\it Mere
+Mortals:  Retract This Article}, Gregory Matthews blog, 
+
+\url{http://statsinthewild.wordpress.com/2012/08/23/mere-mortals-retract-this-article/}.
+
+There the author took exception to someone else's analysis that
+purported to show that professional baseball players have a higher
+mortality rate than do pro football players.  This was counterintuitive,
+since football is more of a contact sport.  It turned out that the
+original analysis had been misleading, as it did not use age as a
+predictor.
+
+Clearly, the above considerations are absolutely crucial to effective
+use of regression analysis for the Description goal.  This insight is
+key---don't do regression without it!  And for the same reasons,
+whenever you read someone else's study, do so with a skeptical eye.
+
+% \subsection{Once Again, Our ALOHA Example} 
+% 
+% In R we can obtain (\ref{vcov}) via the generic function {\bf vcov()}:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > vcov(lmout)
+%             (Intercept)    md4[, 1]   md4[, 3]   md4[, 4]   md4[, 5]
+% (Intercept)    92.73734   -794.4755   2358.860  -2915.238   1279.981
+% md4[, 1]     -794.47553   6896.8443 -20705.705  25822.832 -11422.355
+% md4[, 3]     2358.86046 -20705.7047  62804.912 -79026.086  35220.412
+% md4[, 4]    -2915.23828  25822.8320 -79026.086 100239.652 -44990.271
+% md4[, 5]     1279.98125 -11422.3550  35220.412 -44990.271  20320.809
+% \end{Verbatim}
+% 
+% What is this telling us?  For instance, it says that the (4,4) position
+% (starting at (0,0) in the matrix (\ref{vcov}) is equal to 20320.809, so
+% the standard error of $\widehat{\beta}_4$ is the square root of this,
+% 142.6.  Thus an approximate 95\% confidence interval for the true
+% population $\beta_4$ is
+% 
+% \begin{equation}
+% \label{bigci}
+% 835.89714 \pm 1.96 \cdot 142.6 = (556.4,1115.4)
+% \end{equation}
+% 
+% That interval is quite wide.  The margin of error, $1.96 \cdot 142.6 =
+% 279.5$ is more than half of the left endpoint of the interval, 556.4.
+% Remember what this tells us---that our sample of size 100 is not very
+% large.  On the other hand, the interval is quite far from 0, which
+% indicates that our fourth-degree model is substantially better than our
+% quadratic one.  
+% 
+% Applying the R function {\bf summary()} to a linear model object such as
+% {\bf lmout} here gives standard errors for the $\widehat{\beta}_i$ (and
+% lots of other information), so we didn't really need to call {\bf
+% vcov()}.  But that call can give us more:
+% 
+% Note that we can apply (\ref{covawaprime}) to the estimated covariance
+% matrix of $\widehat{\beta}$!  Recall our old example of measuring
+% the relation between people's weights and heights, 
+% 
+% \begin{equation}
+% m_{W;H}(t) = \beta_0 + \beta_1 t
+% \end{equation}
+% 
+% Suppose we estimate $\beta$ from our data, and wish to find a confidence
+% interval for the mean height of all people of height 70 inches, which is
+% 
+% \begin{equation}
+% \beta_0 + 70 \beta_1
+% \end{equation}
+% 
+% Our estimate is
+% 
+% \begin{equation}
+% \label{estmean70}
+% \widehat{\beta}_0 + 70 \widehat{\beta}_1
+% \end{equation}
+% 
+% That latter quantity is 
+% 
+% \begin{equation}
+% (1,70) \widehat{\beta}
+% \end{equation}
+% 
+% perfect for (\ref{genmvci}).  Thus
+% 
+% \begin{equation}
+% \widehat{Var}(\widehat{\beta}_0 + 70 \widehat{\beta}_1) =
+% (1,70) C
+% \left (
+% \begin{array}{r}
+% 1 \\
+% 70 \\
+% \end{array}
+% \right )
+% \end{equation}
+% 
+% where C is the output from {\bf vcov()}.  The square root of this is
+% then the standard error for (\ref{estmean70}).  (Recall Section
+% \ref{stderrest}.)
+
+% \checkpoint
+
+% \subsection{Estimation Vs. Prediction} 
+% 
+% In statistical parlance, there is a keen distinction made between the
+% words {\it estimation} and {\it prediction}.  To explain this, let's
+% again consider the example of predicting Y = weight from X =
+% (height,age).  Say we have someone of height 67 inches and age 27, and
+% want to guess---i.e. {\it predict}---her weight.
+% 
+% From Section \ref{optimal1}, we know that the best prediction is
+% m[(67,27)].  However, we do not know the value of that quantity, so
+% we must {\it estimate} it from our data.  So, our {\it predicted value}
+% for this person's weight will be $\hat{m}[(67,27)]$, i.e. our {\it
+% estimate} for the value of the regression function at the point (67,27).
+
+\section{Model Selection}
+\label{regmodsel}
+
+The issues raised in Chapter \ref{chap:mod} become crucial in regression
+and classification problems.  In the context of this chapter, we
+typically deal with models having large numbers of parameters.  In
+regression analysis, we often have many predictor variables, and of
+course the number of parameters can become even larger if we add in
+interaction and polynomial terms.
+
+The {\bf model selection} problem concerns simplifying a given model to
+one with fewer parameters.  There are two motivations for this:
+
+\begin{itemize}
+
+\item A central principle will be that simpler models are preferable,
+provided of course they fit the data well.  Hence the Einstein quote
+that opens Chapter \ref{chap:mod}!  Simpler models are often called {\bf
+parsimonious}.
+
+\item A simpler model may actually predict new cases better than a
+complex one, due to the {\bf overfitting} problem discussed below.
+
+\end{itemize}
+
+So, in this section we discuss methods of selecting which predictor
+variables (including powers and interactions) we will use.  
+
+\subsection{The Overfitting Problem in Regression}
+\label{overfit}
+
+Recall that in Section \ref{interaction} we mentioned that we could add
+polynomial terms to a regression model.  But you can see that if we
+carry this notion to its extreme, we get absurd results.  If we fit a
+polynomial of degree 99 to our 100 points, we can make our fitted curve
+exactly pass through every point!  This clearly would give us a
+meaningless, useless curve.  We are simply fitting the noise.
+
+Recall that we analyzed this problem in Section \ref{biasvvariance} in
+our chapter on modeling.  There we noted an absolutely fundamental
+principle in statistics:
+
+\begin{quote}
+In choosing between a simpler model and a more complex one,
+the latter is more accurate only if either
+
+\begin{itemize}
+
+\item we have enough data to support it, or
+
+\item the complex model is sufficiently different from the simpler one
+
+\end{itemize}
+
+\end{quote}
+
+{\bf This is extremely important in regression analysis, because we
+often have so many variables we can use, thus often can make highly
+complex models.}  
+
+In the regression context, the phrase ``we have enough data to support
+the model'' means (in the parametric model case) we have enough data so
+that the confidence intervals for the $\beta_i$ will be reasonably
+narrow.  For fixed n, the more complex the model, the wider the
+resulting confidence intervals will tend to be.
+
+If we use too many predictor variables,\footnote{In the ALOHA example
+above, $b$, $b^2$, $b^3$ and $b^4$ are separate predictors, even though
+they are of course correlated.}, our data is ``diluted,'' by being
+``shared'' by so many $\beta_i$.  As a result, $Var(\widehat{\beta}_i)$
+will tend to be large, with big implications:  Whether our goal is
+Prediction or Description, our estimates will be so poor that neither
+goal is achieved.  
+
+On the other hand, if some predictor variable is really important (i.e.
+its $\beta_i$ is far from 0), then it may pay to include it, even though
+the confidence intervals might get somewhat wider.
+
+The questions raised in turn by the above considerations, i.e. {\bf How
+much} data is enough data?, and {\bf How different} from 0 is ``quite
+different''?, are addressed below in Section \ref{varsel}.
+
+A detailed mathematical example of overfitting in regression is
+presented in my paper A Careful Look at the Use of Statistical
+Methodology in Data Mining (book chapter), by N. Matloff, in {\it
+Foundations of Data Mining and Granular Computing}, edited by T.Y. Lin,
+Wesley Chu and L. Matzlack, Springer-Verlag Lecture Notes in Computer
+Science, 2005.
+
+\subsection{Relation to the Bias-vs.-Variance Tradefoff}
+
+Above we mentioned that the overfitting issue can be viewed as due to
+the bias-vs.-variance tradeoff.  The variance portion of this was
+explained above:  As the number of predictors increases,
+$Var(\widehat{\beta_i})$ will also tend to increase.
+
+But the bias will decrease.  To see this, suppose we have data on two
+predictors.  Let Model I be the result of using just $X^{(1)}$, and
+Model II be the corresponding result using both $X^{(1)}$ and $X^{(2)}$.
+Then from the point of view of Model II, our Model I will be biased.
+
+Specifically, omitting a predictor makes
+the conditional expected response, given all the other predictors AND
+this additional one, is not modeled correctly
+
+\subsection{Multicollinearity}
+
+In typical applications, the $X^{(i)}$ are correlated with each other,
+to various degrees.  If the correlation is high---a condition termed
+{\bf multicollinearity}---problems may occur.
+
+Consider (\ref{betahat}).  Suppose one predictor variable were to be
+fully correlated with another.  That would mean that the first is
+exactly equal to a linear function of the other, which would mean that
+in Q one column is an exact linear combination of the first column and
+another column.  Then $(Q'Q)^{-1}$ would not exist.
+
+Well, if one predictor is strongly (but not fully) correlated with
+another,  $(Q'Q)^{-1}$ will exist, but it will be numerically unstable.
+Moreover, even without numeric roundoff errors, $(Q'Q)^{-1}$ would be
+very large, and thus (\ref{betahatcov}) would be large, giving us large
+standard errors---not good!
+
+Thus we have yet another reason to limit our set of predictor variables.
+
+\subsection{Methods for Predictor Variable Selection}
+\label{varsel}
+
+So, we typically must discard some, maybe many, of our predictor
+variables.  In the weight/height/age example, we may need to discard the
+age variable.  In the ALOHA example, we might need to discard $b^4$ and
+even $b^3$.  How do we make these decisions?
+
+Note carefully that {\bf this is an unsolved problem.}  If anyone claims
+they have a foolproof way to do this, then they do not understand the
+problem in the first place.  Entire books have been written on this
+subject, e.g. {\it Subset Selection in Regression}, by Alan Miller, pub.
+by Chapman and Hall, second ediiton 2002.  In his preface to the second
+edition of the book, Miller laments that almost no progress had been
+made in the field since the first edition had been published, a dozen
+years earlier!  The same statement could be made today.
+
+Myriad different methods have been developed.  but again, none of them
+is foolproof.
+
+\subsubsection{Hypothesis Testing}
+\label{forwardbackward}
+
+The most commonly used methods for variable selection use hypothesis
+testing in one form or another.  Typically this takes the form
+
+\begin{equation}
+\label{idiotmethod}
+H_0:  \beta_i = 0
+\end{equation}
+
+In the context of (\ref{wthtage}), for instance, a decision as to
+whether to include age as one of our predictor variables would mean
+testing
+
+\begin{equation}
+H_0:  \beta_2 = 0
+\end{equation}
+
+If we reject $H_0$, then we use the age variable; otherwise we discard
+it.
+
+This approach is extended in a method called {\it stepwise regression}
+(which actually should be called ``stepwise variable selection.''  It
+comes in {\it forward} and {\it backward} varieties.  In the former, one
+keeps adding more and more predictors to the model, until there are no
+remaining ``significant'' ones.  At each step, one enters the variable
+that is most ``significant,'' meaning the one with the smallest p-value.
+In the backward variation, one starts with all predictors, and removes
+one at each step.
+
+{\bf I hope I've convinced the reader, in Sections \ref{whatswrong} and
+\ref{chisqgof}, that using significance testing for variable selection
+is not a good idea.}  As usual, the hypothesis test is asking the wrong
+question.  For instance, in the weight/height/age example, the test is
+asking whether $\beta_2$ is zero or not---yet we know it is not zero,
+before even looking at our data.  {\it What we want to know} is whether
+$\beta_2$ is far enough from 0 for age to give us better predictions of
+weight.  Those are two very, very different questions.
+
+A very interesting example of overfitting using real data may be found
+in the paper, Honest Confidence Intervals for the Error Variance in
+Stepwise Regression, by Foster and Stine,
+\url{www-stat.wharton.upenn.edu/~stine/research/honests2.pdf}.  The
+authors, of the University of Pennsylvania Wharton School, took real
+financial data and deliberately added a number of extra ``predictors''
+that were in fact random noise, independent of the real data.  They then
+tested the hypothesis (\ref{idiotmethod}).  They found that each of the
+fake predictors was ``significantly'' related to Y!  This illustrates
+both the dangers of hypothesis testing and the possible need for
+multiple inference procedures.\footnote{They added so many predictors
+that r became greater than n.  However, the problems they found would
+have been there to a large degree even if r were less than n but r/n was
+substantial.} This problem has always been known by thinking
+statisticians, but the Wharton study certainly dramatized it.
+
+\subsubsection{Confidence Intervals}
+
+Well, then, what can be done instead?  First, there is the same
+alternative to hypothesis testing that we discussed before---confidence
+intervals.  If the interval is very wide, telling us that it would be
+nice to have more data.  But if the lower bound of that interval is far
+from zero, say, it would look like the corresponding variable is worth
+using as a predictor.
+
+On the other hand, suppose in the weight/height/age example our
+confidence interval for $\beta_2$ is (0.04,0.06).  In other words, we
+estimate $\beta_2$ to be 0.05, with a margin of error of 0.01.  The 0.01
+is telling us that our sample size is good enough for an accurate
+assessment of the situation, but the interval's location---centered at
+0.05--says, for instance, a 10-year difference in age only makes about
+half a pound difference in mean weight.  In that situation age would be
+of almost no value in predicting weight. 
+
+An example of this using real data is given in Section \ref{forest}.
+
+\subsubsection{Predictive Ability Indicators}
+\label{predabil}
+
+Suppose you have several competing models, some using more predictors,
+some using fewer.  If we had some measure of predictive power, we could
+decide to use whichever model has the maximum value of that measure.
+Here are some of the more commonly used methods of this type:
+
+\begin{itemize}
+
+\item 
+One such measure is called {\it adjusted R-squared}.  To explain it, we
+must discuss ordinary $R^2$ first.
+
+Let $\rho$ denote the population correlation between actual Y and
+predicted Y, i.e. the correlation between Y and $m_{Y;X}(X)$, where X is
+the vector of predictor variables in our model.  Then $|\rho|$ is a
+measure of the power of X to predict Y, but it is traditional to use
+$\rho^2$ instead.\footnote{That quantity can be shown to be the
+proportion of variance of Y attributable to X.}
+
+R is then the {\it sample} correlation between the $Y_i$ and the vectors
+$X_i$.  The sample $R^2$ is then an estimate of $\rho^2$.  However, the
+former is a {\bf biased} estimate---over infinitely many samples, the
+long-run average value of $R^2$ is higher than $\rho^2$.  And the worse
+the overfitting, the greater the bias.  Indeed, if we have n-1
+predictors and n observations, we get a perfect fit, with $R^2 = 1$, yet
+obviously that ``perfection'' is meaningless.
+
+Adjusted $R^2$ is a tweaked version of $R^2$ with less bias.  So, in
+deciding which of several models to use, we might choose the one with
+maximal adjusted $R^2$.  Both measures are reported when one calls {\bf
+summary()} on the output of {\bf lm()}.
+
+\item 
+The most popular alternative to hypothesis testing for variable
+selection today is probably {\bf cross validation}.  Here we split our
+data into a {\bf training set}, which we use to estimate the $\beta_i$,
+and a {\bf validation set}, in which we see how well our fitted model
+predicts new data, say in terms of average squared prediction error.  We
+do this for several models, i.e.  several sets of predictors, and choose
+the one which does best in the validation set.  I like this method very
+much, though I often simply stick with confidence intervals.
+
+\item 
+A method that enjoys some popularity in certain circles is the {\bf
+Akaike Information Criterion} (AIC).  It uses a formula, backed by some
+theoretical analysis, which creates a tradeoff between richness of the
+model and size of the standard errors of the $\hat{\beta_i}$.  Here we
+choose the model with minimal AIC.
+
+The R statistical package includes a function {\bf AIC()} for this,
+which is used by {\bf step()} in the regression case.
+
+\end{itemize}
+
+\subsubsection{The LASSO}
+
+Consider again Equation (\ref{sumsq}).  Ordinarily, we finding the $u_i$
+that minimize this quantity.  But the LASSO (Least Absolute Shrinkage
+and Selection Operator) minimizes
+
+\begin{equation}
+\label{sumsqlass}
+\sum_{i=1}^{1033} [W_i - (u_0 + u_1 H_i + 
+u_2 A_i)]^2 + s \sum_{i=1}^{3} |u_i|
+\end{equation}
+
+for some value of s (generally chosen by cross-validation).  The
+importance of this in our context here is that this method turns out to
+force some of the $\hat{u}_i$ to 0---in effect, becoming a variable
+selection procedure.  The LASSO has many fans, though again see the
+Miller book why you ought to be more careful with it.
+
+\subsection{Rough Rules of Thumb}
+\label{thumb}
+
+A rough rule of thumb is that one should have $r < \sqrt{n}$, where r is
+the number of predictors and n is the sample size.\footnote{Asymptotic
+Behavior of Likelihood Methods for Exponential Families When the Number
+of Parameters Tends to Infinity, Stephen Portnoy, {\it Annals of
+Statistics}, 1988.} This result is general, not just restricted to
+regression models.
+
+Also, if the adjusted $R^2$ is close to the unadjusted value, this is
+some indication that you are not overfitting.
+
+\section{Prediction}
+\label{howpredict}
+
+As noted, regression analysis is motivated by prediction.  This is true
+even if ones goal is Description.  We pursue this point further here.
+
+\subsection{Height/Weight Age Example}
+
+Let's return to our weight/height/age example.  We are informed of a
+certain person, of height 70.4 and age 24.8, but weight unknown.  What
+should we predict his weight to be?
+
+The intuitive answer (justified formally on page \pageref{optimpred}) is
+that we predict his weight to be the mean weight for his height/age
+group, 
+
+\begin{equation}
+m_{W;H,A}(70.4,24.8)
+\end{equation}
+
+But that is a population value.  Say we estimate the function $m_{W;H}$
+using that data, yielding $\widehat{m}_{W;H}$.  Then we could take as
+our prediction for the new person's weight
+
+\begin{equation}
+\label{prediction}
+\widehat{m}_{W;H,A}(70.4,24.8)
+\end{equation}
+
+If our model is (\ref{heightage}), then (\ref{prediction}) is
+
+\begin{equation}
+\label{predex}
+\widehat{m}_{W;H}(t) = \widehat{\beta}_0 + \widehat{\beta}_1 70.4 + 
+\widehat{\beta}_2 24.8
+\end{equation}
+
+where the $\widehat{\beta}_i$ are estimated from our data by
+least-squares.
+
+\subsection{R's predict() Function}
+
+We can automate the prediction process in (\ref{predex}), which is handy
+when we are doing a lot of predictions.  An important example of such a
+situation was seen in Section \ref{predabil}, with the idea of breaking
+our data into training and validation sets.
+
+R's {\bf predict()} function makes this much easier.  It is actually a
+collection of functions, with the one corresponding to {\bf lm()} being
+{\bf predict.lm()}.  We just call {\bf predict()}, and R will sense
+which version to call.\footnote{R's object orientation includes the
+notion of {\bf generic functions}, where a single function, say {\bf
+plot()}, actually transfers control to the proper class-specific
+version.}
+
+With the arguments used here, the call form is 
+
+\begin{lstlisting}
+predict(lmobj,newxmatrix)
+\end{lstlisting}
+
+where {\bf lmobj} is an object returned from a call to {\bf lm()}, and
+{\bf newmatrix} is the matrix of predictor values from which we wish to
+predict Y.  The return value will be the vector of predicted Y values.
+
+\section{Example:  Turkish Teaching Evaluation Data}
+\label{turk0}
+
+This data, again from the UCI Machine Learning Repository, consists
+of 5820 student evaluations of professors in Turkey.  
+
+\subsection{The Data}
+
+There are 28 questions of the type agree/disagree, scale of 1 to 5.
+Here are the first few:
+
+Q1: The semester course content, teaching method and evaluation system
+were provided at the start.
+
+Q2: The course aims and objectives were clearly stated at the beginning
+of the period.
+
+Q3: The course was worth the amount of credit assigned to it.
+
+Q4: The course was taught according to the syllabus announced on the
+first day of class.
+
+Q5: The class discussions, homework assignments, applications and
+studies were satisfactory.
+
+Q6: The textbook and other courses resources were sufficient and up to
+date.
+
+Q7: The course allowed field work, applications, laboratory, discussion
+and other studies.
+
+There are also several ``miscellaneous'' questions, e.g. concerning the
+difficulty of the class.  I chose to use just this one.
+
+\subsection{Data Prep}
+
+I used a text editor to remove quotation marks in the original file,
+making it easier to read in.  I then did
+
+\begin{lstlisting}
+> turk <-
+read.csv("~/Montreal/Data/TurkEvals/turkiye-student-evaluation.csv",header=T)
+> names(turk)
+ [1] "instr"      "class"      "nb.repeat"  "attendance" "difficulty"
+ [6] "Q1"         "Q2"         "Q3"         "Q4"         "Q5"        
+[11] "Q6"         "Q7"         "Q8"         "Q9"         "Q10"       
+[16] "Q11"        "Q12"        "Q13"        "Q14"        "Q15"       
+[21] "Q16"        "Q17"        "Q18"        "Q19"        "Q20"       
+[26] "Q21"        "Q22"        "Q23"        "Q24"        "Q25"       
+[31] "Q26"        "Q27"        "Q28"       
+> turk <- turk[,c(6:33,5)]
+\end{lstlisting}
+
+In that last operation, I reordered the data, so that the new column
+numbers would reflect the question numbers:
+
+\begin{lstlisting}
+> head(turk)
+  Q1 Q2 Q3 Q4 Q5 Q6 Q7 Q8 Q9 Q10 Q11 Q12 Q13 Q14 Q15 Q16 Q17 Q18 Q19 Q20
+Q21
+1  3  3  3  3  3  3  3  3  3   3   3   3   3   3   3   3   3   3   3   3
+3
+2  3  3  3  3  3  3  3  3  3   3   3   3   3   3   3   3   3   3   3   3
+3
+3  5  5  5  5  5  5  5  5  5   5   5   5   5   5   5   5   5   5   5   5
+5
+4  3  3  3  3  3  3  3  3  3   3   3   3   3   3   3   3   3   3   3   3
+3
+5  1  1  1  1  1  1  1  1  1   1   1   1   1   1   1   1   1   1   1   1
+1
+6  4  4  4  4  4  4  4  4  4   4   4   4   4   4   4   4   4   4   4   4
+4
+  Q22 Q23 Q24 Q25 Q26 Q27 Q28 difficulty
+1   3   3   3   3   3   3   3          4
+2   3   3   3   3   3   3   3          3
+3   5   5   5   5   5   5   5          4
+4   3   3   3   3   3   3   3          3
+5   1   1   1   1   1   1   1          1
+6   4   4   4   4   4   4   4          3
+\end{lstlisting}
+
+Let's also split the rows of the data into training and validation sets, as
+in Section \ref{predabil}, and fit the model to the training set:
+
+\begin{lstlisting}
+nr <- nrow(turk)
+train <- sample(1:nr,floor(0.8*nr),replace=F)
+val <- setdiff(1:nr,train)
+lmout <- lm(turk[train,9] ~ .,data=turk[train,c(1:8,10:29)])
+\end{lstlisting}
+
+\subsection{Analysis}
+
+So, let's run a regression on the training set.  Question 9, ``Q9:  I
+greatly enjoyed the class and was eager to actively participate during
+the lectures,'' is the closest one to an overall evaluation of an
+instructor.  Let's predict the outcome of Q9 from the other variables,
+in order to understand what makes a popular teacher in Turkey.  Here is
+part of the output:
+
+\begin{lstlisting}
+> lmout <- lm(turk[train,9] ~ .,data=turk[train,c(1:8,10:29)])
+> summary(lmout)
+...
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  1.639e-01  2.852e-02   5.748 9.61e-09 ***
+Q1          -9.078e-05  1.373e-02  -0.007 0.994726    
+Q2           5.148e-02  1.762e-02   2.923 0.003489 ** 
+Q3           6.134e-02  1.541e-02   3.980 7.00e-05 ***
+Q4           7.941e-03  1.626e-02   0.488 0.625343    
+Q5          -3.858e-02  1.851e-02  -2.084 0.037179 *  
+Q6          -2.991e-02  1.690e-02  -1.770 0.076874 .  
+Q7           8.543e-02  1.898e-02   4.501 6.92e-06 ***
+Q8           1.172e-01  1.767e-02   6.631 3.73e-11 ***
+Q10          3.386e-01  1.973e-02  17.162  < 2e-16 ***
+Q11          1.744e-01  1.528e-02  11.414  < 2e-16 ***
+Q12          4.206e-02  1.524e-02   2.760 0.005795 ** 
+Q13         -2.283e-02  2.090e-02  -1.092 0.274879    
+Q14          2.871e-02  2.329e-02   1.233 0.217664    
+Q15         -6.692e-02  2.164e-02  -3.093 0.001993 ** 
+Q16          7.670e-02  2.007e-02   3.821 0.000135 ***
+Q17          1.005e-01  1.716e-02   5.857 5.04e-09 ***
+Q18         -3.766e-03  1.940e-02  -0.194 0.846072    
+Q19          2.268e-02  1.983e-02   1.143 0.252990    
+Q20         -4.538e-02  2.074e-02  -2.189 0.028676 *  
+Q21          1.022e-01  2.280e-02   4.484 7.52e-06 ***
+Q22          5.248e-02  2.288e-02   2.294 0.021860 *  
+Q23         -8.160e-03  2.160e-02  -0.378 0.705668    
+Q24         -1.228e-01  1.924e-02  -6.380 1.95e-10 ***
+Q25          7.248e-02  2.057e-02   3.523 0.000431 ***
+Q26         -6.819e-03  1.775e-02  -0.384 0.700820    
+Q27         -6.771e-03  1.584e-02  -0.428 0.668958    
+Q28         -2.506e-02  1.782e-02  -1.407 0.159615    
+difficulty  -5.367e-03  6.151e-03  -0.873 0.382925    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.556 on 4627 degrees of freedom
+Multiple R-squared:  0.8061,    Adjusted R-squared:  0.8049 
+F-statistic: 686.8 on 28 and 4627 DF,  p-value: < 2.2e-16
+\end{lstlisting}
+
+Questions 10 (``Q10:  My initial expectations about the course were met
+at the end of the period or year'') had the largest coefficient by far,
+0.3386.  
+
+In terms of significance testing, it was very highly significant, but
+since we have a large sample size, 5802, we should be careful not to
+automatically conclude that this is an important predictor.  Let's take
+a closer look.
+
+The intercept term, $\widehat{\beta}_0$, is 0.1639.  This is
+considerably smaller than the coefficient for Q10; increments in Q10 are
+of size 1, and we see that this increment will make a sizeable impact on
+our overall estimated regression function.
+
+So, let's try {\bf predict()} on the validation set:
+
+\begin{lstlisting}
+newy <- predict(lmout,newdata=turk[val,c(1:8,10:29)])
+\end{lstlisting}
+
+Just to make sure that {\bf predict()} works as advertised, let's do a
+check.  Here's is the predicted Y for the first observation in our
+validation set, calculated ``by hand'':
+
+\begin{lstlisting}
+> newx1 <- turk[val[1],c(1:8,10:29)]
+> newx1 <- as.numeric(newx1)  # was a data frame
+> newx1 <- c(1,newx1)  # need to handle the intercept term
+> betas <- lmout$coef
+> betas %*% newx1
+         [,1]
+[1,] 3.976574
+\end{lstlisting}
+
+Here is what {\bf predict()} tells us:
+
+\begin{lstlisting}
+> newy[1]
+       6 
+3.976574  # it checks out!
+\end{lstlisting}
+
+Now, let's see how accurate our predictions are on the new data:
+
+\begin{lstlisting}
+> truey <- turk[val,9]
+> mean(abs(newy - truey))
+[1] 0.2820834
+\end{lstlisting}
+
+Not bad at all---on average, our preduction is off by about 0.3 point,
+on a scale of 5.
+
+The basic point is to fit a model to one data set and then try it out on
+new, ``fresh'' data, which we've done above.  But just for fun, let's go
+back and ``predict'' the original data set:
+
+\begin{lstlisting}
+ predold <- predict(lmout,newdata=turk[train,c(1:8,10:29)])
+> mean(abs(predold - turk[train,9]))
+[1] 0.290844
+\end{lstlisting}
+
+Given the concern about overfitting brought up in Section \ref{overfit},
+one might expect the mean absolute error to be smaller on the original
+data, but it turns out to actually be a bit larger.  The is presumably
+due to sampling error, but the real issue here is that the mean absolute
+error did not decrease a lot.  This is because our sampling size, 5802,
+is large enough to support the 28 predictor variables we are using.
+This is seen above, where the adjusted $R^2$, 0.8049, was almost the
+same as the unadjusted version, 0.8061.
+
+\section{What About the Assumptions?}
+
+We have made two assumptions in this chapter:
+
+\begin{itemize}
+
+\item Linearity of our model:  (\ref{linmod}).  (But recall that this
+doesn't prevent us from including powers of variables etc.)
+
+\item Homogeneity of variance (termed {\bf homoscedasticity}) of Y given
+the $X^{(i)}$: (\ref{hmsced}).\footnote{We also assume that the
+observations are independent.}
+
+\end{itemize}
+
+The classical analysis makes one more assumption:
+
+\begin{itemize}
+
+\item The conditional distribution of Y given the $X^{(i)}$ is normal.
+
+\end{itemize}
+
+We discuss these points further in this section.
+
+\subsection{Exact Confidence Intervals and Tests}
+\label{exactlinreg}
+
+{\bf Note carefully that we have not assumed that Y, given X, is
+normally distributed.}  In the height/weight context, for example, such
+an assumption would mean that weights in a specific height
+subpopulation, say all people of height 70 inches, have a normal
+distribution.  We have not needed this assumption, as wse have relied on
+the Central Limit Theorem to give us approximate normal distributions
+for the $\widehat{\beta}_i$, enabling confidence intervals and
+significance tests.  This issue is similar to that of Section
+\ref{studentt}.  
+
+If we do make such a normality assumption, then we can get exact
+confidence intervals (which of course, only hold if we really do have an
+exact normal distribution in the population).  This again uses Student-t
+distributions.  In that analysis, $s^2$ has n-(r+1) in its denominator
+instead of our n, just as there was n-1 in the denominator for $s^2$
+when we estimated a single population variance.  The number of degrees
+of freedom in the Student-t distribution is likewise n-(r+1).  
+
+But as before, for even moderately large n, it doesn't matter.  And for
+small n, the normal population assumption almost never holds, or
+literally never.  Thus exact methods are overrated, in this author's
+opinion.
+
+\subsection{Is the Homoscedasticity Assumption Important?}
+
+What about the assumption (\ref{hmsced}), which we made and which the
+``exact'' methods assume too?  This assumption is seldom if ever exactly
+true in practice, but studies have shown that the analysis is {\bf
+robust} to that assumption.  This means that even with fairly substantial
+violation of the assumption, the confidence intervals work fairly well.
+
+\subsection{Regression Diagnostics}
+\label{diags}
+
+Researchers in regression analysis have devised some {\bf diagnostic} 
+methods, meaning methods to check the fit of a model, the validity of
+assumptions [e.g. (\ref{hmsced})], search for data points that may have
+an undue influence (and may actually be in error), and so on.  The
+residuals tend to play a central role here.
+
+For instance, to check a model such as (\ref{wthtage}), we could plot
+our residuals against our age values.  Suppose the pattern is that the
+residuals tend to be negative for the very young or very old people in
+our sample (i.e. overpredicting), and positive for the ones in between
+(underpredicting).  This may suggest trying a model quadratic in age.
+
+The R package has tons of diagnostic methods.  See for example 
+{\it Linear Models with R}, Julian Faraway, Chapman and Hall, 2005, and
+{\it An R and S-Plus Companion to Applied Regression}, John Fox, Sage,
+2002.
+
+\section{Case Studies}
+
+\subsection{Example:  Prediction of Network RTT}
+
+Recall the paper by Raz {\it et al}, introduced in Section
+\ref{examples}.  They wished to predict network round-trip travel time
+(RTT) from offline variables.  Now that we know how regression analysis
+works, let's look at some details of that paper.
+
+First, they checked for multicollinearity.  one measure of that is the
+ratio of largest to smallest eigenvalue of the matrix of correlations
+among the predictors.  A rule of thumb is that there are problems if
+this value is greater than 15, but they found it was only 2.44, so they
+did not worry about multicollinearity.
+
+They took a {\it backwards stepwise} approach to predictor variable
+selection, meaning that they started with all the variables, and removed
+them one-by-one while monitoring a goodness-of-fit criterion.  They
+chose AIC for the latter.
+
+Their initial predictors were DIST, the geographic distance between
+source and destination node, HOPS, the number of network hops (router
+processing) and an online variable, AS, the number of {\bf autonomous
+systems}---large network routing regions---a message goes through.  They
+measured the latter using the network tool {\bf traceroute}.
+
+But AS was the first variable they ended up eliminating.  They found
+that removing it increased AIC only slightly, from about 12.6 million to
+12.9 million, and reduced $R^2$ only a bit, from 0.785 to 0.778.  They
+decided that AS was expendable, especially since they were hoping to use
+only offline variables.
+
+Based on a scatter plot of RTT versus DIST, they then decided to try
+adding a quadratic term in that variable.  This increased $R^2$
+substantially, to 0.877.  So, the final prediction equation they settled
+on predicts RTT from a quadratic function of DIST and a linear term for
+HOPS.
+
+\subsection{Transformations}
+
+It is common in some fields, especially economics, to apply logarithm
+transformations to regression variables.\footnote{I personally do not
+take this approach.}
+
+One of the motivations for this is to deal with the homoscedasticity
+assumption:  Say we have just one predictor variable, for simplicity.
+If $Var(Y | X = t)$ is increasing in t, it is hoped that $Var[ln(Y) | X
+= t)$ is more stable.
+
+\subsection{Example:  OOP Study}
+
+Consider again the OOP study cited in Section \ref{examples}.  It was
+actually a bit different from our description above.  Among other
+things, they took natural logarithms of the variables.  The model was
+
+\begin{equation}
+\label{oopmodel}
+\textrm{mean } Y =
+\beta_0 +
+\beta_1 X^{(1)} +
+\beta_2 X^{(2)} +
+\beta_3 X^{(1)} X^{(2)}
+\end{equation}
+
+where now:  $Y$ is the log of Person Months (PM); $X^{(1)}$ is the log of
+KLOC, the number of thousands of lines of code; and $ X^{(2)}$ is a dummy
+variable for OOP.  The results were:
+
+\begin{tabular}{|r|r|r|r|}
+\hline
+coef. & betahat & std.err. \\ \hline
+$\beta_0$ & 4.37 & 0.23 \\ \hline
+$\beta_1$ & 0.49 & 0.07 \\ \hline
+$\beta_2$ & 0.56 & 1.57 \\ \hline
+$\beta_3$ & -0.13 & -1.34 \\ \hline
+\end{tabular}
+
+Let's find the estimated difference in mean log completion time
+under OOP and using procedural language  (former minus the latter), for
+1000-line programs:
+
+\begin{equation}
+(4.37 + 0.49 \cdot 1 + 0.56 \cdot 1 - 0.13 \cdot 1 \cdot 1) -
+(4.37 + 0.49 \cdot 1 + 0.5 \cdot 0 - 0.13 \cdot 0 \cdot 0) = 0.92
+\end{equation}
+
+While it is not the case that the mean of the log is the log of the
+mean, those who use log transformations treat this as an approximation.
+The above computation would then be viewed as the difference between two
+logs, thus the log of a quotient.  That quotient would then be exp(0.92)
+= 2.51.  In other words, OOP takes much longer to write.  However, the
+authors note that neither of the beta coefficients for OOP and KLOC
+$\times$ OOP was significantly different from 0 at the 0.05 level, and
+thus consider the whole thing a wash.
+
+\startproblemset
+
+\oneproblem
+In the quartic model in ALOHA simulation example, find an approximate
+95\% confidence interval for the true population mean wait if our
+backoff parameter b is set to 0.6.
+
+Hint:  You will need to use the fact that a linear combination of the
+components of a multivariate normal random vector has a univariate
+normal distributions as discussed in Section \ref{mvnormdens}.
+
+\oneproblem
+Consider the linear regression model with one predictor, i.e. r = 1. 
+Let $Y_i$ and $X_i$ represent the values of the response and 
+predictor variables for the i$^{th}$ observation in our sample.  
+
+\begin{itemize}
+
+\item [(a)] Assume as in Section \ref{regappcis} that $Var(Y|X = t)$ is
+a constant in t, $\sigma^2$.  Find the exact value of
+$Cov(\hat{\beta}_0, \hat{\beta_1})$, as a function of the $X_i$ and
+$\sigma^2$.  Your final answer should be in scalar, i.e. non-matrix
+form.
+
+\item [(b)] Suppose we wish to fit the model $m_{Y;X}(t) = \beta_1 t$, i.e. 
+the usual linear model but without the constant term, $\beta_0$.  Derive
+a formula for the least-squares estimate of $\beta_1$.
+
+\end{itemize}
+
+\oneproblem
+Suppose the random pair $(X,Y)$ has density $8st$ on $0 < t < s < 1$.
+Find $m_{Y;X}(s)$ and $Var(Y|X=t), ~ 0 < s < 1$. 
+
+\oneproblem
+The code below reads in a file, {\bf data.txt}, with the
+header record
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+"age", "weight", "systolic blood pressure", "height"
+\end{Verbatim}
+
+and then does the regression analysis.
+
+Suppose we wish to estimate $\beta$ in the model
+
+\begin{equation*}
+\textrm{mean weight} = \beta_0 + \beta_1 \textrm{height} + \beta_2
+\textrm{age}
+\end{equation*}
+
+Fill in the blanks in the code:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+dt <- ____________(____________________________________)
+regr <- lm(___________________________________________________)
+cvmat <- _______________(regr)
+print("the estimated value of beta2-beta0 is",
+   ____________________________________________________)
+print("the estimated variance of beta2 - beta0 is",
+   _______________________ %*% cvmat %*%  _________________________)
+# calculate the matrix Q
+q <- cbind(______________________________________________)
+\end{Verbatim}
+
+\oneproblem In this problem, you will conduct an R simulation experiment
+similar to that of Foster and Stine on overfitting, discussed in Section
+\ref{varsel}.  
+
+Generate data $X_i^{(j)}, ~ i = 1,...,n, ~ j = 1,...,r$ from a N(0,1)
+distribution, and $\epsilon_i, ~ i = 1,...,n$ from N(0,4).  Set
+$Y_i = X_i^{(1)} + \epsilon_i, ~ i = 1,...,n$.  This simulates drawing a
+random sample of n observations from an (r+1)-variate population.
+
+Now suppose the analyst, unaware that $Y$ is related to only $X^{(1)}$,
+fits the model
+
+\begin{equation}
+m_{Y;X^{(1)},...,X^{(r)}}(t_1,...,t_r) =
+\beta_0 + \beta_1 t^{(1)} + ... + \beta_r t^{(r)}
+\end{equation}
+
+In actuality, $\beta_j = 0$ for $j > 1$ (and for $i = 0$).
+But the analyst wouldn't know this. Suppose the analyst selects    
+predictors by testing the hypotheses $H_0: \beta_i = 0$, as in Section
+\ref{varsel}, with $\alpha = 0.05$.
+
+Do this for various values of r and n. You should find that, for fixed n
+and increasing r.  You begin to find that some of the predictors are
+declared to be ``significantly'' related to $Y$ (complete with
+asterisks) when in fact they are not  (while $X^{(1)}$, which really is
+related to $Y$, may be declared NOT ``significant.''  This illustrates
+the folly of using hypothesis testing to do variable selection.
+
+\oneproblem
+Suppose given X = t, the distribution of Y has mean $\gamma t$ and
+variance $\sigma^2$, for all t in (0,1). This is a fixed-X regression
+setting, i.e. X is nonrandom: For each i = 1,...,n we observe Yi drawn
+at random from the distribution of Y given X = i/n. The quantities
+$\gamma$ and $\sigma^2$ are unknown.
+
+Our goal is to estimate $m_{Y;X}(0.75)$. We have two choices for our estimator:
+
+\begin{itemize}
+
+\item We can estimate γ in the usual least-squares manner, denoting our
+estimate by G, and then use as our estimator $T_1 = 0.75 G$.
+    
+\item We can take our estimator $T_2$ to be 
+$(Y_1+...+Y_n)/n$,
+
+\end{itemize}
+
+Perform a tradeoff analysis similar to that of Section \ref{bv},
+determining under what conditions $T_1$ is superior to $T_2$ and vice versa. 
+Our criterion is mean squared error (MSE), 
+$E[(T_i - m_{Y;X}(0.75)^]$.
+Make your expressions as closed-form as possible.
+
+Advice: This is a linear model, albeit one without an intercept term.
+The quantity G here is simply $\hat{\sigma}$.  G will turn out to be a
+linear combination of the Xs (which are constants), so its variance is
+easy to find.
+
+\oneproblem
+Suppose X has an $N(\mu,\mu^2)$ distribution, i.e. with the
+standard deviation equal to the mean.  (A common assumption in
+regression contexts.)  Show that $h(X) = \ln(X)$ will be a
+variance-stabilizing transformation, a concept discussed in Section
+\ref{varstabxform}.
+
+\oneproblem
+Consider a random pair $(X,Y)$ for which the linear model
+$E(Y|X) = \beta_0 + \beta_1 X$ holds, and think about predicting $Y$,
+first without $X$ and then with $X$, minimizing mean squared prediction
+error (MSPE) in each case.  As discussed on page \pageref{optimpred}
+without $X$, the best predictor is $EY$, while with $X$ it is $E(Y|X)$, 
+which under our assumption here is $\beta_0 + \beta_1 X$.  Show that the
+reduction in MSPE accrued by using $X$, i.e.
+
+\begin{equation}
+\frac
+{E \left [(Y-EY)^2 \right ] - E \left [\{Y-E(Y|X)\}^2 \right ]}
+{E \left [(Y-EY)^2 \right ]}
+\end{equation}
+
+is equal to $\rho^2(X,Y)$.
+
+\oneproblem
+In an analysis published on the Web (Sparks {\it et al},
+Disease Progress over Time, {\it The Plant Health Instructor}, 2008,
+the following R output is presented:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> severity.lm <- lm(diseasesev~temperature,data=severity)
+> summary(severity.lm)
+Coefficients:
+        Estimate Std. Error t value Pr(>|t|)
+(Intercept)  2.66233    1.10082   2.418  0.04195 *
+temperature  0.24168    0.06346   3.808  0.00518 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{Verbatim}
+
+Fill in the blanks:
+
+\begin{itemize}
+
+\item [(a)] The model here is
+
+mean
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ =
+$\beta_0$ + $\beta_1$
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+\item [(b)] The two null hypotheses being tested here are
+$H_0:$ \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ and
+$H_0:$ \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_.
+
+\end{itemize}
+
+\oneproblem
+In the notation of this chapter, give matrix and/or vector
+expressions for each of the following in the linear regression model:
+
+\begin{itemize}
+
+\item [(a)] $s^2$, our estimator of $\sigma^2$
+
+\item [(b)] the standard error of the estimated value of the
+regression function $m_{Y;X}(t)$ at $t = c$, where $c =
+(c_0,c_1,...,c_r)$
+
+\end{itemize}
+
+% \section{Linear Regression with All Predictors Being Nominal Variables:
+% Analysis of ``Variance''}
+% \label{anova}
+% 
+% (Note to readers:  The material in this section is arguably of lesser
+% value to computer science.  As such, it can easily be skipped.  However,
+% it does provide motivation for our treatment of the log-linear model in
+% Section \ref{loglin}.)
+% 
+% Continuing the ideas in Section \ref{nominal}, suppose in the software
+% engineering study they had kept the project size constant, and instead
+% of $X^{(1)}$ being project size, this variable recorded whether the
+% programmer uses an integrated development environment (IDE).  Say
+% $X^{(1)}$ is 1 or 0, depending on whether the programmer uses the
+% Eclipse IDE or no IDE, respectively.  Continue to assume the study
+% included the nominal Language variable, i.e. assume the study included
+% the indicator variables $X^{(2)}$ (C++) and $X^{(3)}$ (Java).  Now all
+% of our predictors would be nominal/indicator variables.  Regression
+% analysis in such settings is called {\bf analysis of variance} (ANOVA).
+% 
+% Each nominal variable is called a {\bf factor}.  So, in our software
+% engineering example, the factors are IDE and Language.  Note again that
+% in terms of the actual predictor variables, each factor is represented
+% by one or more indicator variables; here IDE has one indicator variables
+% and Language has two.
+% 
+% Analysis of variance is a classic statistical procedure, used heavily in
+% agriculture, for example.  We will not go into details here, but mention
+% it briefly both for the sake of completeness and for its relevance to
+% Sections \ref{interaction} and \ref{loglin}.  (The reader is strongly
+% advised to review Sections \ref{interaction} before continuing.)
+% 
+% \subsection{It's a Regression!}
+% 
+% The term {\it analyisis of variance} is a misnomer.  A more appropriate
+% name would be {\bf analysis of means}, as it is in fact a regression
+% analysis, as follows.
+% 
+% First, note in our software engineering example we basically are talking
+% about six groups, because there are six different combinations of values
+% for the triple $(X^{(1)},X^{(2)},X^{(3)})$.  For instance, the triple
+% (1,0,1) means that the programmer is using an IDE and programming in
+% Java.  Note that triples of the form (w,1,1) are impossible.
+% 
+% So, all that is happening here is that we have six groups with six
+% means.  But that is a regression!  Remember, for variables U and V,
+% $m_{V;U}(t)$ is the mean of all values of V in the subpopulation group
+% of people (or cars or whatever) defined by U = s.  If U is a continuous
+% variable, then we have infinitely many such groups, thus infinitely many
+% means.  In our software engineering example, we only have six groups,
+% but the principle is the same.  We can thus cast the problem in
+% regression terms:
+% 
+% \begin{equation}
+% m_{Y;X}(i,j,k) = E(Y|X^{(1)}=i, X^{(2)}=j, X^{(3)}=k), ~ i,j,k=0,1, j+k
+% \leq 1
+% \end{equation}
+% 
+% Note the restriction $j+k \leq 1$, which reflects the fact that j and k
+% can't both be 1.
+% 
+% Again, keep in mind that we are working with means.  For instance,
+% $m_{Y;X}(0,1,0)$ is the population mean project completion time for
+% the programmers who do not use Eclipse and who program in C++.
+% 
+% Since the triple (i,j,k) can take on only six values, m can be modeled
+% fully generally in the following six-parameter linear form:
+% 
+% \begin{equation}
+% \label{full}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% + \beta_4 ij
+% + \beta_5 ik
+% \end{equation}
+% 
+% where $\beta_4$ and $\beta_5$ are the coefficients of two interaction
+% terms, as in Section \ref{interaction}.  
+% 
+% \subsection{Interaction Terms}
+% 
+% It is crucial to understand the interaction terms.  Without the ij and
+% ik terms, for instance, our model would be
+% 
+% \begin{equation}
+% \label{nointeraction}
+% m_{Y;X}(i,j,k) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k
+% \end{equation}
+% 
+% which would mean (as in Section \ref{interaction}) that the difference
+% between using Eclipse and no IDE is the same for all three programming
+% languages, C++, Java and C.  That common difference would be $\beta_1$.
+% If this condition---the impact of using an IDE is the same across
+% languages---doesn't hold, at least approximately, then we would use the
+% full model, (\ref{full}).  More on this below.
+% 
+% Note carefully that there is no interaction term corresponding to jk,
+% since that quantity is 0, and thus there is no three-way interaction
+% term corresponding to ijk either.  
+% 
+% But suppose we add a third factor, Education, represented by the
+% indicator $X^{(4)}$, having the value 1 if the programmer has a least a
+% Master's degree, 0 otherwise.  Then m would take on 12 values, and the
+% full model would have 12 parameters: 
+% 
+% \begin{equation}
+% \label{full3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% + \beta_{10} ijl
+% + \beta_{11} ikl
+% \end{equation}
+% 
+% Again, there would be no ijkl term, as jk = 0.
+% 
+% Here $\beta_1$, $\beta_2$, $\beta_3$ and $\beta_4$ are called the {\bf
+% main effects}, as opposed to the coefficients of the interaction terms,
+% called of course the {\bf interaction effects}.
+% 
+% The no-interaction version would be
+% 
+% \begin{equation}
+% \label{noint3}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% \end{equation}
+% 
+% \subsection{Now Consider Parsimony}
+% 
+% In the three-factor example above, we have 12 groups and 12 means.  Why
+% not just treat it that way, instead of applying the powerful tool of
+% regression analysis?  The answer lies in our desire for parsimony, as
+% noted in Section \ref{overfit}.
+% 
+% If for example (\ref{noint3}) were to hold, at least approximately, we
+% would have a far more satisfying model.  We could for instance then talk
+% of ``the'' effect of using an IDE, rather than qualifying such a
+% statement by stating what the effect would be for each different
+% language and education level.  Moreover, if our sample size is not very
+% large, we would get more accurate estimates of the various subpopulation
+% means, once again due to bias/variance tradeoff.
+% 
+% Or it could be that, while (\ref{noint3}) doesn't hold, a model with only
+% two-way interactions,
+% 
+% \begin{equation}
+% \label{2way}
+% m_{Y;X}(i,j,k,l) = \beta_0 + \beta_1 i + \beta_2 j + \beta_3 k + \beta_4 l
+% + \beta_5 ij
+% + \beta_6 ik
+% + \beta_7 il
+% + \beta_8 jl
+% + \beta_9 kl
+% \end{equation}
+% 
+% does work well.  This would not be as nice as (\ref{noint3}), but it
+% still would be more parsimonious than (\ref{full3}).
+% 
+% Accordingly, the major thrust of ANOVA is to decide how rich a model is
+% needed to do a good job of describing the situation under study.  There
+% is an implied hierarchy of models of interest here:
+% 
+% \begin{itemize}
+% 
+% \item the full model, including two- and three-way interactions,
+% (\ref{full3})
+% 
+% \item the model with two-factor interactions only, (\ref{2way})
+% 
+% \item the no-interaction model, (\ref{noint3})
+% 
+% \end{itemize}
+% 
+% Traditionally these are determined via hypothesis testing, which
+% involves certain partitionings of sums of squares similar to
+% (\ref{sumsq}).  (This is where the name {\it analysis of variance} stems
+% from.)  The null distribution of the test statistic often turns out to
+% be an F-distribution.  Of course, in this book, we consider hypothesis
+% testing inappropriate, preferring to give some careful thought to the
+% estimated parameters, but it is standard.  Further testing can be done
+% on individual $\beta_1$ and so on.  Often people use simultaneous
+% inference procedures, discussed briefly in Section \ref{simultancis} of
+% our chapter on estimation and testing, since many tests are performed.
+% 
+% \subsection{Reparameterization}
+% 
+% Classical ANOVA uses a somewhat different parameterization than that
+% we've considered here.  For instance, consider a single-factor setting
+% (called {\bf one-way ANOVA}) with three levels.  Our predictors are then
+% $X^{(1)}$ and $X^{(2)}$.  Taking our approach here, we would write
+% 
+% \begin{equation}
+% m_{Y;X}(i,j) = \beta_0 + \beta_1 i + \beta_2 j 
+% \end{equation}
+% 
+% The traditional formulation would be
+% 
+% \begin{equation}
+% \mu_i = \mu + \alpha_i, ~ i = 1,2,3
+% \end{equation}
+% 
+% where
+% 
+% \begin{equation}
+% \mu = \frac{\mu_1+\mu_2+\mu_3}{3}
+% \end{equation}
+% 
+% and 
+% 
+% \begin{equation}
+% \alpha_i = \mu_i - \mu
+% \end{equation}
+% 
+% Of course, the two formulations are equivalent.  It is left to the
+% reader to check that, for instance, 
+% 
+% \begin{equation}
+% \mu = \beta_0 + \frac{\beta_1+\beta_2}{2}
+% \end{equation}
+% 
+% There are similar formulations for ANOVA designs with more than one
+% factor.
+% 
+% Note that the classical formulation overparameterizes the problem.  In
+% the one-way example above, for instance, there are four parameters
+% ($\mu$, $\alpha_1$, $\alpha_2$, $\alpha_3$) but only three groups.
+% This would make the system indeterminate, but we add the constraint
+% 
+% \begin{equation}
+% \sum_{i=1}^3 \alpha_i = 0
+% \end{equation}
+% 
+% Equation (\ref{betahat}) then must make use of {\bf generalized matrix
+% inverses}.
+
+% \section{Clustering}
+% 
+% HERE ONE **REALLY* HAS TROUBLE 
+% WITH "WHAT DOES IT MEAN?:
+
+% pdf("CARTBound.pdf")
+% plot(c(0,1),c(0,1),type="n",xlab="s",ylab="t")
+% lines(c(0,0.62),c(0.8,0.8))
+% lines(c(0.62,1),c(0.58,0.58))
+% lines(c(0.62,0.62),c(0.58,0.8))
+% dev.off()
+% 
+% 
+% lines(c(0.62,0.62),c(0,1))
+
+
+% \section{The Famous ``Error Term''}
+% 
+% Books on linear regression analysis---and there are hundreds, if not
+% thousands of these---generally introduce the subject as follows.  They
+% consider the linear case with r = 1, and write
+% 
+% \begin{equation}
+% \label{classical}
+% Y = \beta_0 + \beta_1 X + \epsilon, ~ E\epsilon = 0
+% \end{equation}
+% 
+% with $\epsilon$ being independent of X.  They also assume that
+% $\epsilon$ has a normal distribution with variance $\sigma^2$.   
+% 
+% Let's see how this compares to what we have been assuming here so far.
+% In the linear case with r = 1, we would write
+% 
+% \begin{equation}
+% \label{ours}
+% m_{Y;X}(t) = E(Y | X=t) = \beta_0 + \beta_1 t
+% \end{equation}
+% 
+% Note that in our context, we could define $\epsilon$ as
+% 
+% \begin{equation}
+% \label{ourepsilon}
+% \epsilon = Y - m_{Y;X} (X)
+% \end{equation}
+% 
+% Equation (\ref{classical}) is consistent with (\ref{ours}): 
+% The former has $E\epsilon = 0$, and so does the latter, since
+% 
+% \begin{equation}
+% E\epsilon = EY -E[m_{Y;X} (X)] = EY - E[E(Y|X)] = EY - EY = 0
+% \end{equation}
+% 
+% In order to produce confidence intervals, we later added the assumption
+% (\ref{hmsced}), which you can see is consistent with (\ref{classical})
+% since the latter assumes that $Var(\epsilon) = \sigma^2$ no matter what
+% value X has.
+% 
+% Now, what about the normality assumption in (\ref{classical})?  That
+% would be equivalent to saying that in our context, the conditional
+% distribution of Y given X is normal, which is an assumption we did not
+% make.  Note that in the weight/height example, this assumption would say
+% that, for instance, the distribution of weights among people of height
+% 68.2 inches is normal.
+% 
+% No matter what the context is, the variable $\epsilon$ is called the
+% {\bf error term}.  Originally this was an allusion to measurement error,
+% e.g. in chemistry experiments, but the modern interpretation would be
+% prediction error, i.e. how much error we make when we us $m_{Y;X}(t)$ to
+% predict Y.
+
+

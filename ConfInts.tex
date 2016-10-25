@@ -1,0 +1,1937 @@
+\chapter{Introduction to Confidence Intervals} 
+\label{chap:confints} 
+
+The idea of a confidence interval is central to statistical inference.
+But actually, you already know about it---from the term {\it margin of
+error} in news reports about opinion polls.
+ 
+\section{The ``Margin of Error'' and Confidence Intervals}
+\label{ciintro}
+
+To explain the idea of margin of error, let's begin with a problem that
+has gone unanswered so far:
+
+In our simulations in previous units, it was never quite clear how long
+the simulation should be run, i.e. what value to set for {\bf nreps} in
+Section \ref{alohasim}.  Now we will finally address this issue.
+
+As our example, consider the Bus Paradox, which presented in
+Section \ref{busparadox}:  Buses arrive at a certain bus stop at random
+times, with interarrival times being independent exponentially
+distributed random variables with mean 10 minutes.  You arrive at the
+bus stop every day at a certain time, say four hours (240 minutes) after
+the buses start their morning run.  What is your mean wait $\mu$ for the
+next bus?  
+
+We found mathematically that, due to the memoryless property of the
+exponential distribution, our wait is again exponentially distributed
+with mean 10.  But suppose we didn't know that, and we wished to find
+the answer via simulation.  (Note to reader:  Keep in mind throughout 
+this example that we will be pretending that we don't know the 
+mean wait is actually 10.  Reminders of this will be brought up
+occasionally.)
+
+We could write a program to do this:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+doexpt <- function(opt) {
+   lastarrival <- 0.0
+   while (lastarrival < opt) 
+      lastarrival <- lastarrival + rexp(1,0.1)
+   return(lastarrival-opt)
+}
+
+observationpt <- 240
+nreps <- 1000
+waits <- vector(length=nreps)
+for (rep in 1:nreps) waits[rep] <- doexpt(observationpt)
+cat("approx. mean wait = ",mean(waits),"\n")
+\end{Verbatim}
+
+Running the program yields
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+approx. mean wait = 9.653743
+\end{Verbatim}
+
+Note that $\mu$ is a population mean, where our ``population'' here is
+the set of all possible bus wait times (some more frequent than others).
+Our simulation, then, drew a sample of size 1000 from that population.
+The expression {\bf mean(waits)} was our sample mean.
+
+Now, was 1000 iterations enough?  How close is this value 9.653743 to
+the true expected value of waiting time?\footnote{Of course, continue to
+ignore the fact that we know that this value is 10.0.  What we're trying
+to do here is figure out how to answer ``how close is it'' questions 
+in general, when we don't know the true mean.}
+
+What we would like to do is something like what the pollsters do during
+presidential elections, when they say ``Ms. X is supported by 62\% of
+the voters, with a margin of error of 4\%.''  In other words, we want to
+be able to attach a margin of error to that figure of 9.653743 above.
+We do this in the next section.
+
+\section{Confidence Intervals for Means}
+\label{cim}
+
+We are now set to make use of the infrastructure that we've built up in
+the preceding sections of this chapter.  Everything will hinge on
+understanding that the sample mean is a random variable, with a known
+approximate distribution.
+
+{\bf The goal of this section (and several that follow) is to develop a
+notion of margin of error, just as you see in the election campaign
+polls.}  This raises two questions:
+
+\begin{itemize}
+
+\item [(a)] What do we mean by ``margin of error''?
+
+\item [(b)] How can we calculate it?
+
+\end{itemize}
+
+% The answer to (a) is that we would like to make a statement, e.g. in the
+% simulation output above, like ``We estimate the mean wait to be 9.65,
+% and we are 95\% confident that the true population mean wait is between
+% 9.65-0.22 and 9.65+0.22.''
+% 
+% Our answer to (b) will now be developed.
+
+\subsection{Basic Formulation}
+\label{ourfirstci}
+
+So, suppose we have a random sample $W_1,...,W_n$ from some population
+with mean $\mu$ and variance $\sigma^2$.
+
+Recall that (\ref{firstz}) has an approximate N(0,1) distribution.  We
+will be interested in the central 95\% of the distribution N(0,1).  Due
+to symmetry, that distribution has 2.5\% of its area in the left tail
+and 2.5\% in the right one.  Through the R call {\bf qnorm(0.025)}, or
+by consulting a N(0,1) cdf table in a book, we find that the cutoff
+points are at -1.96 and 1.96.  In other words, if some random variable
+T has a N(0,1) distribution, then $P(-1.96 < T < 1.96) = 0.95$.
+
+Thus
+
+\begin{equation}
+\label{cistart}
+0.95 \approx P \left (-1.96 <  \frac{\overline{W}-\mu}{\sigma/\sqrt{n}} < 1.96 
+\right )
+\end{equation}
+
+(Note the approximation sign.) Doing a bit of algebra on the
+inequalities yields
+
+\begin{equation}
+\label{preci}
+0.95 \approx P \left ( \overline{W} - 1.96 \frac{\sigma}{\sqrt{n}} < \mu
+< \overline{W} + 1.96 \frac{\sigma}{\sqrt{n}} \right )
+\end{equation}
+
+Now remember, not only do we not know $\mu$, we also don't know
+$\sigma$.  But we can estimate it, as we saw, via (\ref{s2}).  One can
+show (the details will be given in Section \ref{slutsky}) that
+(\ref{preci}) is still valid if we substitute $s$ for $\sigma$, i.e.
+
+\begin{equation}
+\label{theci}
+0.95 \approx P \left ( \overline{W} - 1.96 \frac{s}{\sqrt{n}} < \mu
+< \overline{W} + 1.96 \frac{s}{\sqrt{n}} \right ) 
+\end{equation}
+
+In other words, we are about 95\% sure that the interval 
+
+\begin{equation}
+\label{meanci}
+(\overline{W} - 1.96 \frac{s}{\sqrt{n}}, \overline{W} + 1.96 \frac{s}{\sqrt{n}})
+\end{equation}
+
+contains $\mu$.  This is called a 95\% {\bf confidence interval} for
+$\mu$.  The quantity $1.96 \frac{s}{\sqrt{n}}$ is the margin of error.
+
+\subsection{Example:  Simulation Output}
+
+We could add this feature to our program in Section \ref{ciintro}:
+
+\label{bussim}
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+doexpt <- function(opt) {
+   lastarrival <- 0.0
+   while (lastarrival < opt) 
+      lastarrival <- lastarrival + rexp(1,0.1)
+   return(lastarrival-opt)
+}
+
+observationpt <- 240
+nreps <- 10000
+waits <- vector(length=nreps)
+for (rep in 1:nreps) waits[rep] <- doexpt(observationpt)
+wbar <- mean(waits)
+cat("approx. mean wait =",wbar,"\n")
+s2 <- mean(waits^2) - wbar^2
+s <- sqrt(s2)
+radius <- 1.96*s/sqrt(nreps)
+cat("approx. CI for EW =",wbar-radius,"to",wbar+radius,"\n")
+\end{Verbatim}
+
+When I ran this, I got 10.02565 for the estimate of EW, and got an
+interval of (9.382715, 10.66859).  Note that the margin of error is the
+radius of that interval, about 1.29/2.  We would then say, ``We are about
+95\% confident that the true mean wait time is between 9.38 and 10.67.''
+
+{\bf What does this really mean?}  This question is of the utmost
+importance.  We will devote an entire section to it, Section
+\ref{cimeaning}. 
+
+Note that our analysis here is approximate, based on the Central Limit
+Theorem, which was applicable because $\overline{W}$ involves a sum.  We
+are making no assumption about the density of the population from which
+the $W_i$ are drawn.  However, if that population density itself is
+normal, then an exact confidence interval can be constructed.  This will
+be discussed in Section \ref{studentt}.
+
+\section{Meaning of Confidence Intervals}
+\label{cimeaning}
+
+\subsection{A Weight Survey in Davis}
+\label{davisweights}
+
+Consider the question of estimating the mean weight, denoted by $\mu$, of
+all adults in the city of Davis.  Say we sample 1000 people at random,
+and record their weights, with $W_i$ being the weight of the $i^{th}$
+person in our sample.\footnote{Do you like our statistical pun here?
+Typically an example like this would concern people's heights, not
+weights.  But it would be nice to use the same letter for random
+variables as in Section \ref{cim}, i.e. the letter W, so we'll have our
+example involve people's weights instead of heights.  It works out
+neatly, because the word {\it weight} has the same sound as {\it wait}.}
+
+{\bf Now remember, we don't know the true value of that population mean,
+$\mathbf{\mu}$---again, that's why we are collecting the sample
+data, to estimate $\mathbf{\mu}$!  Our estimate will be our sample mean,
+$\mathbf{\overline{W}}$.  But we don't know how accurate that estimate
+might be.  That's the reason we form the confidence interval, as a gauge
+of the accuracy of $\mathbf{\overline{W}}$ as an estimate of
+$\mathbf{\mu}$.}
+
+% \checkpoint
+
+Say our interval (\ref{meanci}) turns out to be (142.6,158.8).  We say
+that we are about 95\% confident that the mean weight $\mu$ of all
+adults in Davis is contained in this interval.  {\bf What does this
+mean?}  
+
+Say we were to perform this experiment many, many times, recording the
+results in a notebook:  We'd sample 1000 people at random, then record
+our interval $(\overline{W} - 1.96 \frac{s}{\sqrt{n}}, \overline{W} + 1.96
+\frac{s}{\sqrt{n}})$ on the first line of the notebook.  Then we'd
+sample another 1000 people at random, and record what interval we got
+that time on the second line of the notebook.  This would be a different
+set of 1000 people (though possibly with some overlap), so we would get
+a different value of $\overline{W}$ and so, thus a different interval; it
+would have a different center and a different radius.  Then we'd do this
+a third time, a fourth, a fifth and so on.  
+
+Again, each line of the notebook would contain the information for a
+different random sample of 1000 people.  There would be two columns for
+the interval, one each for the lower and upper bounds.  And though it's
+not immediately important here, note that there would also be columns
+for $W_1$ through $W_{1000}$, the weights of our 1000 people, and
+columns for $\overline{W}$ and s.
+
+Now here is the point:  Approximately 95\% of all those intervals would
+contain $\mu$, the mean weight in the entire adult population of Davis.
+The value of $\mu$ would be unknown to us---once again, that's why we'd
+be sampling 1000 people in the first place---but it does exist, and it
+would be contained in approximately 95\% of the intervals.
+
+As a variation on the notebook idea, think of what would happen if you
+and 99 friends each do this experiment.  Each of you would sample 1000
+people and form a confidence interval.  Since each of you would get a
+different sample of people, you would each get a different confidence
+interval.  What we mean when we say the confidence level is 95\% is that
+of the 100 intervals formed---by you and 99 friends---about 95 of them
+will contain the true population mean weight.  Of course, you hope you
+yourself will be one of the 95 lucky ones!  But remember, you'll never
+know whose intervals are correct and whose aren't.
+
+% \checkpoint
+
+{\bf Now remember, in practice we only take {\it one} sample of 1000
+people.  Our notebook idea here is merely for the purpose of
+understanding what we mean when we say that we are about 95\% confident
+that one interval we form does contain the true value of $\mu$.}
+
+% \subsection{Back to Our Bus Simulation}
+% \label{backtobus}
+% 
+% Our simulation example in Section \ref{bus} is statistically the same as
+% our Davis weights example.  Simulation is a sampling process.  If we
+% simulate 1000 bus waits, as we did in that section, we are taking a
+% random sample $W_1,...,W_{1000}$ of size 1000 from ``population'' of all
+% bus waits.  In our program, we find the mean of our 1000 bus waits,
+% which is our sample mean $\overline{W}$.  We are trying to estimate
+% $\mu$, the mean bus wait in the population.  Again, this is not mere
+% analogy; mathematically the two situations, weights and waits, are
+% completely identical, two instances of the same principle.
+% 
+% Let's use the ``you and your 99 friends'' idea again.  Supposed each of
+% you 100 people run the R program at the end of Section \ref{ourfirstci}.
+% Each of you will get a different confidence interval printed out at the
+% end of your run.\footnote{Recall that R will generate a different stream
+% of random numbers each time you run your program, unless you call {\bf
+% set.seed()}.}  Well, when we say that the program prints out a 95\%
+% confidence interval, we mean that about 95 of you 100 people will have
+% an interval that contains the true value of EW.
+% 
+% In the Davis weight example above, I stressed that we don't know $\mu$
+% so as to estimate $\mu$!  But our bus simulation example is somewhat
+% artificial, because we actually did know the value of $\mu$ here; it's 10.  
+% In most simulations we wouldn't know $\mu$, but here we did, as there
+% happened to be some ``bus theory'' available.  
+% 
+% But let's exploit the artificial nature of the bus example, as it will
+% allow us to really see the ``you and 99 friends'' idea in action, as
+% follows.
+% 
+% We'll expand the code to simulate 1000 people running the original
+% program.  In other words, we'll add an extra outer loop to do 1000 runs
+% of the program.  Each run will compute the confidence interval, and then
+% we'll see in the end how many of the 1000 runs have a confidence
+% interval that includes the true EW, 10.0:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+% doexpt <- function(opt) {
+%    lastarrival <- 0.0
+%    while (lastarrival < opt)
+%       lastarrival <- lastarrival + rexp(1,0.1)
+%    return(lastarrival-opt)
+% }
+% 
+% observationpt <- 240
+% nreps <- 1000
+% numruns <- 1000
+% waits <- vector(length=nreps)
+% numcorrectcis <- 0  # number of conf. ints. that contain 10.0
+% for (run in 1:numruns) {
+%    for (rep in 1:nreps) waits[rep] <- doexpt(observationpt)
+%    wbar <- mean(waits)
+%    s2 <- mean(waits^2) - wbar^2
+%    s <- sqrt(s2)
+%    radius <- 1.96*s/sqrt(nreps)
+%    if (abs(wbar - 10.0) <= radius) numcorrectcis <- numcorrectcis + 1
+% }
+% cat("approx. true confidence level=",numcorrectcis/numruns,"\n")
+% \end{Verbatim}
+% 
+% In fact, the output of that program was 0.958, sure enough about 95\%.
+% 
+% Why is it not exactly 0.95?  
+% 
+% \begin{itemize}
+% 
+% \item We only simulated 1000 runs of the program; ideally it should 
+% be an infinite number, to get the exact probability that an interval 
+% contains $\mu$.
+% 
+% \item The Central Limit Theorem is only approximate.
+% 
+% \item Ideally we would use (\ref{preci}), but due to lack of knowledge
+% of the true value of $\sigma$ (we don't know $\mu$, so why would we know
+% $\sigma$?), we resorted to using s instead, in (\ref{meanci}).
+% 
+% \end{itemize}
+% 
+% {\bf Again remember that in practice we only do {\it one} run of
+% simulating 1000 waits for the bus.  Our enhanced simulation code above
+% is merely for the purpose of understanding what we mean when we say that
+% we are about 95\% confident that one interval we form does contain the
+% true value of $\mu$.}
+
+% \checkpoint
+
+\subsection{More About Interpretation}
+
+Some statistics instructors give students the odd warning, ``You can't
+say that the probability is 95\% that $\mu$ is IN the interval; you can
+only say that the probability is 95\% confident that the interval
+CONTAINS $\mu$.'' This of course is nonsense.  As any fool can see, the
+following two statements are equivalent:
+
+\begin{itemize}
+
+\item ``$\mu$ is in the interval''
+
+\item ``the interval contains $\mu$''
+
+\end{itemize}
+
+So it is ridiculous to say that the first is incorrect.  Yet many
+instructors of statistics say so.
+
+Where did this craziness come from?  Well, way back in the early days of
+statistics, some instructor was afraid that a statement like ``The
+probability is 95\% that $\mu$ is in the interval'' would make it sound
+like $\mu$ is a random variable.  Granted, that was a legitimate fear,
+because $\mu$ is not a random variable, and without proper warning, some
+learners of statistics might think incorrectly.  The random entity is
+the interval (both its center and radius), not $\mu$;  $\overline{W}$
+and $s$ in (\ref{meanci}) vary from sample to sample, so the interval is
+indeed the random object here, not $\mu$.  
+
+So, it was reasonable for teachers to warn students not to think $\mu$
+is a random variable.  But later on, some misguided instructor must have
+then decided that it is incorrect to say ``$\mu$ is in the interval,''
+and others then followed suit.  They continue to this day, sadly.
+
+A variant on that silliness involves saying that one can't say ``The
+probability is 95\% that $\mu$ is in the interval,'' because $\mu$ is
+either in the interval or not, so that ``probability'' is either 1 or 0!
+That is equally mushy thinking.
+
+Suppose, for example, that I go into the next room and toss a coin,
+letting it land on the floor.  I return to you, and tell you the coin is
+lying on the floor in the next room.  I know the outcome but you don't.
+What is the probability that the coin came up heads?  To me that is 1 or
+0, yes, but to you it is 50\%, in any practical sense.  
+
+It is also true in the ``notebook'' sense.  If I do this experiment many
+times---go to the next room, toss the coin, come back to you,
+go to the next room, toss the coin, come back to you, etc., one line of
+the notebook per toss---then in the long run 50\% of the lines of the
+notebook have Heads in the Outcome column.  
+
+The same is true for confidence intervals.  Say we conduct many, many
+samplings, one per line of the notebook, with a column labeled Interval
+Contains Mu. Unfortunately, we ourselves don't get to see that column,
+but it exists, and in the long run 95\% of the entries in the column
+will be Yes.  
+
+Finally, there are those who make a distinction between saying ``There
+is a 95\% probability that...'' and ``We are 95\% confident that...''
+That's silly too.  What else could ``95\% confident'' mean if not
+95\% probability?
+
+Consider the experiment of tossing two fair dice.  The probability is
+34/36, or about 94\%, that we get a total that is different from 2 or
+12.  As we toss the dice, what possible distinction could be made
+between saying, ``The probability is 94\% that we will get a total between 3
+and 11'' and saying, ``We are 94\% confident that we will get a total
+between 3 and 11''?  The notebook interpretation supports both
+phrasings, really.  The words {\it probability} and {\it confident}
+should not be given much weight here; remember the quote at the
+beginning of our Chapter 1:
+
+\begin{quote}
+{\it I learned very early the difference between knowing the name of
+something and knowing something}---Richard Feynman, Nobel laureate in
+physics
+\end{quote}
+
+
+\section{Confidence Intervals for Proportions}
+\label{propcis}
+
+So we know how to find confidence intervals for means.  How about
+proportions?
+
+\subsection{Derivation}
+\label{derivation}
+
+For example, in an election opinion poll, we might be interested in the
+proportion p of people in the entire population who plan to vote for
+candidate A.  
+
+We will estimate p by taking a random sample of n voters, and finding
+the {\it sample} proportion of voters who plan to vote for A.  The
+latter is usually denoted $\widehat{p}$, pronounced ``p-hat.''  (The
+symbol  $\widehat{ }$ is often used in statistics to mean ``estimate
+of.'')
+
+Assign to each voter in the population a value of Y, 1 if he/she plans
+to vote for A, 0 otherwise.  Let $Y_i$ be the value of Y for the
+i$^{th}$ person in our sample.  Then
+
+\begin{equation}
+\label{specialcaseofmean}
+\widehat{p} = \overline{Y}
+\end{equation}
+
+where $\overline{Y}$ is the sample mean among the $Y_i$,
+and p is the population mean of Y.
+
+% It turns out that we already have our answer, from Section
+% \ref{indicator}.  We found there that proportions are special cases of
+% means:  If Y is an indicator random variable with P(Y = 1) = p,
+% then EY = p.
+
+So we are really working with means after all, and thus in order to get
+a confidence interval for p from $\widehat{p}$, we can use
+(\ref{meanci})!  We have that an approximate 95\% confidence interval
+for p is
+
+\begin{equation}
+\label{tmppropci}
+\left ( 
+\widehat{p} 
+- 1.96 s / \sqrt{n},
+\widehat{p}
++ 1.96 s / \sqrt{n}
+\right ) 
+\end{equation}
+
+where as before $s^2$ is the sample variance among the $Y_i$, defined in
+\ref{s2}.
+
+But there's more, because we can exploit the fact that in this special
+case, each $Y_i$ is either 1 or 0, in order to save ourselves a bit of
+computation, as follows:  
+
+Recalling the convenient form of $s^2$, (\ref{alts2}), we have
+
+\begin{eqnarray}
+s^2 &=& 
+\frac{1}{n} \sum_{i=1}^{n} Y_i^2 - \overline{Y}^2 \label{consistent} \\
+&=& \frac{1}{n} \sum_{i=1}^{n} Y_i - \overline{Y}^2 \\
+&=& \overline{Y} - \overline{Y}^2 \\
+&=& \widehat{p} - \widehat{p}^2 
+\end{eqnarray} 
+
+Then (\ref{tmppropci}) simplifies to
+
+\begin{equation}
+\label{propci}
+\left ( 
+\widehat{p} 
+- 1.96 \sqrt{\widehat{p} (1-\widehat{p})/n},
+\widehat{p}
++ 1.96 \sqrt{\widehat{p} (1-\widehat{p})/n}
+\right ) 
+\end{equation}
+
+\subsection{That n vs. n-1 Thing Again}
+\label{nvsnminu1again}
+
+Recall Section \ref{dividebywhat}, in which it was noted that this
+book's definition of the sample variance, (\ref{s2}), is a little at
+odds with the the way most books define it, (\ref{theirs2}).  The above
+derivation sheds a bit more light on this topic.
+
+In the way I've defined things here, I was consistent:  I divided by n
+both in (\ref{s2}) and in (\ref{consistent}).  Yet most books divide by
+n-1 in the former case but by n in the latter case!  Their version of
+(\ref{propci}) is exactly the same as mine, yet they use a different $s$
+in (\ref{meanci})---even though they too observe that the proportions
+case is just a special case of estimating means (as in
+(\ref{specialcaseofmean})).  So, another reason to divide by n in
+(\ref{s2}) is to be consistent.
+
+Again, the difference is usually minuscule anyway, but conceptually it's
+important to understand.  As noted earlier, the n-1 divisor is really
+just a historical accident.
+
+\subsection{Simulation Example Again}
+
+In our bus example above, suppose we also want our simulation to print
+out the (estimated) probability that one must wait longer than 6.4
+minutes.  As before, we'd also like a margin of error for the output.
+
+We incorporate (\ref{propci}) into our program:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+doexpt <- function(opt) {
+   lastarrival <- 0.0
+   while (lastarrival < opt)
+      lastarrival <- lastarrival + rexp(1,0.1)
+   return(lastarrival-opt)
+}
+
+observationpt <- 240
+nreps <- 1000
+waits <- vector(length=nreps)
+for (rep in 1:nreps) waits[rep] <- doexpt(observationpt)
+wbar <- mean(waits)
+cat("approx. mean wait =",wbar,"\n")
+s2 <- (mean(waits^2) - mean(wbar)^2)
+s <- sqrt(s2)
+radius <- 1.96*s/sqrt(nreps)
+cat("approx. CI for EW =",wbar-radius,"to",wbar+radius,"\n")
+prop <- length(waits[waits > 6.4]) / nreps
+s2 <- prop*(1-prop)
+s <- sqrt(s2)
+radius <- 1.96*s/sqrt(nreps)
+cat("approx. P(W > 6.4) =",prop,", with a margin of error of",radius,"\n")
+\end{Verbatim}
+
+When I ran this, the value printed out for $\widehat{p}$ was 0.54,
+with a margin of error of 0.03, thus an interval of (0.51,0.57).
+We would say, ``We don't know the exact value of $P(W > 6.4)$, so we ran
+a simulation.  The latter estimates this probability to be 0.54, with a
+95\% margin of error of 0.03.''
+
+\subsection{Example:  Davis Weights} 
+\label{severalexamples}
+
+Note again that this uses the same principles as our Davis weights
+example.  Suppose we were interested in estimating the proportion of
+adults in Davis who weigh more than 150 pounds.  Suppose that proportion
+is 0.45 in our sample of 1000 people.  This would be our estimate
+$\widehat{p}$ for the population proportion $p$, and an approximate 95\%
+confidence interval (\ref{propci}) for the population proportion would be
+(0.42,0.48).  We would then say, ``We are 95\% confident that the true
+population proportion p of people who weigh over 150 pounds is between
+0.42 and 0.48.''
+
+Note also that although we've used the word {\it proportion} in the
+Davis weights example instead of {\it probability}, they are the same.
+If I choose an adult at random from the population, the probability that
+his/her weight is more than 150 is equal to the proportion of adults in
+the population who have weights of more than 150.
+
+And the same principles are used in opinion polls during presidential
+elections.  Here $p$ is the population proportion of people who plan to
+vote for the given candidate.  This is an unknown quantity, which is
+exactly the point of polling a sample of people---to estimate that
+unknown quantity p.  Our estimate is $\widehat{p}$, the proportion of
+people in our sample who plan to vote for the given candidate, and n is
+the number of people that we poll.  We again use (\ref{propci}).
+
+\subsection{Interpretation}
+
+The same interpretation holds as before.  Consider the examples in the
+last section:
+
+\begin{itemize}
+
+\item If each of you and 99 friends were to run the R program at the
+beginning of Section \ref{severalexamples}, you 100 people would get 100
+confidence intervals for $P(W > 6.4)$.  About 95 of you would have
+intervals that do contain that number.
+
+\item If each of you and 99 friends were to sample 1000 people in Davis
+and come up with confidence intervals for the true population proportion
+of people who weight more than 150 pounds, about 95 of you would have
+intervals that do contain that true population proportion.
+
+\item If each of you and 99 friends were to sample 1200 people in an
+election campaign, to estimate the true population proportion of people
+who will vote for candidate X, about 95 of you will have intervals that
+do contain this population proportion.
+
+\end{itemize}
+
+Of course, this is just a ``thought experiment,'' whose goal is to
+understand what the term ``95\% confident'' really means.  In practice,
+we have just one sample and thus compute just one interval.  But we say
+that the interval we compute has a 95\% chance of containing the
+population value, since 95\% of all intervals will contain it. 
+
+% \checkpoint
+
+\subsection{(Non-)Effect of the Population Size}
+
+Note that in both the Davis and election examples, it doesn't matter
+what the size of the population is.  The approximate distribution of
+$\widehat{p}$ is N(p,p(1-p)/n), so the accuracy of $\widehat{p}$, depends
+only on $p$ and $n$.  So when people ask, ``How a presidential election
+poll can get by with sampling only 1200 people, when there are more than
+100,000,000 voters in the U.S.?'' now you know the answer.  (We'll
+discuss the question ``Why 1200?'' below.)
+
+Another way to see this is to think of a situation in which we wish to
+estimate the probability p of heads for a certain coin.  We toss the
+coin n times, and use $\widehat{p}$ as our estimate of p.  Here our
+``population''---the population of all coin tosses---is infinite, yet it
+is still the case that 1200 tosses would be enough to get a good
+estimate of p.
+
+\subsection{Inferring the Number Polled}
+
+A news report tells us that in a poll, 54\% of those polled supported
+Candidate A, with a 2.2\% margin of error.  Assuming that the methods
+here were used, with a 95\% level of confidence, let's find the
+approximate number polled.
+
+\begin{equation}
+0.022 = 1.96 \times \sqrt{0.54 \cdot 0.46 / n}
+\end{equation}
+
+Solving, we find that n is approximately 1972.
+
+\subsection{Planning Ahead}
+
+Now, why do the pollsters often sample 1200 people?  
+
+First, note that the maximum possible value of $\widehat{p}
+(1-\widehat{p})$ is 0.25.\footnote{Use calculus to find the maximum
+value of f(x) = x(1-x).} Then the pollsters know that their margin of
+error with n = 1200 will be at most $1.96 \times 0.5/\sqrt{1200}$, or
+about 3\%, even before they poll anyone.  They consider 3\% to be
+sufficiently accurate for their purposes, so 1200 is the n they choose.
+
+\section{General Formation of Confidence Intervals from Approximately
+Normal Estimators}
+\label{stderrest}
+
+We would now like to move on to constructing confidence intervals for
+other settings than the case handled so far, estimation of a single
+population mean or proportion.
+
+\subsection{The Notion of a Standard Error}
+\label{notionofse}
+
+Suppose we are estimating some population quantity $\theta$ based on
+sample data $Y_1,...,Y_n$.  So far, our only examples have had $\theta$
+as a population mean $\mu$, a population proportion p.  But we'll see
+other examples as things unfold in this and subsequent chapters.  
+
+Consider an estimate for $\theta$, $\widehat{\theta}$, and suppose that
+the estimator is composed of some sum for which the Central Limit
+Theorem applies,\footnote{Using more advanced tools (Section
+\ref{delta}), one can show approximate normality even in many nonlinear
+cases.}, so that the approximate distribution of  $\widehat{\theta}$ 
+is normal with mean $\theta$ and some variance.
+
+Ponder this sequence of points: 
+
+\begin{itemize}
+
+\item $\widehat{\theta}$ is a random variable.
+
+\item Thus $\widehat{\theta}$ has a variance.
+
+\item Thus $\widehat{\theta}$ has a standard deviation $\eta$.
+
+\item Unfortunately, $\eta$ is an unknown population quantity.
+
+\item But we may be able to estimate $\eta$ from our sample data.  Call
+that estimate $\widehat{\eta}$.
+
+\item We refer to $\widehat{\eta}$ as the {\it standard error} of
+$\widehat{\theta}$, or $\textrm{s.e.}\widehat{\theta}$.
+
+\end{itemize}
+
+Back in Section \ref{ourfirstci}, we found a standard error for
+$\overline{W}$, the sample mean, using the following train of thought:
+
+\begin{itemize}
+
+\item $Var(\overline{W}) = \frac{\sigma^2}{n}$
+
+\item $\widehat{Var}(\overline{W}) = \frac{s^2}{n}$
+
+\item $\textrm{s.e.}(\overline{W}) = \frac{s}{\sqrt{n}}$
+
+\end{itemize}
+
+In many cases, deriving a standard error is more involved than the
+above,  But the point is this:
+
+\begin{quote}
+
+Suppose $\widehat{\theta}$ is a sample-based estimator of a population
+quantity $\theta$, and that, due to being composed of sums or some other
+reason, $\widehat{\theta}$ is approximately normally distributed with
+mean $\theta$, and some (possibly unknown) variance.  Then the quantity
+
+\begin{equation}
+\label{thetahatstderr}
+\frac
+{\widehat{\theta} - \theta}
+{{\rm s.e.}(\widehat{\theta})}
+\end{equation}
+
+has an approximate N(0,1) distribution.
+% \footnote{This also presumes that
+% $\widehat{\theta}$ is a {\bf consistent} estimator of $\theta$, meaning
+% that $\widehat{\theta}$ converges to $\theta$ as $n \rightarrow \infty$.
+% There are some other technical issues at work here, but they are beyond
+% the scope of this book.}
+
+\end{quote}
+
+\subsection{Forming General Confidence Intervals}
+
+That means we can mimic the derivation that led to (\ref{meanci}).  As
+with (\ref{cistart}), write
+
+\begin{equation}
+0.95 \approx P \left (-1.96 <  
+\frac
+{\widehat{\theta} - \theta}
+{{\rm s.e.}(\widehat{\theta})}
+< 1.96 \right )
+\end{equation}
+
+After going through steps analogous to those following (\ref{cistart}),
+we find that an approximate 95\% confidence interval for $\theta$ is
+
+\begin{equation}
+\label{genci}
+\widehat{\theta} \pm 1.96 \cdot {\rm s.e.}(\widehat{\theta})
+\end{equation}
+
+In other words, the margin of error is $1.96 \textrm{ s.e.}(\widehat{\theta})$.
+
+{\bf The standard error of the estimate is one of the most commonly-used
+quantities in statistical applications.  You will encounter it
+frequently in the output of R, for instance, and in the subsequent
+portions of this book.  Make sure you understand what it means and how
+it is used.} 
+
+And note again that $\sqrt{\widehat{p} (1-\widehat{p})/n}$ is the
+standard error of $\widehat{p}$.
+
+\subsection{Standard Errors of Combined Estimators}
+
+Here is further chance to exercise your skills in the mailing tubes
+regarding variance.
+
+Suppose we have two population values to estimate, $\omega$ and
+$\gamma$, and that we are also interested in the quantity $\omega + 2
+\gamma$.  We'll estimate the latter with $\hat{\omega} + 2
+\hat{\gamma}$.  Suppose the standard errors of $\hat{\omega}$ and
+$\hat{\gamma}$ turn out to be 3.2 and 8.8, respectively, and that the
+two estimators are independent and approximately
+normal.\footnote{Technically, the term {\it standard error} is only used
+for approximately normal estimators anyway.}
+Let's find the standard error of
+$\hat{\omega} + 2 \hat{\gamma}$.
+
+We know from the material surrounding (\ref{lincombnormal}) that 
+$\hat{\omega} + 2 \hat{\gamma}$ has an approximately normal distribution
+with variance
+
+\begin{equation}
+Var(\hat{\omega}) + 2^2 Var(\hat{\gamma})
+\end{equation}
+
+% We have (make sure you can supply the reasons)
+% 
+% \begin{eqnarray}
+% Var(\hat{\omega} + 2 \hat{\gamma}) &=& 
+% Var(\hat{\omega}) + Var(2 \hat{\gamma}) \\ 
+% &=& 
+% \end{eqnarray}
+
+Thus the standard error of $\hat{\omega} + 2 \hat{\gamma}$ is
+
+\begin{equation}
+\label{threetwo}
+\sqrt{\cdot 3.2^2 + 2^2 \cdot 8.8^2}
+\end{equation}
+
+Now that we know the standard error of $\hat{\omega} + 2 \hat{\gamma}$,
+we can use it in (\ref{genci}).  We add and subtract 1.96 times
+(\ref{threetwo}) to $\hat{\omega} + 2 \hat{\gamma}$, and that is our
+interval.
+
+In general, for constants $a$ and $b$, an approximate 95\% confidence
+interval for the population quantity $a \omega + b \gamma$ is
+
+\begin{equation}
+\label{gen2ci}
+a \hat{\omega} + b \hat{\gamma} \pm 1.96 ~
+\sqrt{a^2 s.e.^2(\hat{\omega}) +
+      b^2 s.e.^2(\hat{\gamma})
+}
+\end{equation}
+
+We can go even further.  If $\hat{\omega}$ and $\hat{\gamma}$ are not
+independent but have known covariance, we can use the methods of Chapter
+\ref{randvec} to obtain a standard error for any linear combination of
+these two estimators.
+
+\section{Confidence Intervals for Differences of Means or Proportions}
+\label{diffs}
+
+\subsection{Independent Samples}
+\label{indepsams}
+
+Suppose in our sampling of people in Davis we are mainly interested in
+the difference in weights between men and women.  Let $\overline{X}$ and
+$n_1$ denote the sample mean and sample size for men, and let $\overline{Y}$
+and $n_2$ for the women.  Denote the population means and variances by
+$\mu_i$ and $\sigma_i^2$, i = 1,2.  We wish to find a confidence
+interval for $\mu_1 - \mu_2$.  The natural estimator for that quantity
+is $\overline{X} - \overline{Y}$.  
+
+So, how can we form a confidence interval for $\mu_1 - \mu_2$ using
+$\overline{X} - \overline{Y}$?  Since the latter quantity is composed of
+sums, we can use (\ref{genci}) and (\ref{gen2ci}).  Here:
+
+\begin{itemize}
+
+\item $a = 1, ~ b = -1$
+
+\item $\omega = \mu_1, ~ \gamma = \mu_2$
+
+\item $\hat{\omega} = \overline{X}, ~
+       \hat{\gamma} = \overline{Y}$
+
+\end{itemize}
+
+\label{diffxbarybar}
+
+But we know from before that $s.e.(\overline{X} = s_1 / \sqrt{n}$, 
+where $s^2_1$ is the sample variance for the men, 
+
+\begin{equation}
+s_1^2 = \frac{1}{n_1}\sum_{i=1}^{n_1} (X_i - \overline{X})^2
+\end{equation}
+
+and similarly for $\overline{Y}$ and the women.  So, 
+we have
+
+\begin{equation}
+\label{sediff}
+\textrm{s.e.}(\overline{X} - \overline{Y}) =
+\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}
+\end{equation}
+
+Thus (\ref{genci}) tells us that an approximate 95\% confidence interval
+for $\mu_1 - \mu_2$ is
+
+\begin{equation}
+\label{2indepsamp}
+\left (\overline{X}-\overline{Y} - 1.96 \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}},
+\overline{X}-\overline{Y} + 1.96 \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}} \right )
+\end{equation}
+
+% \checkpoint
+
+What about confidence intervals for the difference in two population
+proportions $p_1 - p_2$?  Recalling that in Section \ref{propcis} we
+noted that proportions are special cases of means, we see that finding a
+confidence interval for the difference in two proportions is covered by
+(\ref{2indepsamp}).  Here
+
+\begin{itemize}
+
+\item $\overline{X}$ reduces to $\widehat{p}_1$
+
+\item $\overline{Y}$ reduces to $\widehat{p}_2$
+
+\item $s_1^2$ reduces to $\widehat{p}_1 (1 - \widehat{p}_1)$ 
+
+\item $s_2^2$ reduces to $\widehat{p}_2 (1 - \widehat{p}_2)$
+
+\end{itemize}
+
+So, (\ref{2indepsamp}) reduces to
+
+\begin{equation}
+\label{2indepprop}
+\widehat{p_1} - \widehat{p_2}  \pm R
+\end{equation}
+
+where the radius R is
+
+\begin{equation}
+1.96 ~ \sqrt{
+   \frac{\widehat{p}_1 (1 - \widehat{p}_1)}{n_1} +
+   \frac{\widehat{p}_2 (1 - \widehat{p}_2)}{n_2}
+}
+\end{equation}
+
+\subsection{Example:  Network Security Application}
+\label{netsecapp}
+
+In a network security application, C. Mano {\it et
+al}\footnote{RIPPS: Rogue Identifying Packet Payload Slicer Detecting
+Unauthorized Wireless Hosts Through Network Traffic Conditioning, C.
+Mano and a ton of other authors, {\sc ACM Transactions on Information
+Systems and Security}, May 2007.} compare round-trip travel time for
+packets involved in the same application in certain wired and wireless
+networks.  The data was as follows:
+
+\begin{tabular}{|l|l|l|l|}
+\hline
+sample & sample mean & sample s.d. & sample size \\ \hline  \hline
+wired & 2.000 & 6.299 & 436 \\ \hline
+wireless & 11.520 & 9.939 & 344 \\ \hline
+\end{tabular}
+
+We had observed quite a difference, 11.52 versus 2.00, but could it be
+due to sampling variation?  Maybe we have unusual samples?  This calls
+for a confidence interval!
+
+Then a 95\% confidence interval for the difference between wireless and
+wired networks is
+
+\begin{equation}
+11.520 - 2.000 \pm 1.96 
+\sqrt{\frac{9.939^2}{344} + \frac{6.299^2}{436}}
+= 9.52 \pm 1.22
+\end{equation}
+
+So you can see that there is a big difference between the two networks,
+even after allowing for sampling variation.
+
+\subsection{Dependent Samples}
+\label{depsams}
+
+Note carefully, though, that a key point above was the independence of
+the two samples.  By contrast, suppose we wish, for instance, to find a
+confidence interval for $\nu_1 - \nu_2$, the difference in mean heights
+in Davis of 15-year-old and 10-year-old children, and suppose our data
+consist of pairs of height measurements at the two ages on {\it the same
+children}.  In other words, we have a sample of n children, and for the
+$i^{th}$ child we have his/her height $U_i$ at age 15 and $V_i$ at age
+10.  Let $\overline{U}$ and $\overline{V}$ denote the sample means.
+
+The problem is that the two sample means are not independent.  If a
+child is taller than his/her peers at age 15, he/she was probably taller
+than them when they were all age 10.  In other words, for each i, $V_i$
+and $U_i$ are positively correlated, and thus the same is true for
+$\overline{V}$ and $\overline{U}$.  Thus we cannot use (\ref{2indepsamp}).
+
+As always, it is instructive to consider this in ``notebook'' terms.
+Suppose on one particular sample at age 10---one line of the
+notebook---we just happen to have a lot of big kids.  Then
+$\overline{V}$ is large.  Well, if we look at the same kids later at age
+15, they're liable to be bigger than the average 15-year-old too.  In
+other words, among the notebook lines in which $\overline{V}$ is large,
+many of them will have $\overline{U}$ large too.
+
+Since $\overline{U}$ is approximately normally distributed with mean
+$\nu_1$, about half of the notebook lines will have $\overline{U} >
+\nu_1$.  Similarly, about half of the notebook lines will have
+$\overline{V} > \nu_2$.  But the nonindependence will be reflected in
+MORE than one-fourth of the lines having both $\overline{U} > \nu_1$ and
+$\overline{V} > \nu_2$.  (If the two sample means were 100\% correlated,
+that fraction would be 1.0.)
+
+Contrast that with a sample scheme in which we sample some 10-year-olds
+and some 15-year-olds, say at the same time.  Now {\it there are
+different kids in each of the two samples}.  So, if by happenstance we
+get some big kids in the first sample, that has no impact on which kids
+we get in the second sample.  In other words, $\overline{V}$ and
+$\overline{U}$ will be independent.  In this case, one-fourth of the
+lines will have both $\overline{U} > \nu_1$ and $\overline{V} > \nu_2$.
+
+So, we cannot get a confidence interval for $\nu_1 - \nu_2$ from
+(\ref{2indepsamp}), since the latter assumes that the two sample means
+are independent.  What to do?
+
+The key to the resolution of this problem is that the random variables
+$T_i = V_i - U_i$, i = 1,2,...,n are still independent.  Thus we can use
+(\ref{meanci}) on these values, so that our approximate 95\% confidence
+interval is
+
+\begin{equation}
+(\overline{T} - 1.96 \frac{s}{\sqrt{n}}, \overline{T} + 1.96 \frac{s}{\sqrt{n}})
+\end{equation}
+
+where $\overline{T}$ and $s^2$ are the sample mean and sample variance
+of the $T_i$.
+
+A common situation in which we have dependent samples is that in which
+we are comparing two dependent proportions.  Suppose for example that
+there are three candidates running for a political office, A, B and C.
+We poll 1,000 voters and ask whom they plan to vote for.  Let $p_A$,
+$p_B$ and $p_C$ be the three population proportions of people planning
+to vote for the various candidates, and let $\widehat{p}_A$,
+$\widehat{p}_B$ and $\widehat{p}_C$ be the corresponding sample
+proportions.  
+
+Suppose we wish to form a confidence interval for $p_A - p_B$. Clearly,
+the two sample proportions are not independent random variables, since
+for instance if $\widehat{p}_A = 1$ then we know for sure that
+$\widehat{p}_B$ is 0.  
+
+Or to put it another way, define the indicator variables $U_i$ and $V_i$
+as above, with for example $U_i$ being 1 or 0, according to whether the
+$i^{th}$ person in our sample plans to vote for A or not, with $V_i$
+being defined similarly for B.  Since $U_i$ and $V_i$ are
+``measurements'' on {\it the same person}, they are not independent, and
+thus $\widehat{p}_A$ and $\widehat{p}_B$ are not independent either.
+
+Note by the way that while the two sample means in our kids' height
+example above were positively correlated, in this voter poll example,
+the two sample proportions are negatively correlated.
+
+So, we cannot form a confidence interval for $p_A - p_B$ by using
+(\ref{2indepprop}).  What can we do instead?
+
+We'll use the fact that the vector $(N_A, N_B, N_C)^T$ has a multinomial
+distribution, where $N_A$, $N_B$ and $N_C$ denote the numbers of people
+in our sample who state they will vote for the various candidates (so
+that for instance $\widehat{p}_A = N_A/1000$).  
+
+Now to compute $Var(\widehat{p}_A - \widehat{p}_B)$, we make use of
+(\ref{genvarxplusy}):
+
+\begin{equation}
+Var(\widehat{p}_A - \widehat{p}_B) =
+Var(\widehat{p}_A) + 
+Var(\widehat{p}_B) - 
+2Cov(\widehat{p}_A, \widehat{p}_B)
+\end{equation}
+
+Or, we could have taken a matrix approach, using (\ref{covawaprime})
+with A equal to the row vector (1,-1,0).
+
+So, using (\ref{propcov}), the standard error of $\widehat{p}_A -
+\widehat{p}_B$ is 
+
+\begin{equation}
+\label{seofdiffprops}
+\sqrt{
+0.001 \widehat{p}_A (1-\widehat{p}_A) +
+0.001 \widehat{p}_B (1-\widehat{p}_B)
++0.002 \widehat{p}_A \widehat{p}_B
+}
+\end{equation}
+
+\subsection{Example:  Machine Classification of Forest Covers}
+\label{forestcover}
+
+{\it Remote sensing} is machine classification of type from variables
+observed aerially, typically by satellite.  The application we'll
+consider here involves forest cover type for a given location; there
+are seven different types.  (See Blackard, Jock A. and Denis J. Dean,
+2000, ``Comparative Accuracies of Artificial Neural Networks and
+Discriminant Analysis in Predicting Forest Cover Types from Cartographic
+Variables,'' {\it Computers and Electronics in Agriculture},
+24(3):131-151.)  Direct observation of the cover type is either too
+expensive or may suffer from land access permission issues.  So, we wish
+to guess cover type from other variables that we can more easily obtain.
+
+One of the variables was the amount of hillside shade at noon, which
+we'll call HS12.  {\it Here's our goal:}  Let $\mu_1$ and $\mu_2$ be the
+population mean HS12 among sites having cover types 1 and 2,
+respectively.  If $\mu_1 - \mu_2$ is large, then HS12 would be a good
+predictor of whether the cover type is 1 or 2.  
+
+So, we wish to estimate $\mu_1 - \mu_2$ from our data, in which we do
+know cover type.  There were over 50,000 observations, but for
+simplicity we'll just use the first 1,000 here.  Let's find an
+approximate 95\% confidence interval for $\mu_1 - \mu_2$.  The two
+sample means were 223.8 and 226.3, with s values of 15.3 and 14.3, and
+the sample sizes were 226 and 585.  
+
+Using (\ref{2indepsamp}), we have that the interval is
+
+\begin{equation}
+223.8 - 226.3 \pm 1.96 
+\sqrt{\frac{15.3^2}{226} + \frac{14.3^2}{585}}
+= -2.5 \pm 2.3
+= (-4.8,-0.3)
+\end{equation}
+
+Given that HS12 values are in the 200 range (see the sample means), this
+difference between them actually is not very large.  This is a great
+illustration of an important principle, it will turn out in Section
+\ref{whatswrong}.
+
+As another illustration of confidence intervals, let's find one for the
+difference in population proportions of sites that have cover types 1
+and 2.  Our sample estimate is 
+
+\begin{equation}
+\widehat{p}_1 - \widehat{p}_2 = 0.226 - 0.585 = -0.359
+\end{equation}
+
+The standard error of this quantity, from (\ref{seofdiffprops}), is
+
+\begin{equation}
+\sqrt{
+0.001 \cdot 0.226 \cdot 0.774
+0.001 \cdot 0.585 \cdot 0.415
++002 \cdot 0.226 \cdot 0.585
+} 
+= 0.019
+\end{equation}
+
+That gives us a confidence interval of 
+
+\begin{equation}
+-0.359 \pm 1.96 \cdot 0.019 = (-0.397,-0.321)
+\end{equation}
+
+\section{And What About the Student-t Distribution?}
+\label{studentt}
+
+{\it Far better an approximate answer to the right question, which is
+often vague, than an exact answer to the wrong question, which can
+always be made precise}---John Tukey, pioneering statistician at Bell
+Labs
+
+Another thing we are not doing here is to use the {\bf Student
+t-distribution}.  That is the name of the distribution of the quantity
+
+\begin{equation}
+\label{tdist}
+T = \frac{\overline{W}-\mu}{\tilde{s}/\sqrt{n-1}}
+\end{equation}
+
+where $\tilde{s}^2$ is the version of the sample variance in which we
+divide by n-1 instead of by n, i.e. (\ref{alts2}).
+
+Note carefully that we are assuming that the $W_i$ themselves---not just
+$\overline{W}$---have a normal distribution.  In other words, if we are
+studying human weight, say, then the assumption is that weight follows
+an exact bell-shaped curve.  The exact distribution of T is called the
+{\bf Student t-distribution with n-1 degrees of freedom}.  These
+distributions thus form a one-parameter family, with the degrees of
+freedom being the parameter.
+
+The general definition of the Student-t family is distribution of ratios
+$U / \sqrt{V/k}$, where
+
+\begin{itemize}
+
+\item U has a N(0,1) distribution 
+
+\item V has a chi-squared distribution with k degrees of freedom 
+
+\item U and V are independent 
+
+\end{itemize}
+
+It can be shown that in (\ref{tdist}), if the sampled population has a
+normal distribution, then $(\overline{W} - \mu)/\sigma$ and
+$\tilde{s}^2/\sigma^2$ actually do satisfy the above conditions on U and
+V, respectively, with k = n-1.  (If we are forming a confidence interval
+for the difference of two means, the calculation of degrees of freedom
+becomes more complicated, but it is not important here.)
+
+This distribution has been tabulated.  In R, for instance, the functions
+{\bf dt()}, {\bf pt()} and so on play the same roles as {\bf dnorm()},
+{\bf pnorm()} etc. do for the normal family.  The call {\bf qt(0.975,9)}
+returns 2.26.  This enables us to get a confidence interval for $\mu$
+from a sample of size 10, at EXACTLY a 95\% confidence level, rather
+than being at an APPROXIMATE 95\% level as we have had here, as follows.
+
+We start with (\ref{cistart}), replacing 1.96 by 2.26, $ (\bar{W}-\mu) /
+(\sigma/\sqrt{n})$ by T, and $\approx$ by $=$.  Doing the same algebra,
+we find the following confidence interval for $\mu$:
+
+\begin{equation}
+(\overline{W} - 2.26 \frac{\tilde{s}}{\sqrt{10}}, \overline{W} + 2.26
+\frac{\tilde{s}}{\sqrt{10}})
+\end{equation}
+
+Of course,  for general n, replace 2.26 by $t_{0.975,n-1}$, the 0.975
+quantile of the t-distribution with n-1 degrees of freedom.  The
+distribution is tabulated by the R functions {\bf dt()}, {\bf pt()} and
+so on.
+
+I do not use the t-distribution here because:
+
+\begin{itemize}
+
+\item It depends on the parent population having an exact normal
+distribution, which is never really true.  In the Davis case, for
+instance, people's weights are approximately normally distributed, but
+definitely not exactly so.  For that to be exactly the case, some people
+would have to have weights of say, a billion pounds, or negative weights,
+since any normal distribution takes on all values from $-\infty$ to
+$\infty$.
+
+\item For large n, the difference between the t-distribution and N(0,1)
+is negligible anyway.  That wasn't true in the case n = 10 above, where
+our confidence interval multiplied the standard error by 2.26 instead of
+1.96 as we'd seen earlier.  But for n = 50, the 2.26 already shrinks to
+2.01, and for n = 100, it is 1.98.
+
+\end{itemize}
+
+\section{R Computation}
+\label{rcomp}
+
+The R function {\bf t.test()} forms confidence intervals for a single
+mean or for the difference of two means.  In the latter case, the two
+samples must be independent; otherwise, do the single-mean CI on
+differences, as in Section \ref{depsams}.
+
+This function uses the Student-t distribution, rather than the normal,
+but as discussed in Section \ref{studentt}, the difference is negligible
+except in small samples.
+
+Thus you can conveniently use {\bf t.test()} to form a confidence
+interval for a single mean, instead of computing (\ref{meanci}) yourself
+(or writing the R code yourself).
+
+It's slightly more complicated in the case of forming a confidence
+interval for the difference of two means.  The {\bf t.test()} function
+will do that for you too, but will make the assmption that we have
+$\sigma^2_1 = \sigma^2_2$ in Section \ref{indepsams}.  Unless you
+believe there is a huge difference between the two population variances,
+this approximation is not bad.
+
+\section{Example:  Pro Baseball Data}
+\label{baseball0}
+
+The SOCR data repository at the UCLA Statistics Department includes a
+data set on major league baseball players, at
+\url{http://wiki.stat.ucla.edu/socr/index.php/SOCR_Data_MLB_HeightsWeights}.
+There are 1035 players in the sample, with the variables Name, Team,
+Position, Height, Weight and Age.  I downloaded it and placed it into a
+file {\bf Baseball.dat}
+
+\subsection{R Code}
+
+First we read in the data:
+
+\begin{lstlisting}
+> players <- read.table("Baseball.dat",header=T)
+Error in scan(file, what, nmax, sep, dec, quote, skip, nlines, na.strings,  : 
+  line 641 did not have 6 elements
+\end{lstlisting}
+
+Oops!  The entry for one player, Kirk Saarloos, did not have a weight
+figure.  So I edited the file by hand, placing the string ``NA'' there
+for weight; this is R's code for missing data.  I then tried again:
+
+\begin{lstlisting}
+> players <- read.table("Baseball.dat",header=T)
+> head(players)
+             Name Team       Position Height Weight   Age
+1   Adam_Donachie  BAL        Catcher     74    180 22.99
+2       Paul_Bako  BAL        Catcher     74    215 34.69
+3 Ramon_Hernandez  BAL        Catcher     72    210 30.78
+4    Kevin_Millar  BAL  First_Baseman     72    210 35.43
+5     Chris_Gomez  BAL  First_Baseman     73    188 35.71
+6   Brian_Roberts  BAL Second_Baseman     69    176 29.39
+\end{lstlisting}
+
+I read in the file {\bf Baseball.dat}, whose first line consisted of a
+header giving the names of the variables.  I assigned the result to {\bf
+players}, whose type will be that of an R {\bf data frame}.  I then
+called R's {\bf head()} function, to take a look at the results to make
+sure things are OK.
+
+We could then query various items in the object {\bf players}, say the
+mean weight (not conditioned on height), via \lstinline{players[,5]} or
+\lstinline{players$Weight}.
+
+\subsection{Analysis}
+\label{baseballcis}
+
+Let's find an approximate 95\% confidence interval for the population
+mean weight of catchers.\footnote{Note that this is an observational
+study, as discussed in Section \ref{observational}, with attendant care
+needed for the conclusions we derive from this data.}
+
+\begin{lstlisting}
+> catch <- players[players$Position == "Catcher",]
+> t.test(catch$Weight)
+
+	One Sample t-test
+
+data:  catch$Weight
+t = 113.1467, df = 75, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 200.7315 207.9264
+sample estimates:
+mean of x 
+ 204.3289 
+\end{lstlisting}
+
+Our CI is (200.7,207.9).
+
+(There is material in the above output on significance testing, which we
+will cover in the next chapter.)
+
+How about a comparison in population mean weights between catchers and
+first basemen?
+
+\begin{lstlisting}
+> firstb <- players[players$Position == "First_Baseman",]
+> t.test(catch$Weight,firstb$Weight)
+
+	Welch Two Sample t-test
+
+data:  catch$Weight and firstb$Weight
+t = -2.7985, df = 102.626, p-value = 0.006133
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -15.002763  -2.557524
+sample estimates:
+mean of x mean of y 
+\end{lstlisting}
+
+We might be interested in inference concerning the population
+proportion of catchers older than 32:
+
+\begin{lstlisting}
+> old <- (catch$Age > 32)
+> head(old)
+[1] FALSE  TRUE FALSE FALSE FALSE FALSE
+> old <- as.integer(old)
+> head(old)
+[1] 0 1 0 0 0 0
+> t.test(old)
+
+	One Sample t-test
+
+data:  old
+t = 5.705, df = 75, p-value = 2.189e-07
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 0.1969573 0.4083058
+sample estimates:
+mean of x 
+0.3026316 
+\end{lstlisting}
+
+Note that the intervals, especially the last one, are rather wide.  We
+just don't have enough catchers to get much accuracy.  How many are
+there?\footnote{In order to do any of this, we are tacitly assuming that
+our players are a sample of some general population of players, say,
+past, present and future., even if we have all the present ones.  This
+is very common in applied statistical analysis.}
+
+\begin{lstlisting}
+> nrow(catch)
+[1] 76
+\end{lstlisting}
+
+\section{Example:  UCI Bank Marketing Dataset}
+\label{ucibank}
+
+This data set was obtained from the UC Irvine Machine Learning Data
+Repository, \url{http://archive.ics.uci.edu/ml/about.html}.  A bank in
+Portugal had developed a new type of account, and they were interested
+in studying what types of customers would be more likely to switch to
+the new account.
+
+\begin{lstlisting}
+> bank <- read.table("bank-full.csv",header=T,sep=";")
+> head(bank)
+  age          job marital education default balance housing loan  day
+1  58   management married  tertiary      no    2143     yes   no    5
+2  44   technician  single secondary      no      29     yes   no    5
+3  33 entrepreneur married secondary      no       2     yes  yes    5
+4  47  blue-collar married   unknown      no    1506     yes   no    5
+5  33      unknown  single   unknown      no       1      no   no    5
+6  35   management married  tertiary      no     231     yes   no    5
+  month duration campaign pdays previous poutcome  y
+1   may      261        1    -1        0  unknown no
+2   may      151        1    -1        0  unknown no
+3   may       76        1    -1        0  unknown no
+4   may       92        1    -1        0  unknown no
+5   may      198        1    -1        0  unknown no
+6   may      139        1    -1        0  unknown no
+\end{lstlisting} 
+
+(The variable {\bf contact} has been omitted here, to fit the display on
+the page.)
+
+There are many variables here, explained in more detail at the UCI site.
+We'll come back to this example, but let's do one quick confidence
+interval.  Here we will compare the success rates of the marketing
+campaign for married and unmarried people:
+
+\begin{lstlisting}
+> marrd <- bank[bank$marital == "married",]
+> unmarrd <- bank[bank$marital != "married",]
+> t.test(marrd$success,unmarrd$success)
+
+        Welch Two Sample t-test
+
+data:  marrd$success and unmarrd$success
+t = -12.471, df = 34676.26, p-value < 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.04578514 -0.03334804
+sample estimates:
+mean of x mean of y 
+0.1012347 0.1408012 
+\end{lstlisting}
+
+So, we are 95\% confident that the population success
+rate is between 3.3\% and 4.6\% less for married people.
+
+Note by the way that there are more than 46,000 people in this sample.
+So, the Student-t and N(0,1) distributions are now indistinguishable.
+
+\section{Example:  Amazon Links}
+
+This example involves the Amazon product co-purchasing network, March 2
+2003.  The data set is large but simple. It stores a directed graph of
+what links to what: If a record show i then j, it means that i is often
+co-purchased with j (though not necessarily vice versa).  Let's find a
+confidence interval for the mean number of inlinks, i.e. links into a
+node.
+
+Actually, even the R manipulations are not so trivial, so here is the
+complete code (\url{http://snap.stanford.edu/data/amazon0302.html}):
+
+\begin{lstlisting}[numbers=left]
+mzn <- read.table("amazon0302.txt",header=F)
+# cut down the data set for convenience
+mzn1000 <- mzn[mzn[1.] <= 1000 & mzn[,2] <= 1000,]
+# make an R list, one element per value of j
+degrees1000 <- split(mzn1000,mzn1000[,2])
+# by finding the number of rows in each matrix, we get the numbers of
+# inlinks
+indegrees1000 <- sapply(degrees1000,nrow)
+\end{lstlisting}
+
+Now run {\bf t.test()}:
+
+\begin{lstlisting}
+> t.test(indegrees1000)
+
+        One Sample t-test
+
+data:  indegrees1000 
+t = 35.0279, df = 1000, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 0 
+95 percent confidence interval:
+ 3.728759 4.171340 
+sample estimates:
+mean of x 
+  3.95005 
+\end{lstlisting}
+
+So, in our sample data, the mean number of inlinks was 3.95, and we are
+95\% confident that the true population mean is between 3.73 and 4.17.
+
+\section{Example:  Master's Degrees in CS/EE}
+
+In an analysis of the National Survey of College Graduates, I looked at
+workers in CS or EE, who have CS or EE degrees.\footnote{There were
+various other restrictions, which I will not go into here.}  I had them
+in R data frames named {\bf cs} and {\bf ee}, each of which had an
+indicator variable {\bf ms} signifying that the worker has a Master's
+degree (but not a PhD).  Let's see the difference between CS and EE on
+this variable:
+
+\begin{lstlisting}
+> t.test(cs$ms,ee$ms)
+
+	Welch Two Sample t-test
+
+data:  cs$ms and ee$ms 
+t = 2.4895, df = 1878.108, p-value = 0.01288
+alternative hypothesis: true difference in means is not equal to 0 
+95 percent confidence interval:
+ 0.01073580 0.09045689 
+sample estimates:
+mean of x mean of y 
+0.3560551 0.3054588 
+\end{lstlisting}
+
+So, in our sample, 35.6\% and 30.5\% of the two groups had Master's
+degrees, and we are 95\% confident that the true population difference
+in proportions of Master's degrees in the two groups is between 0.01 and
+0.09.
+
+% \section{The Multivariate Case}
+% 
+% In the last few sections, the standard error has been key to finding
+% confidence intervals for univariate quantities.  Recalling that the standard
+% error, squared, is the estimated variance of our estimator, one might
+% guess that the analogous quantity in the multivariate case is the
+% estimator covariance matrix of the estimator.  This turns out to be
+% correct.
+% 
+% \subsection{Sample Mean and Sample Covariance Matrix}
+% 
+% Say W is an r-element random vector, and we have a random sample
+% $W_1,...,W_n$ from the distribution of W.
+% 
+% In analogy with (\ref{s2}), we have
+% 
+% \begin{equation}
+% \label{estcovmat}
+% \widehat{Cov}(W) =
+% \frac{1}{n} \sum_{i=1}^n 
+% (W_i - \overline{W})
+% (W_i - \overline{W})'
+% \end{equation}
+% 
+% where
+% 
+% \begin{equation}
+% \label{estvecmean}
+% \overline{W} = 
+% \frac{1}{n} \sum_{i=1}^n W_i
+% \end{equation}
+% 
+% Note that (\ref{estcovmat}) and (\ref{estvecmean}) are of size r x r and
+% r x 1, and are estimators of Cov(W) and EW.
+% 
+% Note too that (\ref{estvecmean}) is a sum, thus reminding us of the
+% Central Limit Theorem.  In this case it's the Multivariate Central Limit
+% Theorem, which implies that $\overline{W}$ has an approximate
+% multivariate normal distribution.  If you didn't read that chapter, the
+% key content is the following:
+% 
+% \begin{quote}
+% 
+% Let 
+% 
+% \begin{equation}
+% \label{cvec}
+% \left ( \begin{array}{r} 
+% c_1 \\
+% ... \\
+% c_r \\
+% \end{array} \right )
+% \end{equation}
+% 
+% denote any constant (i.e. nonrandom) r-element
+% vector.  Then the quantity
+% 
+% \begin{equation}
+% c' \overline{W}
+% \end{equation}
+% 
+% has an approximate normal distribution with mean c EW and variance
+% 
+% \begin{equation}
+% c' ~ Cov(\overline{W}) c
+% \end{equation}
+% 
+% An approximate 95\% confidence interval for $c_1 EW_1 + ... + c_r EW_r$
+% is then
+% 
+% \begin{equation}
+% \label{mvci}
+% c' \overline{W} \pm 1.96 \sqrt{c' \widehat{Cov}(\overline{W}) c}
+% \end{equation}
+% 
+% where the estimated covariance matrix is given in (\ref{estcovmat}).  
+% \end{quote}
+% 
+% More generally, here is the extension of the material in Section
+% \ref{stderrest}:
+% 
+% \begin{quote}
+% Suppose we are estimating some r-component vector $\theta$, using an
+% approximately r-variate normal estimator $\widehat{\theta}$.  Let C
+% denote the estimated covariance matrix of $\widehat{\theta}$.
+% Then an approximate 95\% confidence interval for $\c'theta$ is
+% 
+% \begin{equation}
+% \label{genmvci}
+% c' \widehat{\theta} \pm 1.96 \sqrt{c' C c}
+% \end{equation}
+% \end{quote}
+% 
+% 
+% \subsection{Growth Rate Example}
+% 
+% Suppose we are studying children's growth patterns, and
+% have data on heights at ages 6, 10 and 18, denoted (X,Y,Z) = W.  We're
+% interested in the growths between 6 and 10, and between 10 and 18,
+% denoted by $G_1$ and $G_2$, respectively.  Say we wish to form a
+% confidence interval for $EG_2 - EG_1$, based on a random sample $W_i =
+% (X_i,Y_i,Z_i), i = 1,...,n$.
+% 
+% This fits right into the context of the previous section.  We're
+% interested in
+% 
+% \begin{equation}
+% (EZ - EY) - (EY - EX) = EZ - 2 EY + EX
+% \end{equation}
+% 
+% So, we can set c = (1,-2,1) in (\ref{cvec}), and then use
+% (\ref{mvci}).
+% 
+% \section{Advanced Topics in Confidence Intervals}
+
+% \section{Sampling With and Without Replacement}
+% 
+% Implicit in our analyses so far in our assumption that the $W_i$ are
+% independent is that we are sampling {\bf with replacement}, which means
+% it's possible in the Davis weights example that our random sampling
+% process might choose the same person twice.  
+% 
+% If we sample with replacement, we say that we have a {\bf random
+% sample}.  If it is done without replacement, it's called a {\bf simple
+% random sample}.  In the latter case, (\ref{oneovernpopvar}) does not
+% hold, because the $W_i$ are not independent (though they are still
+% identically distributed).  To see this, suppose that Davis were a tiny
+% town consisting of just three adults, with weights 120, 161 and 190.
+% Then if for example $W_1 = 190$, then $E(W_2|W_1) = (120+161)/2 =
+% 140.5$, while $E(W_1) = (120+161+190)/3 = 157$.  Thus $W_1$ and $W_2$
+% are not independent, and (\ref{oneovernpopvar}) would
+% fail.\footnote{Note, though, that (\ref{barmean}) {\it does} hold,
+% because expected values of sums equal sums of expected values even for
+% dependent random variables.}
+% 
+% But except for cases in which our sample size is a substantial fraction
+% of the population size, the probability of getting the same person twice
+% would be very low, so it doesn't matter.  Thus we can safely use
+% analyses which assume with-replacement sampling even if we are using
+% without-replacement sampling.
+% 
+% \section{One-Sided Confidence Intervals}
+% \label{oneside}
+% 
+% Confidence intervals as discussed so far give one both an upper and
+% lower bound for the parameter of interest.  (From here on, the
+% word {\it parameter} is used in a broader context than just parametric
+% families of distributions.  The term will refer to any population
+% quantity.)
+% 
+% In some applications, we are interested in having only an upper bound,
+% or only a lower bound.  One can go through the same kind of reasoning as
+% in Section \ref{ciintro} above to obtain approximate 95\%
+% \underline{one-sided} confidence intervals:
+% 
+% \begin{equation}
+% (\overline{W} - 1.65 \frac{s}{\sqrt{n}}, \infty)
+% \end{equation}
+% 
+% \begin{equation}
+% (-\infty, \overline{W} + 1.65 \frac{s}{\sqrt{n}})
+% \end{equation}
+% 
+% Note the constant 1.65, which is the 0.95 quantile of the N(0,1) distr,
+% compared to 1.96, the 0.975 quantile.
+% 
+% One-sided intervals might be used simply out of preferance, or from the
+% dictates of the application.  For example, in the {\bf market basket}
+% problems in data mining, one is interested in finding proportions that
+% are larger than a specified value, so one-sided intervals are natural
+% there.
+% 
+% \section{Random Sample Size}
+% 
+% In our Davis weights example in Section \ref{davisweights}, we were
+% implicitly assuming that the samples sizes of the two groups, $n_1$ and
+% $n_2$, were nonrandom.  For instance, we might sample 500 men and 500
+% women.
+% 
+% On the other hand, we might simply sample 1000 people without regard to
+% gender.  Then the number of men and women in the sample would be random.
+% Think once again of our notebook view.  In our first sample of 1000
+% people, we might have 492 men and 508 women.  In our second sample, the
+% gender breakdown might be 505 and 495, and so on.  In keeping with the
+% convention to denote random quantities by capital letters, we might
+% write the numbers of men and women in our sample as $N_1$ and $N_2$.
+% 
+% However, in most cases it should not matter.  As long as there is not
+% some odd property of our sampling method, e.g. in which there would be
+% tendency for larger samples to have shorter men, we can simply do our
+% inference conditionally on $N_1$ and $N_2$, thus treating them as
+% constants.
+
+\section{Other Confidence Levels}
+
+We have been using 95\% as our confidence level.  This is common, but of
+course not unique.  We can for instance use 90\%, which gives us a
+narrower interval (in (\ref{meanci}), we multiply by 1.65 instead of by
+1.96.  (The reader should check this, using the {\bf qnorm()} function.)
+Narrower is better, of course, but it comes at the expense of lower
+confidence.
+
+A confidence interval's error rate is usually denoted by $1-\alpha$, so
+a 95\% confidence level has $\alpha = 0.05$.
+
+% \section{Exact Confidence Intervals}
+% \label{exactcis}
+% 
+% Recall how we derived our previous confidence intervals.  We began with
+% a probability statement involving our estimator, and then did some
+% algebra to turn it around into a formula for a confidence interval.
+% Those operations had nothing to do with the approximate nature of the
+% distributions involved.  We can do the same thing if we have exact
+% distributions.
+% 
+% For example, suppose we have a random sample $X_1,...,X_{10}$ from an
+% exponential distribution with parameter $\lambda$.  Let's find an exact
+% 95\% confidence interval for $\lambda$.  
+% 
+% Let 
+% 
+% \begin{equation}
+% T = X_1+...+X_{10}
+% \end{equation}
+% 
+% Recall that T has a gamma distribution with parameters 10 (the
+% ``shape,'' in R's terminology) and $\lambda$.  Let $q(\lambda)$ denote
+% the 0.95 quantile of this distribution, i.e. the point to the right of
+% which there is only 5\% of the area under the density.  Note carefully
+% that this is indeed a function of $\lambda$; it has different values for
+% different $\lambda$.  Then:
+% 
+% \begin{equation}
+% 0.95 = P[T \leq q(\lambda)] = P[q^{-1}(T) \geq \lambda]
+% \end{equation}
+% 
+% (Here we have used the fact that q() is a decreasing function.)
+% 
+% So, an EXACT 95\% one-sided confidence interval for $\lambda$ is
+% 
+% \begin{equation}
+% (0,q^{-1}(T))
+% \end{equation}
+% 
+% Now, what IS $q^{-1}$?  Recall what q() is, the 0.95 quantile of the
+% gamma distribution with shape 10.  It always helps intuition to look at
+% some specific numbers:
+% 
+% \begin{Verbatim}[fontsize=\relsize{-2}]
+% > qgamma(0.95,10,2.5)
+% [1] 6.282087
+% > qgamma(0.95,10,4)
+% [1] 3.926304
+% \end{Verbatim}
+% 
+% So, q(2.5) = 6.28 and q(4) = 3.92.  That means $q^{-1}(6.28) = 2.5$ and
+% $q^{-1}(3.92) = 4$.
+% 
+% You can now see how we can form the interval.  Say T = 16.4.  Then we do
+% some trial-and-error until we find a number w such that {\bf
+% qgamma(0.95,10,w) = 16}.  Our confidence interval is then (0,w).
+
+\section{One More Time:  Why Do We Use Confidence Intervals?}
+
+After all the variations on a theme in the very long Section
+\ref{ciintro}, it is easy to lose sight of the goal, so let's review:
+
+Almost everyone is familiar with the term ``margin of error,'' given in
+every TV news report during elections.  The report will say something
+like, ``In our poll, 62\% stated that they plan to vote for Ms. X.  The
+margin of error is 3\%.''  Those two numbers, 62\% and 3\%, form the
+essence of confidence intervals:
+
+\begin{itemize}
+
+\item The 62\% figure is our estimate of p, the true population fraction
+of people who plan to vote for Ms. X.
+
+\item Recognizing that that 62\% figure is only a sample estimate of p,
+we wish to have a measure of how accurate the figure is---our margin of
+error.  Though the poll reports don't say this, what they are actually
+saying is that we are 95\% sure that the true population value p is in
+the range $0.62 \pm 0.03$.
+
+\end{itemize}
+
+So, a confidence interval is nothing more than the concept of the
+$a \pm b$ range that we are so familiar with.
+
+\startproblemset
+
+\oneproblem
+Consider Equation (\ref{theci}).  In each of the entries in
+the table below, fill in either R for random, or NR for nonrandom:
+
+\begin{tabular}{|r|r|}
+\hline
+quantity & R or NR? \\ \hline
+$\overline{W}$ & \ \\ \hline
+$s$ & \ \\ \hline
+$\mu$ & \ \\ \hline
+$n$ & \ \\ \hline
+\end{tabular}
+
+\oneproblem
+Consider $\hat{p}$, the estimator of a population
+proportion p, based on a sample of size n.  Give the expression for the
+standard error of $\hat{p}$.
+
+\oneproblem
+Suppose we take a simple random sample of size 2 from a
+population consisting of just three values, 66, 67 and 69.  Let
+$\overline{X}$ denote the resulting sample mean.  Find
+$p_{\overline{X}}(67.5)$.
+
+\oneproblem
+Suppose we have a random sample $W_1,...,W_n$, and we wish
+to estimate the population mean $\mu$, as usual.  But we decide to place
+double weight on $W_1$, so our estimator for $\mu$ is
+
+\begin{equation}
+U = \frac{2W_1+W_2+...+W_n}{n+1}
+\end{equation}
+
+Find E(U) and Var(U) in terms of $\mu$ and the population variance
+$\sigma^2$.  
+
+\oneproblem
+Suppose a random sample of size n is drawn from a population in which,
+unknown to the analyst, X actually has an exponential distribution
+with mean 10. Suppose the analyst forms an approximate 95\% confidence
+interval for the mean, using (\ref{meanci}). Use R simulation 
+to estimate the true confidence level, for n = 10, 25, 100 and 500.
+
+\oneproblem 
+Suppose we draw a sample of size 2 from a population in which $X$ has
+the values 10, 15 and 12.  Find $p_{\overline{X}}$, first assuming sampling
+with replacement, then assuming sampling without replacement.
+
+\oneproblem
+We ask 100 randomly sampled programmers whether C++ is their
+favorite language, and 12 answer yes.  Give a numerical expression for
+an approximate 95\% confidence interval for the population fraction of
+programmers who have C++ as their favorite language.
+
+\oneproblem
+In Equation (\ref{meanci}), suppose 1.96 is replaced by 1.88 in
+both instances.  Then of course the confidence level will be smaller
+than 95\%.  Give a call to an R function (not a simulation), that will
+find the new confidence level.
+
+\oneproblem
+Candidates A, B and C are vying for election.  Let $p_1$, $p_2$ and 
+$p_3$ denote the fractions of people planning to vote for them.  We 
+poll n people at random, yielding estimates $\widehat{p_1}$, 
+$\widehat{p_2}$ and $\widehat{p_3}$.  Y claims that she has more 
+supporters than the other two candidates combined.  Give a formula 
+for an approximate 95\% confidence interval for $p_2 - (p_1+p_3)$.
+
+\oneproblem
+Suppose Jack and Jill each collect random samples of size n from a 
+population having unknown mean $\mu$ but KNOWN variance $\sigma^2$.  
+They each form an approximate 95\% confidence interval for $\mu$, 
+using (\ref{meanci}) but with s replaced by $\sigma$.  Find the 
+approximate probability that their intervals do not overlap.  Express 
+your answer in terms of $\Phi$, the cdf of the N(0,1) distribution. 
+
+\oneproblem
+In the example of the population of three people, page \pageref{threeyahn}, 
+find the following:
+
+\begin{itemize}
+
+\item [(a)] $p_{X_1}(70)$
+
+\item [(b)] $p_{X_1,X_2}(69,70)$
+
+\item [(c)] $F_{\overline{X}}(69.5)$
+
+\item [(d)] probability that $\overline{X}$ overestimates the population
+mean $\mu$ 
+
+\item [(e)] $p_{\overline{X}}(69)$ if our sample size is three
+rather than two (remember, we are sampling with replacement)
+
+\end{itemize}
+
+\oneproblem
+In the derivation (\ref{barmean}), suppose instead we have a simple 
+random sample.  Which one of the following statements is correct?
+
+\begin{itemize}
+
+\item [(a)] $E(\overline{X})$ will still be equal to $\mu$.
+
+\item [(b)] $E(\overline{X})$ will not exist.
+
+\item [(c)] $E(\overline{X})$ will exist, but may be less than $\mu$.
+
+\item [(d)] $E(\overline{X})$ will exist, but may be greater than $\mu$.
+
+\item [(e)] None of the above is necessarily true.
+
+\end{itemize}
+
+\oneproblem
+Consider a toy example in which we take a random sample of
+size 2 (done with replacement) from a population of size 2.  The two
+values in the population (say heights in some measure system) are 40 and
+60.  Find $p_{s^2}(100)$.
+

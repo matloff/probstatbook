@@ -1,0 +1,563 @@
+\chapter{Introduction to Continuous-Time Markov Chains}
+\label{conmarkov} 
+
+In the Markov chains we analyzed in Chapter \ref{dismarkov}, events
+occur only at integer times.  However, many Markov chain models are of
+the \textbf{continuous-time} type, in which events can occur at any
+times.  Here the \textbf{holding time}, i.e. the time the system spends
+in one state before changing to another state, is a continuous random
+variable.
+
+\section{Continuous-Time Markov Chains}
+
+The state of a Markov chain at any time now has a continuous subscript.
+Instead of the chain consisting of the random variables $X_n, ~ n =
+1,2,3,...$, it now consists of $\{X_t: t \in [0,\infty)\}$.  The Markov
+property is now
+
+\begin{equation}
+P(X_{t+u} = k | X_s \textrm{ for all } 0 \leq s \leq t) =
+P(X_{t+u} = k | X_t) \textrm{ for all } t,u \geq 0
+\end{equation}
+
+\section{Holding-Time Distribution}
+
+In order for the Markov property to hold, the distribution of holding
+time at a given state needs to be ``memoryless.'' Recall that
+exponentially distributed random variables have this property. In other
+words, if a random variable W has density
+
+\begin{equation}
+\label{lambdaeqnxxx}
+f(t)=\lambda e^{-\lambda t}
+\end{equation}
+
+for some $\lambda$ then
+
+\begin{equation}
+\label{exponnomemxxx}
+P(W>r+s|W>r)=P(W>s)
+\end{equation}
+
+for all positive r and s. And exponential
+distributions are the only continuous distributions which have this
+property. Therefore, \textsl{holding times in Markov chains must be
+exponentially distributed.}  
+
+Because it is central to the Markov property, the exponential distribution
+is assumed for all basic activities in Markov models. In queuing models,
+for instance, both the interarrival time and service time are assumed to
+be exponentially distributed (though of course with different values of
+$\lambda$). In reliability modeling, the lifetime of a component is
+assumed to have an exponential distribution.
+
+Such assumptions have in many cases been verified empirically. If you go to
+a bank, for example, and record data on when customers arrive at the
+door, you will find the exponential model to work well (though you may
+have to restrict yourself to a given time of day, to account for
+nonrandom effects such as heavy traffic at the noon hour). In a study of
+time to failure for airplane air conditioners, the distribution was also
+found to be well fitted by an exponential density.  On the other hand,
+in many cases the distribution is not close to exponential, and purely
+Markovian models cannot be used for anything more than a rough
+approximation.
+
+\subsection{The Notion of ``Rates''}
+\label{ratesxxx}
+
+A key point is that the parameter $\lambda$ in (\ref{lambdaeqnxxx}) has
+the interpretation of a rate, in the sense discussed in Theorem
+\ref{thm1}.  To review, first, recall that $1/\lambda$ is the mean.  Say
+light bulb lifetimes have an exponential distribution with mean 100
+hours, so $\lambda = 0.01$.  In our lamp, whenever its bulb burns out,
+we immediately replace it with a new on.  Imagine watching this lamp
+for, say, 100,000 hours.  During that time, we will have done
+approximately 100000/100 = 1000 replacements.  That would be using 1000
+light bulbs in 100000 hours, so we are using bulbs at the rate of 0.01
+bulb per hour.  For a general $\lambda$, we would use light bulbs at the
+rate of $\lambda$ bulbs per hour.  This concept is crucial to what
+follows.
+
+\section{Stationary Distribution}
+
+In analogy to (\ref{limntcpy}), we again define $\pi_{i}$ to be the
+long-run proportion of time the system is in state i, where now $N_{it}$
+is the proportion of the time spent in state i, during (0,t).  We again
+will derive a system of linear equations to solve for these proportions,
+using a flow out = flow in argument.
+
+\subsection{Intuitive Derivation}
+
+To this end, let $\lambda_{i}$ denote the parameter in the
+holding-time distribution at state i, and define the
+quantities 
+
+\begin{equation}
+\label{rhorsxxx}
+\rho_{rs} = \lambda_r p_{rs}
+\end{equation}
+
+where $p_{rs}$ is that probably that, when a jump out of state r occurs,
+the jump is to state s.
+
+The equations has the following interpretation.  Note:
+
+\begin{itemize}
+
+\item $\lambda_r$ is the rate of jumps out of state r, so
+
+\item $\lambda_r p_{rs}$ is the rate of jumps from state r to state s,
+and since
+
+\item $\pi_r$ is the long-run proportion of the time we are in state r,
+then
+
+\item $\pi_r \lambda_r p_{rs}$ is the rate of jumps from r to s
+
+\end{itemize}
+
+Then, equating the rate of transitions into i and the rate out of i, we
+have
+
+\begin{equation}
+\label{newnewbalance}
+\pi_i \lambda_i = \sum_{j \neq i} \pi_j \lambda_j p_{ji}
+\end{equation}
+
+These equations can then be solved for the $\pi_i$.
+
+\subsection{Computation}
+
+Motivated by (\ref{newnewbalance}), define the matrix Q by
+
+\begin{equation}
+q_{ij} = 
+\begin{cases}
+\lambda_j p_{ji}, & \text{if $i \neq j$}\\
+-\lambda_i, & \text{if $i = j$}
+\end{cases}
+\end{equation}
+
+Q is called the {\bf infinitesimal generator} of the system, so named
+because it is the basis of the system of differential equations that can
+be used to find the finite-time probabilistic behavior of $X_t$.  
+
+% The name also reflects the rates notion we've been discussing, due to
+% the fact that, say in our light bulb example in Section \ref{ratesxxx},
+% 
+% \begin{equation}
+% P(\textrm{bulb fails in next h time}) = \lambda h + o(h)
+% \end{equation}
+
+Then (\ref{newnewbalance}) is stated in matrix form as
+
+\begin{equation}
+\label{qpi}
+Q \pi = 0
+\end{equation}
+
+But the $\pi_i$ must sum to 1, so the above equation is subject to
+
+\begin{equation}
+\label{onepi}
+1' \pi = 1
+\end{equation}
+
+where $1$ denotes a (column) vector of n 1s, where n is the number of
+states.
+
+In view of (\ref{onepi}), the system (\ref{qpi}) is redundant; there are
+n equations for n-1 unknowns,  So, replace the last equation in
+(\ref{qpi}) by (\ref{onepi}).
+
+Here is R code to solve the system:
+
+\begin{lstlisting}
+findpicontin <- function(q) {
+   n <- nrow(q)
+   q[n,] <- rep(1,n)
+   rhs <- c(rep(0,n-1),1)
+   pivec <- solve(q,rhs)
+   return(pivec)
+}
+\end{lstlisting}
+
+To formulate the equations  (\ref{newnewbalance}), we'll need a property
+of exponential distributions derived in Section \ref{min}, copied here
+for convenience:
+
+\begin{theorem}
+
+Suppose $W_{1},...,W_{k}$ are independent random variables, with $W_{i}$
+being exponentially distributed with parameter $\lambda_{i}$.  Let
+$Z=\min(W_{1},...,W_{k})$. Then
+
+\begin{itemize}
+
+\item [(a)] Z is exponentially distributed with parameter $\lambda
+_{1}+...+\lambda_{k}$
+
+\item [(b)] $P(Z=W_{i}) =
+\frac{\lambda_{i}}{\lambda_{1}+...+\lambda_{k}}$
+
+\end{itemize}
+
+\end{theorem}
+
+\section{Example:  Machine Repair}
+\label{machinerepairxxx}
+
+Suppose the operations in a factory require the use of a certain kind of
+machine.  The manager has installed two of these machines. This is known
+as a \textbf{gracefully degrading system}: When both machines are
+working, the fact that there are two of them, instead of one, leads to a
+shorter wait time for access to a machine.  When one machine has failed,
+the wait is longer, but at least the factory operations may continue. Of
+course, if both machines fail, the factory must shut down until at least
+one machine is repaired.
+
+Suppose the time until failure of a single machine, carrying the full
+load of the factory, has an exponential distribution with mean 20.0, but
+the mean is 25.0 when the other machine is working, since it is not so
+loaded. Repair time is exponentially distributed with mean 8.0.
+
+We can take as our state space \{0,1,2\}, where the state is the number
+of working machines. Now, let us find the parameters $\lambda_{i}$ and
+$p_{ji}$ for this system. For example, what about $\lambda_{2}$?  The
+holding time in state 2 is the \underline{minimum} of the two lifetimes
+of the machines, and thus from the results of Section \ref{min}, has
+parameter $\frac{1}{25.0}+\frac{1}{25.0}=0.08$. 
+
+For $\lambda_{1}$, a transition out of state 1 will be either to state
+2 (the down machine is repaired) or to state 0 (the up machine fails).
+The time until transition will be the minimum of the lifetime of the up
+machine and the repair time of the down machine, and thus will have
+parameter $\frac{1}{20.0}+\frac{1}{8.0}=0.175$.  Similarly, $\lambda
+_{0}=\frac{1}{8.0}+\frac{1}{8.0}=0.25$.
+
+It is important to understand how the Markov property is being used
+here. Suppose we are in state 1, and the down machine is repaired,
+sending us into state 2.  Remember, the machine which had already been
+up has ``lived'' for some time now. But the memoryless property of the
+exponential distribution implies that this machine is now ``born
+again.''
+
+What about the parameters $p_{ji}$? Well, $p_{21}$ is certainly easy to
+find; since the transition $2\rightarrow 1$ is the \textit{only}
+transition possible out of state 2, $p_{21} = 1$.
+
+For $p_{12}$, recall that transitions out of state 1 are to states 0 and
+2, with rates 1/20.0 and 1/8.0, respectively.  So,
+
+\begin{equation}
+p_{12} = \frac{1/8.0}{1/20.0+1/8.0} = 0.72
+\end{equation}
+
+Working in this manner, we finally arrive at the complete system of equations
+(\ref{newnewbalance}):
+
+\begin{eqnarray}
+\pi_{2}(0.08) & = & \pi_{1}(0.125)\\
+\pi_{1}(0.175) & = & \pi_{2}(0.08)+\pi_{0}(0.25)\\
+\pi_{0}(0.25) & = & \pi_{1}(0.05)
+\end{eqnarray} 
+
+In matrix terms:
+
+\begin{equation}
+\left (
+\begin{array}{rrr}
+-0.25 & 0.05 & 0 \\
+0.25 & -0.175 & 0.08 \\
+0 & 0.125 & -0.08  \\
+\end{array}
+\right )
+\pi = 0
+\end{equation}
+
+Let's find the solution:
+
+\begin{lstlisting}
+> q
+      [,1]   [,2]  [,3]
+[1,] -0.25  0.050  0.00
+[2,]  0.25 -0.175  0.08
+[3,]  0.00  0.125 -0.08
+> findpicontin(q)
+[1] 0.07239819 0.36199095 0.56561086
+\end{lstlisting}
+
+% Of course, we also have the constraint $\pi_{2}+\pi_{1}+\pi_{0}=1$.
+% The solution turns out to be
+
+So,
+
+\begin{equation}
+\pi =(0.072,0.362,0.566)
+\end{equation}  
+
+Thus for example, during 7.2\% of the time, there will be no machine available
+at all.
+
+Several variations of this problem could be analyzed. We could compare
+the two-machine system with a one-machine version. It turns out that the
+proportion of down time (i.e. time when no machine is available)
+increases to 28.6\%. Or we could analyze the case in which only one
+repair person is employed by this factory, so that only one machine can
+be repaired at a time, compared to the situation above, in which we
+(tacitly) assumed that if both machines are down, they can be repaired
+in parallel. We leave these variations as exercises for the reader.
+
+\section{Example:  Migration in a Social Network}
+
+The following is a simplified version of research in online social
+networks.
+
+There is a town with two social groups, with each person being in
+exactly one group.  People arrive from outside town, with exponentially
+distributed interarrival times at rate $\alpha$, and join one of the
+groups with probability 0.5 each.  Each person will occasionally switch
+groups, with one possible ``switch'' being to leave town entirely.  A
+person's time before switching is exponentially distributed with rate
+$\sigma$; the switch will either be to the other group or to the outside
+world, with probabilities q and 1-q, respectively.  Let the state of the
+system be (i,j), where i and j are the number of current members in
+groups 1 and 2, respectively.
+
+Let's find a typical balance equation, say for the state (8,8):
+
+\begin{equation}
+\pi_{(8,8)} (\alpha + 16 \cdot \sigma ) =
+( \pi_{(9,8)} + \pi_{(8,9)}) \cdot 9 \sigma (1-q) +
+( \pi_{(9,7)} + \pi_{(7,9)}) \cdot 9 \sigma q +
+( \pi_{(8,7)} + \pi_{(7,8)}) \cdot 0.5 \alpha
+\end{equation}
+
+The reasoning is straightforward.  How can we move out of state (8,8)?
+Well, there could be an arrival (rate $\alpha$), or any one of the 16
+people could switch groups (rate $16 \sigma$), etc.
+
+Now, in a ``going beyond finding the $\pi$'' vein, let's find the
+long-run fraction of transfers into group 1 that come from group 2, as
+opposed to from the outside.
+
+The rate of transitions into that group from outside is $0.5 \alpha$.
+When the system is in state (i,j), the rate of transitions into group 1
+from group 2 is $j \sigma q$, so the overall rate is $\sum_{i,j}
+\pi_{(i,j)} j \sigma q$.  Thus the fraction of new members coming in to
+group 1 from transfers is
+
+\begin{equation}
+\frac{\sum_{i,j} \pi_{(i,j)} j \sigma q}
+{0.5 \alpha + \sum_{i,j} \pi_{(i,j)} j \sigma q}
+\end{equation}
+
+The above reasoning is very common, quite applicable in many situations.
+By the way, note that $\sum_{i,j} \pi_{(i,j)} j \sigma q = \sigma q EN$,
+where N is the number of members of group 2.
+
+
+\section{Birth/Death Processes}
+
+We noted earlier that the system of equations for the $\pi_i$ may not be
+easy to solve. In many cases, for instance, the state space is infinite
+and thus the system of equations is infinite too. However, there is a
+rich class of Markov chains for which closed-form solutions have been
+found, called \textbf{birth/death processes}.\footnote{Though we treat
+the continuous-time case here, there is also a discrete-time analog.} 
+
+Here the state space consists of (or has been mapped to) the
+set of nonnegative integers, and $p_{ji}$ is nonzero only in cases in
+which $|i-j| = 1$. (The name ``birth/death'' has its origin in Markov
+models of biological populations, in which the state is the current
+population size.) Note for instance that the example of the gracefully
+degrading system above has this form. An M/M/1 queue---one server,
+``Markov'' (i.e.  exponential) interarrival times and Markov service
+times---is also a birth/death process, with the state being the number
+of jobs in the system.
+
+Because the $p_{ji}$ have such a simple structure, there is hope that we
+can find a closed-form solution for the $\pi_i$, and it turns out we
+can.  Let $u_i = \rho_{i,i+1}$ and $d_i = \rho_{i,i-1}$ (`u' for ``up,''
+`d' for ``down'').  Then (\ref{newbalance}) is
+
+\begin{equation}
+\pi_{i+1} d_{i+1} + \pi_{i-1} u_{i-1} = \pi_i \lambda_i 
+= \pi_i (u_i+d_i), ~ i \geq 1
+\end{equation}
+
+\begin{equation}
+\pi_1 d_1 = \pi_0 \lambda_0 = \pi_0 u_0
+\end{equation}
+
+In other words,
+
+\begin{equation}
+\label{recurs}
+\pi_{i+1} d_{i+1} - \pi_i u_i = \pi_i d_i - \pi_{i-1} u_{i-1}, ~ i \geq 1
+\end{equation}
+
+\begin{equation}
+\label{base}
+\pi_1 d_1 - \pi_0 u_0 = 0
+\end{equation}
+
+Applying (\ref{recurs}) recursively to the base (\ref{base}), we see
+that
+
+\begin{equation}
+\pi_i d_i - \pi_{i-1} u_{i-1} = 0,
+~ i \geq 1
+\end{equation}
+
+so that 
+
+\begin{equation}
+\pi_i = \pi_{i-1} \frac{u_{i-1}}{d_i}
+~ i \geq 1
+\end{equation}
+
+and thus
+
+\begin{equation}
+\label{pir}
+\pi_i = \pi_0 r_i
+\end{equation}
+
+where
+
+\begin{equation}
+r_{i}=\Pi ^{i}_{k=1}\frac{u_{k-1}}{d_k}
+\end{equation}
+
+where $r_i = 0$ for $i > m$ if the chain has no states past m.
+
+Then since the $\pi_i$ must sum to 1, we have that
+
+\begin{equation}
+\pi_{0}=\frac{1}{1+\sum ^{\infty }_{i=1}r_{i}}
+\end{equation}  
+
+and the other $\pi_i$ are then found via (\ref{pir}).  
+
+Note that the chain might be finite, i.e. have $u_i = 0$ for some i.  In
+that case it is still a birth/death chain, and the formulas above for
+$\pi$ still apply.
+
+\section{Cell Communications Model}
+
+Let's consider a more modern example of this sort, involving cellular
+phone systems.  (This is an extension of the example treated in K.S.
+Trivedi, {\it Probability and Statistics, with Reliability and Computer
+Science Applications} (second edition), Wiley, 2002, Sec. 8.2.3.2, which
+is in turn is based on two papers in the {\it IEEE Transactions on
+Vehicular Technology}.)
+
+We consider one particular cell in the system.  Mobile phone users drift
+in and out of the cell as they move around the city.  A call can either
+be a {\bf new call}, i.e. a call which someone has just dialed, or a
+{\bf handoff call}, i.e. a call which had already been in progress in a
+neighboring cell but now has moved to this cell.
+
+Each call in a cell needs a {\bf channel}.\footnote{This could be a
+certain frequency or a certain time slot position.} There are n channels
+available in the cell.  We wish to give handoff calls priority over new
+calls.\footnote{We would rather give the caller of a new call a polite
+rejection message, e.g. ``No lines available at this time, than suddenly
+terminate an existing conversation.}  This is accomplished as follows.
+
+The system always reserves g channels for handoff calls.  When a request
+for a new call (i.e. a non-handoff call) arrives, the system looks at
+$X_t$, the current number of calls in the cell.  If that number is less
+than n-g, so that there are more than g idle channels available, the new
+call is accepted; otherwise it is rejected.
+
+We assume that new calls originate from within the cells according to a
+Poisson process with rate $\lambda_1$, while handoff calls drift in from
+neighboring cells at rate $\lambda_2$.  Meanwhile, call durations are
+exponential with rate $\mu_1$, while the time that a call remains within
+the cell is exponential with rate $\mu_2$.
+
+\subsection{Stationary Distribution}
+
+We again have a birth/death process, though a bit more complicated than
+our earlier ones.  Let $\lambda = \lambda_1 + \lambda_2$ and $\mu =
+\mu_1 + \mu_2$.  Then here is a sample balance equation, focused on
+transitions into (left-hand side in the equation) and out of (right-hand
+side) state 1:
+
+\begin{equation}
+\label{state1}
+\pi_0 \lambda + \pi_2 2 \mu = \pi_1 (\lambda + \mu)
+\end{equation}
+
+Here's why:  How can we enter state 1?  Well, we could do so from state
+0, where there are no calls; this occurs if we get a new call (rate
+$\lambda_1$) or a handoff  call (rate $\lambda_2$.  In state 2, we enter
+state 1 if one of the two calls ends (rate $\mu_1$) or one of the two
+calls leaves the cell (rate $\mu_2$).  The same kind of reasoning shows
+that we leave state 1 at rate $\lambda + \mu$. 
+
+As another example, here is the equation for state n-g:
+
+\begin{equation}
+\label{stateng}
+\pi_{n-g} [\lambda_2 + (n-g) \mu] = \pi_{n-g+1} \cdot (n-g+1) \mu +
+\pi_{n-g-1} \lambda
+\end{equation} 
+
+Note the term $\lambda_2$ in (\ref{stateng}), rather than $\lambda$ as
+in (\ref{state1}). 
+
+Using our birth/death formula for the $\pi_i$, we find that
+
+\begin{equation}
+\pi_k = \begin{cases}
+   \pi_0 \frac{A^k}{k!}, & \text{k $\leq$ n-g} \\
+   \pi_0 \frac{A^{n-g}}{k!} A_1^{k-(n-g)}, & \text{k $\geq$ n-g} \\
+\end{cases}
+\end{equation}
+
+where $A = \lambda/\mu$, $A_1 = \lambda_2/\mu$ and
+
+\begin{equation}
+\pi_0 = \left [
+\sum_{k=0}^{n-g-1} \frac{A^k}{k!} + 
+\sum_{k=n-g}^n \frac{A^{n-g}}{k!} A_1^{k-(n-g)}
+\right ] ^ {-1}
+\end{equation}
+
+\subsection{Going Beyond Finding the $\pi$}
+
+One can calculate a number of interesting quantities from the $\pi_i$:
+
+\begin{itemize}
+
+\item The probability of a handoff call being rejected is $\pi_n$.  
+
+\item The probability of a new call being blocked is
+
+\begin{equation}
+\sum_{k=n-g}^{n} \pi_k
+\end{equation}
+
+\item Since the per-channel utilization in state i is i/n, the overall
+long-run per-channel utilization is
+
+\begin{equation}
+\sum_{i=0}^n \pi_i \frac{i}{n} 
+\end{equation}
+
+\item The long-run proportion of accepted calls which are handoff calls
+is the rate at which handoff calls are accepted, divided by the rate at
+which calls are accepted:
+
+\begin{equation}
+\frac{\lambda_2 \sum_{i=0}^{n-1} \pi_i} 
+{\lambda_1 \sum_{i=0}^{n-g-1} \pi_i + \lambda_2 \sum_{i=0}^{n-1} \pi_i}
+\end{equation}
+
+
+\end{itemize}
+
+

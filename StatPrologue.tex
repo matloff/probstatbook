@@ -1,0 +1,580 @@
+\chapter{Statistics:  Prologue}
+\label{chap:statprologue} 
+
+{\it There are three kinds of lies:  lies, damned lies and
+statistics}---variously attributed to Benjamin Disraeli, Mark Twain etc. 
+
+Consider the following problems:
+
+\begin{itemize}
+
+\item Suppose you buy a ticket for a raffle, and get ticket number 68.
+Two of your friends bought tickets too, getting numbers 46 and 79.  Let
+c be the total number of tickets sold.  You don't know the value of c,
+but hope it's small, so you have a better chance of winning.  How can
+you estimate the value of c, from the data, 68, 46 and 79?
+
+\item It's presidential election time.  A poll says that 56\% of the
+voters polled support candidate X, with a margin of error of 2\%.  The
+poll was based on a sample of 1200 people.  How can a sample of 1200
+people out of more than 100 million voters have a margin of error that
+small?  And what does the term {\it margin of error} really mean,
+anyway?
+
+\item A satellite detects a bright spot in a forest.  Is it a fire?  How
+can we design the software on the satellite to estimate the probability
+that this is a fire?
+
+\end{itemize}
+
+If you think that statistics is nothing more than adding up columns of
+numbers and plugging into formulas, you are badly mistaken.  Actually,
+statistics is an application of probability theory.  We employ
+probabilistic models for the behavior of our sample data, and {\it infer}
+from the data accordingly---hence the name, {\bf statistical inference}. 
+
+Arguably the most powerful use of statistics is \underline{prediction}.
+This has applications from medicine to marketing to movie animation.  We
+will study prediction in Chapter \ref{chap:linreg}.
+
+\section{Sampling Distributions}
+\label{startcrucial}
+
+We first will set up some infrastructure, which will be used heavily
+throughout the next few chapters.
+
+\subsection{Random Samples}
+\label{randomsamples}
+
+\begin{definition}
+Random variables $X_1, X_2, X_3,...$ are said to be
+{\bf i.i.d.}\ if they are independent and identically distributed.  The
+latter term means that $p_{X_i}$ or $f_{X_i}$ is the same for all i.
+\end{definition}
+
+Note the following carefully:
+
+\begin{quote}
+For i.i.d. $X_1, X_2, X_3,...$, we often use X to represent a generic
+random variable having the common distribution of the $X_i$.
+\end{quote}
+
+\begin{definition}
+We say that $X_1, X_2, X_3,...,X_n$ is a {\bf random
+sample} of size n from a population if the $X_i$ are i.i.d.\ and their 
+common distribution is that of the population.
+\end{definition}
+
+({\bf Please note:}  Those numbers $X_1, X_2, X_3,...,X_n$ collectively
+form \underline{one} sample; you should not say anything like ``We have
+n samples.'')
+
+If the sampled population is finite,\footnote{You might wonder how it
+could be infinite.  Say for example we model the distribution of X as a
+continuous random variable, then there are infinitely many values X can
+take on, though it must be kept in mind that, as noted in Section
+\ref{unicorns}, continuous random variables are only idealizations.}
+then a random sample must be drawn in this manner.  Say there are k
+entities in the population, e.g. k people, with values $v_1,...,v_k$.  '
+If we are interested in people's heights, for instance, then
+$v_1,...,v_k$ would be the heights of all people in our population.
+Then a random sample is drawn this way:
+
+\begin{itemize}
+
+\item [(a)] The sampling is done with replacement.
+
+\item [(b)] Each $X_i$ is drawn from $v_1,...,v_k$, with each $v_j$
+having probability $\frac{1}{k}$ of being drawn.
+
+\end{itemize}
+
+Condition (a) makes the $X_i$ independent, while (b) makes them
+identically distributed.
+
+If sampling is done without replacement, we call the data a {\bf simple
+random sample}.  Note how this implies lack of independence of the
+$X_i$.  If for instance $X_1 = v_3$, then we know that no other $X_i$
+has that value, contradicting independence; if the $X_i$ were
+independent, knowledge of one should not give us knowledge concerning
+others.
+
+But we usually assume true random sampling, and will mean that unless
+explicitly stating otherwise.
+
+Keep this very important point in mind:
+
+\begin{quote}
+
+Note most carefully that {\it each $X_i$ has the same distribution as
+the population}.  If for instance a third of the population, i.e. a
+third of the $v_j$, are less than 28, then $P(X_i < 28)$ will be 1/3.
+
+If the mean value of X in the population is, say, 51.4, then EX will
+be 51.4, and so on.
+
+These points areeasy to see, but keep them in mind at all times, as
+they will arise again and again.
+
+\end{quote}
+
+% What about drawing from an infinite population?  This may sound odd at
+% first, but it relates to the fact, noted at the outset of Chapter
+% \ref{chap:contin}, that although continuous random variables don't
+% really exist, they often make a good approximation.  In our human height
+% example above, for instance, heights do tend to follow a bell-shaped
+% curve which which is well-approximated by a normal distributiion.
+% 
+% In this case, each $X_i$ is modeled as having a continuum of possible
+% values, corresponding to a theoretically infinite population.
+% Each $X_i$ then has the same density as the population density.
+
+% \subsection{Example:  Subpopulation Considerations}
+% 
+% To get a better understanding of the fact that the $X_i$ are random
+% variables, consider an election poll in the following setting:
+% 
+% \begin{itemize}
+% 
+% \item The total population size is m.
+% 
+% \item We sample n people at random.
+% 
+% \item In the population, there are d Democrats, r Republicans and o
+% people we'll refer to as Others.
+% 
+% \end{itemize}
+% 
+% Let D, R and O denote the number of people of the three types that we
+% get in our sample.  It would be nice if our sample contained Democrats,
+% Republicans and Others in proportions roughly the same as in the
+% population.  In order to see how likely this is to occur, let's find the
+% probability mass function of the random vector (D,R,O)',
+% 
+% \begin{equation}
+% \label{dro}
+% p_{D,R,O}(i,j,k) = P(D = i, R = j, O = k)
+% \end{equation}
+% 
+% {\bf Case I:  Random Sample}
+% 
+% Here the $X_i$ are i.i.d., with each one being one of the three
+% categories (Democrat, Republican, Other).  Moreover, the random
+% variables D, R and O are the total counts of the number of times each of
+% the three categories occurs.  In other words, this is exactly the
+% setting of Section \ref{multinompmfsection}, and the random vector
+% (D,R,O)' has a multinomial distribution! 
+% 
+% So, we evaluate (\ref{dro}) by using (\ref{multinompmf}) with
+% 
+% \begin{equation}
+% p_1 = d/m, ~~ p_2 = r/m, ~~ p_3 = o/m
+% \end{equation}
+% 
+% {\bf Case I:  Simple Random Sample}
+% 
+% This is a combinatorial problem, from Section \ref{comb}:
+% 
+% \begin{equation}
+% P(D = i, R = j, O = k)
+% = 
+% \frac
+% {\binom{m}{i} \cdot
+% \binom{m-i}{j}}
+% {\binom{m-i-j}{k}} 
+% \end{equation}
+
+
+\section{The Sample Mean---a Random Variable}
+
+A large part of this chapter will concern the {\bf sample mean},
+
+\begin{equation}
+\label{xbardef}
+\overline{X} = \frac{X_1 + X_2 + X_3 + ... + X_n}{n}
+\end{equation}
+
+A simple yet crucial concept is point that $\overline{X}$ is a random
+variable.  Since $X_1, X_2, X_3,...,X_n$ are random variables,
+$\overline{X}$ is a random variable too.  
+
+Make absolutely sure to distinguish between the sample mean and the
+population mean.  
+
+\subsection{Toy Population Example}
+\label{threeyahn}
+
+Let's illustrate it with a tiny example.  Suppose we
+have a population of three people, with heights 69, 72 and 70, and we
+draw a random sample of size 2.  Here $\overline{X}$ can take on six
+values:
+
+\begin{equation}
+\frac{69+69}{2} = 69,
+\frac{69+72}{2} = 70.5,
+\frac{69+70}{2} = 69.5,
+\frac{70+70}{2} = 70,
+\frac{70+72}{2} = 71,
+\frac{72+72}{2} = 72
+\end{equation}
+
+The probabilities of these values are 1/9, 2/9, 2/9, 1/9, 2/9 and 1/9,
+respectively.  So,
+
+\begin{equation}
+\label{pmfxbar}
+p_{\overline{X}}(69) = \frac{1}{9}, ~~
+p_{\overline{X}}(70.5) = \frac{2}{9}, ~~
+p_{\overline{X}}(69.5) = \frac{2}{9}, ~~
+p_{\overline{X}}(70) = \frac{1}{9}, ~~
+p_{\overline{X}}(71) = \frac{2}{9}, ~~
+p_{\overline{X}}(72) = \frac{1}{9} ~~
+\end{equation}
+
+Since $\overline{X}$ is a random variable, it also has a cdf.  For
+instance, the reader should verify that $F_{\overline{X}}(69.9) = 3/9$.
+
+Viewing it in ``notebook'' terms, we might have, in the first three
+lines:
+
+\begin{tabular}{|r|r|r|r|}
+\hline
+notebook line & $X_1$ & $X_2$ & $\overline{X}$  \\ \hline
+\hline
+1 & 70 & 70 & 70 \\ \hline
+2 & 69 & 70 & 69.5 \\ \hline
+3 & 72 & 70 & 71 \\ \hline
+\end{tabular}
+
+Again, the point is that all of $X_1$, $X_2$ and $\overline{X}$ are
+random variables.
+
+\subsection{Expected and Variance of $\overline{X}$}
+
+Now, returning to the case of general n and our sample
+$X_1,...,X_n$, since $\overline{X}$ is a random variable, we can ask
+about its expected value and variance.  Note that in notebook terms,
+these are the long-run mean and variance of the values in the
+$\overline{X}$ column above.
+
+Let $\mu$ denote the population mean.  Remember, each $X_i$ is
+distributed as is the population, so $EX_i = \mu$.  Again in notebook
+terms, this says that the long-run average in the $X_1$ column will be
+$\mu$.  (The same will be true for the $X_2$ column.)
+
+This then implies that the expected value of $\overline{X}$ is also
+$\mu$.  Here's why:
+
+\begin{eqnarray}
+E(\overline{X}) 
+&=& E \left [ \frac{1}{n} \sum_{i=1}^n X_i \right ] ~~~~ (\textrm{def.
+   of $\overline{X}$ }) \\
+&=& \frac{1}{n} E \left ( \sum_{i=1}^{n} X_i \right ) ~~~~ (\textrm{for
+const. c, } E(cU) = cEU) \\
+&=& \frac{1}{n} \sum_{i=1}^{n} EX_i ~~~~ (E[U+V] = EU + EV) \\
+&=& \frac{1}{n} n \mu  ~~~~ (EX_i = \mu) \\
+&=& \mu
+\label{barmean}
+\end{eqnarray}
+
+Moreover, the variance of $\overline{X}$ is 1/n times the population
+variance:
+
+\begin{eqnarray}
+Var(\overline{X}) &=& Var \left [ \frac{1}{n} \sum_{i=1}^n X_i \right ] \\
+&=& \frac{1}{n^2} Var \left ( \sum_{i=1}^{n} X_i \right ) ~~~~
+(\textrm{for const. c, }, Var[cU] = c^2Var[U]) \\
+&=& \frac{1}{n^2} \sum_{i=1}^{n} Var(X_i)  ~~~~
+(\textrm{for U,V indep., }, Var[U+V] = Var[U]+Var[V]) \\
+&=& \frac{1}{n^2} n \sigma^2  \\
+&=& \frac{1}{n} \sigma^2
+\label{oneovernpopvar}
+\end{eqnarray}
+
+\subsection{Toy Population Example Again}
+
+Let's verify (\ref{barmean}) and (\ref{oneovernpopvar}) for toy
+population in Section \ref{threeyahn}.  The population mean is
+
+\begin{equation}
+\mu = (69+70+72) / 3 = 211/3
+\end{equation}
+
+Using (\ref{a}) and (\ref{pmfxbar}), we have
+
+\begin{equation}
+E\overline{X} = \sum_{c} c ~ p_{\overline{X}}(c) =
+69 \cdot \frac{1}{9} +
+69.5 \cdot \frac{2}{9} +
+70 \cdot \frac{1}{9} +
+70.5 \cdot \frac{2}{9} +
+71 \cdot \frac{2}{9} +
+72 \cdot \frac{1}{9} = 211/3
+\end{equation}
+
+So, (\ref{barmean}) is confirmed.  What about (\ref{oneovernpopvar})?
+
+First, the population variance is
+
+\begin{equation}
+\label{toysig2}
+\sigma^2 = \frac{1}{3} \cdot (69^2+70^2+72^2) - (\frac{211}{3})^2 =
+\frac{14}{9}
+\end{equation}
+
+The variance of $\overline{X}$ is
+
+\begin{eqnarray}
+\label{vartoyxbar}
+Var(\overline{X})
+&=& E(\overline{X}^2) - (E\overline{X})^2 \\
+&=& E(\overline{X}^2) - (\frac{211}{3})^2 
+\end{eqnarray}
+
+Using (\ref{egofx}) and (\ref{pmfxbar}), we have
+
+\begin{equation}
+E(\overline{X}^2) = \sum_{c} c^2 ~ p_{\overline{X}}(c) =
+69^2 \cdot \frac{1}{9} +
+69.5^2 \cdot \frac{2}{9} +
+70^2 \cdot \frac{1}{9} +
+70.5^2 \cdot \frac{2}{9} +
+71^2 \cdot \frac{2}{9} +
+72^2 \cdot \frac{1}{9} 
+\end{equation}
+
+The reader should now wrap things up and  confirm that (\ref{vartoyxbar})
+does work out to (14/9) / 2 = 7/9, as claimed by (\ref{oneovernpopvar})
+and (\ref{toysig2}).
+
+\subsection{Interpretation}
+
+Now, let's step back and consider the significance of the above
+findings (\ref{barmean}) and (\ref{oneovernpopvar}):
+
+\begin{itemize}
+
+\item [(a)] Equation (\ref{barmean}) tells us that although some samples give
+us an $\overline{X}$ that is too high, i.e. that overestimates $\mu$,
+while other samples give us an $\overline{X}$ that is too low, on
+average $\overline{X}$ is ``just right.''
+
+\item [(b)] Equation (\ref{oneovernpopvar}) tells us that for large samples,
+i.e. large n, $\overline{X}$ doesn't vary much from sample to sample.
+
+\end{itemize}
+
+If you put (a) and (b) together, it says that for large n,
+$\overline{X}$ is probably pretty accurate, i.e. pretty close to the
+population mean $\mu$.  (You may wish to view this in terms of Section
+\ref{cheb}.)  So, the story of statistics often boils down to asking,
+``Is the variance of our estimator small enough?''  You'll see this in
+the coming chapters.
+
+\section{Sample Means Are Approximately Normal---No Matter What the
+Population Distribution Is}
+\label{xbarclt}
+
+The Central Limit Theorem tells us that the numerator in (\ref{xbardef})
+has an approximate normal distribution.  That means that affine
+transformations of that numerator are also approximately normally
+distributed (page \pageref{affine}).  So:
+
+\begin{quote}
+{\bf Approximate distribution of (centered and scaled) $\overline{X}$}:
+
+The quantity 
+
+\begin{equation}
+\label{firstz}
+Z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}
+\end{equation}
+
+has an approximately N(0,1) distribution, where $\sigma^2$ is the
+population variance.
+\end{quote}
+
+Make sure you understand why it is the ``N'' that is approximate here, not
+the 0 or 1.  
+
+So even if the population distribution is very skewed, multimodal and so
+on, the sample mean will still have an approximate normal distribution.
+This will turn out to be the core of statistics; they don't call the
+theorem the {\it Central} Limit Theorem for nothing.
+
+\subsection{The Sample Variance---Another Random Variable}
+
+Later we will be using the sample mean $\overline{X}$, a function of the
+$X_i$, to estimate the population mean $\mu$.  What other function of the
+$X_i$ can we use to estimate the population variance $\sigma^2$?
+
+Let X denote a generic random variable having the distribution of the
+$X_i$, which, note again, is the distribution of the population.
+Because of that property, we have
+
+\begin{equation}
+Var(X) = \sigma^2   ~~~~ (\sigma^2 \textrm{ is the population variance})
+\end{equation}
+
+Recall that by definition
+
+\begin{equation}
+\label{sigma2def}
+Var(X)
+= E[(X-EX)^2]
+\end{equation}
+
+\subsubsection{Intuitive Estimation of $\sigma^2$}
+
+Let's estimate $Var(X) = \sigma^2$ by taking sample analogs
+in (\ref{sigma2def}).  The correspondences are shown in Table
+\ref{analogs}.
+
+\begin{table}
+\vskip 0.5in
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+pop. entity & samp. entity \\ \hline 
+\hline
+EX & $\overline{X}$ \\ \hline 
+X & $X_i$ \\ \hline
+E[] & $\frac{1}{n} \sum_{i=1}^n$ \\ \hline
+\end{tabular}
+\caption{Population and Sample Analogs}
+\label{analogs}
+\end{center}
+\end{table}
+
+The sample analog of $\mu$ is $\overline{X}$.  What about the sample
+analog of the ``E()''?  Well, since E() averaging over the whole
+population of Xs, the sample analog is to average over the sample.  So,
+our sample analog of (\ref{sigma2def}) is
+
+\begin{equation}
+\label{s2}
+s^2 = \frac{1}{n} \sum_{i=1}^{n} (X_i-\overline{X})^2 
+\end{equation}
+
+In other words, just as it is natural to estimate the population mean of
+X by its sample mean, the same holds for Var(X):
+
+\begin{quote}
+The population variance of X is the mean squared distance from X to its
+population mean, as X ranges over all of the population.  Therefore 
+it is natural to estimate Var(X) by the average squared distance of X 
+from its sample mean, among our sample values $X_i$, shown in 
+(\ref{s2}).
+\end{quote}
+
+% \checkpoint
+
+We use $s^2$ as our symbol for this estimate of population
+variance.\footnote{Though I try to stick to the convention of using only
+capital letters to denote random variables, it is conventional to use
+lower case in this instance.} 
+
+\subsubsection{Easier Computation}
+
+By the way, it can be shown that (\ref{s2}) is equal to 
+
+\begin{equation}
+\label{alts2}
+\frac{1}{n} \sum_{i=1}^{n} X_i^2 - \overline{X}^2
+\end{equation}
+
+This is a handy way to calculate $s^2$, though it is subject to more
+roundoff error.  Note that (\ref{alts2}) is a sample analog of
+(\ref{varuformula}).
+
+\subsubsection{To Divide by n or n-1?}
+\label{dividebywhat}
+
+It should be noted that it is common to divide by n-1 instead of by n in
+(\ref{s2}).  In fact, almost all textbooks divide by n-1 instead of n.
+Clearly, unless n is very small, the difference will be minuscule; such
+a small difference is not going to affect any analyst's decisionmaking.
+But there are a couple of important conceptual questions here:
+
+\begin{itemize}
+
+\item Why do most people (and R, in its {\bf var()} function) divide by
+n-1?
+
+\item Why do I choose to use n?
+
+\end{itemize}
+
+The answer to the first question is that (\ref{s2}) is what is called
+{\bf biased downwards}, meaning that it can be shown (Section
+\ref{whynot}) that 
+
+\begin{equation}
+E(s^2) = \frac{n-1}{n} \sigma^2
+\end{equation}
+
+In notebook terms, if we were to take many, many samples, one per line
+in the notebook, in the long run the average of all of our $s^2$ values
+would be slightly smaller than $\sigma^2$.  This bothered the early
+pioneers of statistics, so they decided to divide by n-1 to make the
+sample variance an {\bf unbiased} estimator of $\sigma^2$.  Their
+definition of $s^2$ is
+
+\begin{equation}
+\label{theirs2}
+s^2 = \frac{1}{n-1} \sum_{i=1}^{n} (X_i-\overline{X})^2 
+\end{equation}
+
+This is why W. Gossett defined his now-famous Student-t distribution using
+(\ref{theirs2}), with a factor of n-1 instead of n.  But he could have
+just as easily defined it as (\ref{s2}).
+
+Moreover, even though $s^2$ is unbiased under their definition, their $s$
+itself is still biased downward (Section \ref{wearedifferent}).  And
+since $s$ itself is what we (this book and all others) use in forming
+confidence intervals, one can see that insisting on unbiasedness is a
+losing game.
+
+I choose to use (\ref{s2}), dividing by n, because of Table
+\ref{analogs}; it's very important that students understand this idea of
+sample analogs.  Another virtue of this approach is that it is in a
+certain sense more consistent, as we'll see in Section
+\ref{nvsnminu1again}.
+
+\section{Observational Studies}
+\label{observational}
+
+The above formulation of sampling is rather idealized.  It assumes a
+well-defined population, from which each unit is equally likely to be
+sampled.  In real life, though, things are often not so clearcut.
+
+In Section \ref{baseball0}, for instance, we analyze data on major
+league baseball players, and apply statistical inference procedures
+based on the material in the current chapter.  The player data is for a
+particular year, and our population is the set of all major league
+players, past, present and future.  But here, no physical sampling
+occurred; we are implicitly assuming that our data {\it act like} a
+random sample from that population.  
+
+That in turn means that there was nothing special about our particular
+year.  A player in our year, for instance, is just as likely to weigh
+more than 220 pounds than in previous years.  This is probably a safe
+assumption, but at the same time it probably means we should restrict
+our (conceptual) population to recent years; back in the 1920s, players
+probably were not as big as those we see today.
+
+The term usually used for settings like that of the baseball player data
+is {\it observational studies}.  We passively {\it observe} our data
+rather than obtaining it by physically sampling from the population.
+The careful analyst must consider whether his/her data are
+representative of the conceptual population, versus subject to some
+bias.
+
+\section{A Good Time to Stop and Review!} 
+ 
+The material we've discussed since page \pageref{startcrucial}, is
+absolutely key, forming the very basis of statistics.  It will be used
+constantly, throughout all our chapters here on statistics.  It would be
+highly worthwhile for the reader to review this chapter before
+continuing.
+ 

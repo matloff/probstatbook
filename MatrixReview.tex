@@ -1,0 +1,478 @@
+\chapter{Review of Matrix Algebra}
+ \chaptermark{Matrix Review}
+\label{chap:matrixreview}
+
+This book assumes the reader has had a course in linear algebra (or has
+self-studied it, always the better approach).  This appendix is intended
+as a review of basic matrix algebra, or a quick treatment for those
+lacking this background.
+
+\section{Terminology and Notation}
+
+A {\bf matrix} is a rectangular array of numbers.  A {\bf vector} is a
+matrix with only one row (a {\bf row vector} or only one column (a {\bf
+column vector}).
+
+The expression, ``the (i,j) element of a matrix,'' will mean its element
+in row i, column j.
+
+Please note the following conventions:
+
+\begin{itemize}
+
+\item Capital letters, e.g. $A$ and $X$, will be used to denote matrices and
+vectors.  
+
+\item Lower-case letters with subscripts, e.g. $a_{2,15}$ and $x_8$,
+will be used to denote their elements.
+
+\item Capital letters with subscripts, e.g. $A_{13}$, will be used to
+denote submatrices and subvectors.
+
+\end{itemize}
+
+If $A$ is a {\bf square} matrix, i.e., one with equal numbers n of rows and
+columns, then its {\bf diagonal} elements are $a_{ii}$, i = 1,...,n.
+
+A square matrix is called {\bf upper-triangular} if $a_{ij} = 0$
+whenever $i > j$, with a corresponding definition for {\bf
+lower-triangular} matrices.
+
+The {\bf norm} (or {\bf length}) of an n-element vector $X$ is 
+
+\begin{equation}
+\parallel{X} \parallel = \sqrt{\sum_{i=1}^n x_i^2}
+\end{equation}
+
+\subsection{Matrix Addition and Multiplication}
+
+\begin{itemize}
+
+\item For two matrices have the same numbers of rows and same numbers of
+columns, addition is defined elementwise, e.g.
+
+\begin{equation}
+\left (
+\begin{array}{cc}
+1 & 5 \\
+0 & 3 \\
+4 & 8 
+\end{array}
+\right ) +
+\left (
+\begin{array}{cc}
+6 & 2 \\
+0 & 1 \\
+4 & 0 
+\end{array}
+\right ) =
+\left (
+\begin{array}{cc}
+7 & 7 \\
+0 & 4 \\
+8 & 8 
+\end{array}
+\right ) 
+\end{equation}
+
+\item Multiplication of a matrix by a {\bf scalar}, i.e., a number, is also
+defined elementwise, e.g.
+
+\begin{equation}
+0.4 \left (
+\begin{array}{cc}
+7 & 7 \\
+0 & 4 \\
+8 & 8 
+\end{array}
+\right ) =
+\left (
+\begin{array}{cc}
+2.8 & 2.8 \\
+0 & 1.6 \\
+3.2 & 3.2 
+\end{array}
+\right ) 
+\end{equation}
+
+\item The {\bf inner product} or {\bf dot product} of equal-length
+vectors $X$ and $Y$ is defined to be
+
+\begin{equation}
+\sum_{k=1}^n x_k y_k
+\end{equation}
+
+\item The product of matrices $A$ and $B$ is defined if the number of rows
+of $B$ equals the number of columns of $A$ ($A$ and $B$ are said to be {\bf
+conformable}).  In that case, the (i,j) element of the product $C$ is
+defined to be
+
+\begin{equation}
+c_{ij} = \sum_{k=1}^n a_{ik} b_{kj}
+\end{equation}
+
+For instance,
+
+\begin{equation}
+\left (
+\begin{array}{cc}
+7 & 6 \\
+0 & 4 \\
+8 & 8 
+\end{array}
+\right )
+\left (
+\begin{array}{cc}
+1 & 6 \\
+2 & 4 
+\end{array}
+\right ) =
+\left (
+\begin{array}{cc}
+19 & 66 \\
+8 & 16 \\
+24 & 80
+\end{array}
+\right ) 
+\end{equation}
+
+It is helpful to visualize $c_{ij}$ as the inner product of row i of $A$
+and column j of $B$, e.g. as shown in bold face here:
+
+\begin{equation}
+\left (
+\begin{array}{cc}
+\mathbf 7 & \mathbf 6 \\
+0 & 4 \\
+8 & 8 
+\end{array}
+\right )
+\left (
+\begin{array}{cc}
+\mathbf 1 & 6 \\
+\mathbf 2 & 4 
+\end{array}
+\right ) =
+\left (
+\begin{array}{cc}
+\mathbf 19 & 66 \\
+8 & 16 \\
+24 & 80
+\end{array}
+\right ) 
+\end{equation}
+
+\item Matrix multiplication is associative and distributive, but in
+general not commutative:
+
+\begin{equation}
+A(BC) = (AB)C
+\end{equation}
+
+\begin{equation}
+A(B+C) = AB + AC
+\end{equation}
+
+\begin{equation}
+AB \neq BA
+\end{equation}
+
+\end{itemize}
+
+\section{Matrix Transpose}
+
+\begin{itemize}
+
+\item The transpose of a matrix A, denoted $A'$ or $A^{T}$, is obtained by
+exchanging the rows and columns of A, e.g.
+
+\begin{equation}
+\left (
+\begin{array}{cc}
+7 & 70 \\
+8 & 16 \\
+8 & 80
+\end{array}
+\right )' =
+\left (
+\begin{array}{ccc}
+7 & 8 & 8 \\
+70 & 16 & 80
+\end{array}
+\right )
+\end{equation}
+
+\item If $A + B$ is defined, then
+
+\begin{equation}
+(A+B)' = A' + B'
+\end{equation}
+
+\item If $A$ and $B$ are conformable, then
+
+\begin{equation}
+(AB)' = B'A'
+\end{equation}
+
+\end{itemize}
+
+\section{Linear Independence}
+
+Equal-length vectors $X_1$,...,$X_k$ are said to be {\bf linearly
+independent} if it is impossible for
+
+\begin{equation}
+a_1 X_1 +
+... +
+a_k X_k = 0
+\end{equation}
+
+unless all the $a_i$ are 0.
+
+\section{Determinants}
+
+Let $A$ be an $n \times n$ matrix.  The definition of the determinant of
+$A$, det(A), involves an abstract formula featuring permutations.  It will be
+omitted here, in favor of the following computational method.
+
+Let $A_{-(i,j)}$ denote the submatrix of $A$ obtained by deleting its
+i$^{th}$ row and j$^{th}$ column.  Then the determinant can be computed
+recursively across the k$^{th}$ row of $A$ as
+
+\begin{equation}
+det(A) =
+\sum_{m=1}^n (-1)^{k+m} det(A_{-(k,m)})
+\end{equation}
+
+where
+
+\begin{equation}
+det
+\left (
+\begin{array}{cc}
+s & t   \\
+u & v 
+\end{array}
+\right ) = sv -tu
+\end{equation}
+
+Generally, determinants are mainly of theoretical importance, but they
+often can clarify one's understanding of concepts.
+
+\section{Matrix Inverse}
+\label{matrixinverse}
+
+\begin{itemize}
+
+\item The {\bf identity} matrix $I$ of size $n$ has 1s in all of its
+diagonal elements but 0s in all off-diagonal elements.  It has the
+property that $AI = A$ and $IA = A$ whenever those products are defined.
+
+\item The $A$ is a square matrix and $AB = I$, then $B$ is said to be the
+{\bf inverse} of $A$, denoted $A^{-1}$.  Then $BA = I$ will hold as well.
+
+\item $A^{-1}$ exists if and only if its rows (or columns) are
+linearly independent.
+
+\item $A^{-1}$ exists if and only if $det(A) \neq 0$.
+
+\item If $A$ and $B$ are square, conformable and invertible, then $AB$ is also
+invertible, and
+
+\begin{equation}
+(AB)^{-1} = B^{-1} A^{-1}
+\end{equation}
+
+\end{itemize}
+
+A matrix $U$ is said to be {\bf orthogonal} if its rows each have norm 1
+and are orthogonal to each other, i.e., their inner product is 0.  $U$ thus
+has the property that $U U' = I$ i.e., $U^{-1} = U$.
+
+The inverse of a triangular matrix is easily obtained by something called
+{\bf back substitution}.
+
+Typically one does not compute matrix inverses directly.  A common
+alternative is the {\bf QR decomposition}:  For a matrix $A$,
+matrices Q and R are calculated so that $A = QR$, where $Q$ is an orthogonal
+matrix and $R$ is upper-triangular.  
+
+If $A$ is square and invertible, $A^{-1}$ is easily found: 
+
+\begin{equation}
+\label{qr}
+A^{-1} = (QR)^{-1} = R^{-1} Q'
+\end{equation}
+
+Again, though, in some cases $A$ is part of a more complex system, and the
+inverse is not explicitly computed.
+
+\section{Eigenvalues and Eigenvectors}
+
+Let $A$ be a square matrix.\footnote{For nonsquare matrices, the
+discussion here would generalize to the topic of {\bf singular value
+decomposition}.}  
+
+\begin{itemize}
+
+\item A scalar $\lambda$ and a nonzero vector $X$ that satisfy
+
+\begin{equation}
+AX = \lambda X
+\end{equation}
+
+are called an {\bf eigenvalue} and {\bf eigenvector} of $A$, respectively.
+
+\item If $A$ is symmetric and real, then it is {\bf diagonalizable},
+i.e., there exists an orthogonal matrix $U$ such that
+
+\begin{equation}
+\label{diagonalize}
+U'AU = D
+\end{equation}
+
+for a diagonal matrix $D$.  The elements of $D$ are the eigenvalues of
+$A$, and the columns of $U$ are the eigenvectors of $A$.
+
+A different sufficient condition for \ref{diagonalize} is that the
+eigenvalues of $A$ are distinct.  In this case, $U$ will not necessarily
+be orthogonal.
+
+By the way, this latter sufficient condition shows that ``most'' square
+matrices are diagonalizable, if we treat their entries as continous
+random variables.  Under such a circumstance, the probability of having
+repeated eigenvalues would be 0.
+
+\end{itemize}
+
+\section{Rank of a Matrix}
+
+{\it Definition:}  The rank of a matrix $A$ is the maximal number of
+linearly independent columns in $A$.
+
+Let's denote the rank of $A$ by rk($A)$.  Rank has the following
+properties:
+
+\begin{itemize}
+
+\item rk($A'$)  = rk($A$)
+
+\item Thus the rank of $A$ is also the maximal number of linearly
+independent rows in $A$.
+
+\item Let $A$ be $r \times s$.  Then
+
+\begin{equation}
+\textrm{rk}(A) \leq \min(r,s)
+\end{equation}
+
+\item rk($A'A$) = rk($A)$
+
+\end{itemize}
+
+\section{Matrix Algebra in R}
+
+The R programming language has extensive facilities for matrix algebra,
+introduced here.  Note by the way that R uses column-major order.
+
+A linear algebra vector can be formed as an R vector, or as a one-row or
+one-column matrix.
+
+\begin{lstlisting}
+> # constructing matrices
+> a <- rbind(1:3,10:12)
+> a
+     [,1] [,2] [,3]
+[1,]    1    2    3
+[2,]   10   11   12
+> b <- matrix(1:9,ncol=3)  
+> b
+     [,1] [,2] [,3]
+[1,]    1    4    7
+[2,]    2    5    8
+[3,]    3    6    9
+# multiplication, etc.
+> c <- a %*% b; c + matrix(c(1,-1,0,0,3,8),nrow=2)
+     [,1] [,2] [,3]
+[1,]   15   32   53
+[2,]   67  167  274
+> c %*% c(1,5,6)  # note 2 different c's
+     [,1]
+[1,]  474
+> # transpose, inverse
+> t(a)  # transpose
+     [,1] [,2]
+[1,]    1   10
+[2,]    2   11
+[3,]    3   12
+> u <- matrix(runif(9),nrow=3)
+> u
+           [,1]       [,2]      [,3]
+[1,] 0.08446154 0.86335270 0.6962092
+[2,] 0.31174324 0.35352138 0.7310355
+[3,] 0.56182226 0.02375487 0.2950227
+> uinv <- solve(u)
+> uinv
+           [,1]      [,2]      [,3]
+[1,]  0.5818482 -1.594123  2.576995
+[2,]  2.1333965 -2.451237  1.039415
+[3,] -1.2798127  3.233115 -1.601586
+> u %*% uinv  # note roundoff error
+             [,1]          [,2]          [,3]
+[1,] 1.000000e+00 -1.680513e-16 -2.283330e-16
+[2,] 6.651580e-17  1.000000e+00  4.412703e-17
+[3,] 2.287667e-17 -3.539920e-17  1.000000e+00
+> # eigenvalues and eigenvectors
+> eigen(u)
+$values
+[1]  1.2456220+0.0000000i -0.2563082+0.2329172i 
+-0.2563082-0.2329172i
+
+$vectors
+              [,1]                  [,2]                  [,3]
+[1,] -0.6901599+0i -0.6537478+0.0000000i 
+-0.6537478+0.0000000i
+[2,] -0.5874584+0i -0.1989163-0.3827132i 
+-0.1989163+0.3827132i
+[3,] -0.4225778+0i  0.5666579+0.2558820i  
+0.5666579-0.2558820i
+> # diagonal matrices (off-diagonals 0)
+> diag(3)
+     [,1] [,2] [,3]
+[1,]    1    0    0
+[2,]    0    1    0
+[3,]    0    0    1
+> diag((c(5,12,13)))
+     [,1] [,2] [,3]
+[1,]    5    0    0
+[2,]    0   12    0
+[3,]    0    0   13
+\end{lstlisting}
+
+We can obtain matrix inverse using {\bf solve()}, e.g.
+
+\begin{lstlisting}
+> m <- rbind(1:2,3:4)
+> m
+     [,1] [,2]
+[1,]    1    2
+[2,]    3    4
+> minv <- solve(m)
+> minv
+     [,1] [,2]
+[1,] -2.0  1.0
+[2,]  1.5 -0.5
+> m %*% minv  # should get I back
+     [,1]         [,2]
+[1,]    1 1.110223e-16
+[2,]    0 1.000000e+00
+\end{lstlisting}
+
+Note the roundoff error, even with this small matrix.  We can try the QR
+method, provided to us in R via {\bf qr()}.  In fact, if we just want
+the inverse, {\bf qr.solve()} will compute (\ref{qr}) for us.
+
+We can in principle obtain rank from, for example, the {\bf rank}
+component from the output of {\bf qr()}.  Note however that although
+rank is clearly defined in theory, the presence of roundoff error in
+computation make may rank difficult to determine reliably.

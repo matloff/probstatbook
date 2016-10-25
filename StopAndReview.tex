@@ -1,0 +1,253 @@
+\chapter{Stop and Review:  Probability Structures}
+\label{stopandreview}
+
+There's quite a lot of material in the preceding chapters, but it's
+crucial that you have a good command of it before proceeding, as the
+coming chapters will continue to build on it.
+
+With that aim, here are the highlights of what we've covered so far,
+with links to the places at which they were covered:
+
+\begin{itemize}
+
+\item {\bf expected value} (Section \ref{expval}):
+
+Consider random variables X and Y (not assumed independent), and 
+constants $c_1$ and $c_2$.  We have:
+
+\begin{equation}
+E(X + Y) = EX + EY
+\end{equation}
+
+\begin{equation}
+E(c_1 X) = c_1 EX
+\end{equation}
+
+\begin{equation}
+E(c_1 X + c_2 Y) = c_1 EX + c_2 EY
+\end{equation}
+
+By induction,
+
+\begin{equation}
+E(a_1 U_1 + ... + a_k U_k) = a_1 EX_1 + ... + a_k EX_k
+\end{equation}
+
+for random variables $U_i$ and constants $a_i$.
+
+\item {\bf variance} (Section \ref{variance}):
+
+For any variable W,
+
+\begin{equation}
+Var(W) = E[(W - EW)^2] = E(W^2) - (EW)^2
+\end{equation}
+
+Consider random variables X and Y (now assumed independent), and 
+constants $c_1$ and $c_2$.  We have:
+
+\begin{equation}
+Var(X+Y) = Var(X) + Var(Y)
+\end{equation}
+
+\begin{equation}
+Var(c_1 X) = c^2_1 Var(X)
+\end{equation}
+
+By induction,
+
+\begin{equation}
+Var(a_1 U_1 + ... + a_k U_k) = a^2_1 Var(U_1) + ... + a^2_k Var(U_k)
+\end{equation}
+
+for independent random variables $U_i$ and constants $a_i$.
+
+\item {\bf indicator random variables} (Section \ref{indicator}):
+
+Equal 1 or 0, depending on whether a specified event A occurs.
+
+If T is an indicator random variable for the event A, then
+
+\begin{equation}
+ET = P(A), ~~ Var(T) = P(A) [1-P(A)]
+\end{equation}
+
+\item {\bf distributions}:
+
+   \begin{itemize}
+
+   \item {\bf cdfs}(Section \ref{presentsaproblem}):
+
+   For any random variable X,
+
+   \begin{equation}
+   F_X(t) = P(X \leq t),  ~~~~ -\infty < t < \infty
+   \end{equation}
+
+   \item {\bf pmfs} (Section \ref{dstrdef}): 
+
+   For a discrete random variable X,
+
+   \begin{equation}
+   p_X(k) = P(X = k)
+   \end{equation}
+
+   \item {\bf density functions} (Section \ref{dstrdef}): 
+
+   For a continuous random variable X,
+
+   \begin{equation}
+   f_X(t) = \frac{d}{dt} F_X(t), ~~~~ -\infty < t < \infty
+   \end{equation}
+
+   and
+
+   \begin{equation}
+   P(X \textrm{ in } A) = \int_A f_X(s) ~ ds
+   \end{equation}
+
+   \end{itemize}
+
+\item {\bf famous parametric families of distributions}:
+
+Just like one can have a family of curves, say $sin(2\pi n \theta(t)$
+(different curve for each n and $\theta$), certain families of
+distributions have been found useful.  They're called {\it parametric
+families}, because they are indexed by one or more parameters,
+anlagously to n and $\theta$ above.
+
+discrete:
+
+   \begin{itemize}
+
+   \item {\bf geometric} (Section \ref{geom})
+
+   Number of i.i.d. trials until first success.  For success probability p: 
+
+   \begin{equation}
+   p_N(k) = (1-p)^k p
+   \end{equation}
+
+   \begin{equation}
+   EN = 1/p, ~~ Var(N) =  \frac{1-p}{p^2}
+   \end{equation}
+
+   \item {\bf binomial} (Section \ref{binom}):
+
+   Number of successes in n i.i.d. trials, probability p of success per
+   trial:
+
+   \begin{equation}
+   p_N(k) = \binom{n}{k} p^k (1-p)^{n-k}  
+   \end{equation}
+
+   \begin{equation}
+   EN = np, ~~ Var(N) = np(1-p)
+   \end{equation}
+
+   \item {\bf Poisson} (Section \ref{poisfam}):
+
+   Has often been found to be a good model for counts over time periods.
+
+   One parameter, often called $\lambda$.  Then
+
+   \begin{equation}
+   p_N(k) = \frac{e^{- \lambda} \lambda^k}{k!}, k = 0,1,2,...
+   \end{equation}
+
+   \begin{equation}
+   EN = Var(N) = \lambda
+   \end{equation}
+
+   \item {\bf negative binomial} (Section \ref{negbin}):
+
+   Number of i.i.d. trials until r$^{th}$ success.  For success
+   probability p: 
+
+   \begin{equation}
+   p_N(k) =  \binom{k-1}{r-1} (1-p)^{k-r} p^r, k = r, r+1, ...
+   \end{equation}
+
+   \begin{equation}
+   E(N) = r \cdot \frac{1}{p}, ~~ Var(N) = r \cdot \frac{1-p}{p^2}
+   \end{equation}
+
+   \end{itemize}
+
+continuous:
+
+   \begin{itemize}
+
+   \item {\bf uniform} (Section \ref{unifprops}):
+
+   All points ``equally likely.''  If the interval is (q,r),
+
+   \begin{equation}
+   f_X(t) = \frac{1}{r-q}, ~~~~ q < t < r
+   \end{equation}
+
+   \begin{equation}
+   EX = = \frac{q+r}{2}, ~~ Var(D) = \frac{1}{12} (r-q)^2
+   \end{equation}
+
+   \item {\bf normal (Gaussian)} (Section \ref{normalfam}):
+
+   ``Bell-shaped curves.''  Useful due to Central Limit Theorem (Section
+   \ref{theclt}.  (Thus good approximation to binomial distribution.)
+
+   Closed under affine transformations (Section \ref{affine})!
+
+   Parameterized by mean and variance, $\mu$ and $\sigma^2$:
+
+   \begin{equation}
+   f_X(t) =  \frac{1}{\sqrt{2\pi} \sigma} 
+   ~ e^{- 0.5 \left (\frac{t-\mu}{\sigma} \right )^2}, -\infty < t < \infty
+   \end{equation}
+
+   {\bf exponential} (Section \ref{exponfam}):
+
+   \item Memoryless!  One parameter, usually called $\lambda$.
+   Connectedt to Poisson family.
+
+   \begin{equation}
+   f_X(t) = = \lambda e^{-\lambda t}, 0 < t < \infty
+   \end{equation}
+
+   \begin{equation}
+   EX = 1/\lambda, ~~ Var(X) = 1/\lambda^2
+   \end{equation}
+
+   \item {\bf gamma} (Section \ref{gammafam}):
+
+   Special case, Erlang family, arises as the distribution of the sum of
+   i.i.d. exponential random variables.
+
+   \begin{equation}
+   f_X(t) = \frac{1}{\Gamma(r)} \lambda^r t^{r-1} e^{-\lambda t}, ~ t > 0
+   \end{equation}
+
+   \end{itemize}
+
+\item {\bf iterated expected values:}
+
+   \begin{itemize}
+
+   \item For discrete U (\ref{adamsdiscrete}),
+
+   \begin{equation}
+   E(V) = \sum_c P(U = c) ~ E(V ~|~ U = c) 
+   \end{equation}
+
+   \item For continuous V (\ref{adamscontin}),
+
+   \begin{equation}
+   E(W) = \int_{-\infty}^{\infty} f_V(t) ~ E(W ~|~ V = t)~ dt
+   \end{equation}
+
+
+
+   \end{itemize}
+
+\end{itemize}
+
+

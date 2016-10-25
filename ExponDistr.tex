@@ -1,0 +1,620 @@
+\chapter{The Exponential Distributions}
+\label{chap:expondistr}
+
+The family of exponential distributions, Section \ref{exponfam}, has a
+number of remarkable properties, which contribute to its widespread
+usage in probabilistic modeling.  We'll discuss those here.
+
+\section{Connection to the Poisson Distribution Family}
+\label{connpoi}
+
+Suppose the lifetimes of a set of light bulbs are independent and
+identically distributed {\bf (i.i.d.)}, and consider the following
+process.  At time 0, we install a light bulb, which burns an amount of
+time $X_1$.  Then we install a second light bulb, with lifetime $X_2$.
+Then a third, with lifetime $X_3$, and so on.  
+
+Let 
+
+\begin{equation}
+\label{ti}
+T_r = X_1+...+X_r
+\end{equation}
+
+denote the time of the $r^{th}$ replacement.  Also, let N(t) denote the
+number of replacements up to and including time t.  Then it can be shown
+that if the common distribution of the $X_i$ is exponentially
+distributed, the N(t) has a Poisson distribution with mean $\lambda t$.
+And the converse is true too:  If the $X_i$ are independent and
+identically distributed and N(t) is Poisson, then the $X_i$ must have
+exponential distributions.  In summary:
+
+\begin{theorem}
+Suppose $X_1, X_2, ...$ are i.i.d. nonnegative continuous random
+variables.  Define
+
+\begin{equation}
+T_r = X_1+...+X_r
+\end{equation}
+
+and 
+
+\begin{equation}
+N(t) = \max\{k: T_k \leq t\}
+\end{equation}
+
+Then the distribution of N(t) is Poisson with parameter $\lambda t$ for
+all t if and only if the $X_i$ have an exponential distribution with
+parameter $\lambda$.
+
+\end{theorem}
+
+In other words, N(t) will have a Poisson distribution if and only if the
+lifetimes are exponentially distributed.  
+
+\begin{proof}
+
+{\it ``Only if'' part:}
+
+The key is to notice that the event $X_1 > t$ is exactly equivalent to
+$N(t) = 0$.  If the first light bulb lasts longer than t, then the
+count of burnouts at time t is 0, and vice versa.  Then
+
+\begin{eqnarray}
+\label{onlyif}
+P(X_1 > t) &=& P[N(t) = 0] ~~ \textrm{(see above equiv.) } \\
+&=& \frac{(\lambda t)^0}{0!} \cdot e^{-\lambda t} ~~ ((\ref{poispmf})\\
+&=& e^{-\lambda t} 
+\end{eqnarray}
+
+Then
+
+\begin{equation} 
+f_{X_1}(t) = \frac{d}{dt} (1 - e^{-\lambda t}) =
+\lambda e^{-\lambda t} 
+\end{equation}
+
+That shows that $X_1$ has an exponential distribution, and since the
+$X_i$ are i.i.d., that implies that all of them have that distribution.
+
+{\it ``If'' part:}
+
+We need to show that if the $X_i$ are exponentially distributed with
+parameter $\lambda$, then for u nonnegative and each positive integer k,
+
+\begin{equation}
+\label{poispmfcopy}
+P[N(u) = k] = \frac{(\lambda u)^k e^{-\lambda u}}{k!}
+\end{equation}
+
+The proof for the case k = 0 just reverses (\ref{onlyif}) above.  The
+general case, not shown here, notes that $N(u) \leq k$ is equivalent to
+$T_{k+1} > u$.  The probability of the latter event can be found by
+integrating (\ref{erldens}) from u to infinity.  One needs to perform
+k-1 integrations by parts, and eventually one arrives at
+(\ref{poispmfcopy}), summed from 1 to k, as required.
+
+\end{proof}
+  
+The collection of random variables N(t) $t \geq 0$, is called a {\bf
+Poisson process}.
+
+% \begin{equation}
+% \label{ntmean}
+% E[N(t)] = \lambda t
+% \end{equation}
+
+The relation $E[N(t)] = \lambda t$ says that replacements are occurring
+at an average rate of $\lambda$ per unit time.  Thus $\lambda$ is called
+the {\bf intensity parameter} of the process.  It is this ``rate''
+interpretation that makes $\lambda$ a natural indexing parameter in
+(\ref{expdens}).
+
+\section{Memoryless Property of Exponential Distributions}
+\label{nomemxxx}
+
+One of the reasons the exponential family of distributions is so famous
+is that it has a property that makes many practical stochastic models
+mathematically tractable:  The exponential distributions are
+{\bf memoryless}.  
+
+\subsection{Derivation and Intuition}
+
+What the term {\it memoryless} means for a random variable W
+is that for all positive t and u
+
+\begin{equation}
+\label{stmtnomemxxx}
+P(W > t+u | W > t) = P(W > u)
+\end{equation}
+
+Any exponentially distributed random variable has this property.
+Let's derive this:
+
+\begin{eqnarray}
+\label{nomemderivxxx}
+P(W > t+u | W > t) &=& \frac{P(W > t+u {\rm ~and~} W > t)}{P(W > t)} \\ 
+&=& \frac{P(W > t+u)}{P(W > t)} \\
+&=&  \frac
+{\int_{t+u}^{\infty} \lambda e^{-\lambda s}~ ds}
+{\int_{t}^{\infty} \lambda e^{-\lambda s}~ ds} \\
+&=& e^{-\lambda u} \\
+&=& P(W > u)
+\end{eqnarray}
+
+We say that this means that ``time starts over'' at time t, or that W
+``doesn't remember'' what happened before time t.
+
+It is difficult for the beginning modeler to fully appreciate the
+memoryless property.  Let's make it concrete.  Consider the problem of
+waiting to cross the railroad tracks on Eighth Street in Davis, just
+west of J Street. One cannot see down the tracks, so we don't know
+whether the end of the train will come soon or not.
+
+If we are driving, the issue at hand is whether to turn off the car's
+engine.  If we leave it on, and the end of the train does not come for a
+long time, we will be wasting gasoline; if we turn it off, and the end
+does come soon, we will have to start the engine again, which also
+wastes gasoline.  (Or, we may be deciding whether to stay there, or go
+way over to the Covell Rd. railroad overpass.)
+
+Suppose our policy is to turn off the engine if the end of the train
+won't come for at least s seconds. Suppose also that we arrived at the
+railroad crossing just when the train first arrived, and we have already
+waited for r seconds.  Will the end of the train come within s more
+seconds, so that we will keep the engine on? If the length of the train
+were exponentially distributed (if there are typically many cars, we can
+model it as continuous even though it is discrete), Equation
+(\ref{stmtnomemxxx}) would say that the fact that we have waited r seconds so
+far is of no value at all in predicting whether the train will end
+within the next s seconds. The chance of it lasting at least s more
+seconds right now is no more and no less than the chance it had of
+lasting at least s seconds when it first arrived.
+
+\subsection{Uniquely Memoryless}
+
+By the way, the exponential distributions are the only continuous
+distributions which are memoryless.  (Note the word {\it continuous}; in
+the discrete realm, the family of geometric distributions are also
+uniquely memoryless.) This too has implications for the theory.  A rough
+proof of this uniqueness is as follows:
+
+Suppose some continuous random variable V has the memoryless property,
+and let R(t) denote $1-F_V(t)$.  Then from (\ref{stmtnomemxxx}), we would
+have 
+
+\begin{equation}
+R(t+u)]/R(t) = R(u)
+\end{equation} 
+
+or
+
+\begin{equation}
+R(t+u) = R(t) R(u)
+\end{equation}
+
+Differentiating both sides with respect to t, we'd have
+
+\begin{equation}
+R\prime(t+u) = R\prime(t) R(u)
+\end{equation}
+
+Setting t to 0, this would say
+
+\begin{equation}
+R\prime(u) = R\prime(0) R(u)
+\end{equation}
+
+This is a well-known differential equation, whose solution is
+
+\begin{equation}
+R(u) = e^{-cu}
+\end{equation}
+
+which is exactly 1 minus the cdf for an exponentially distributed random
+variable.
+
+\subsection{Example:  ``Nonmemoryless'' Light Bulbs}
+
+Suppose the lifetimes in years of light bulbs have the density 2t/15 on
+(1,4), 0 elsewhere.  Say I've been using bulb A for 2.5 years now in a
+certain lamp, and am continuing to use it.  But at this time I put a new
+bulb, B, in a second lamp.  I am curious as to which bulb is more likely
+to burn out within the next 1.2 years.  Let's find the two
+probabilities.
+
+For bulb A:
+
+\begin{equation}
+P(L > 3.7 | L > 2.5) =
+\frac{P(L > 3.7)}{P(L > 2.5)} =
+0.24
+\end{equation}
+
+For bulb B:
+
+\begin{equation}
+P(X > 1.2) = \int_{1.2}^{4} 2t/15 ~ dt = 0.97
+\end{equation}
+
+So you can see that the bulbs do have ``memory.''  We knew this
+beforehand, since the exponential distributions are the only continuous
+ones that have no memory.
+
+\section{\label{min}Example:  Minima of Independent Exponentially
+Distributed Random Variables}  
+\label{minexp}
+
+The memoryless property of the exponential distribution (Section
+\ref{nomemxxx} leads to other key properties.  Here's a famous one:
+
+\begin{theorem}
+\label{thm1}
+
+Suppose $W_{1},...,W_{k}$ are independent random variables, with $W_{i}$
+being exponentially distributed with parameter $\lambda_{i}$.  Let
+$Z=\min(W_{1},...,W_{k})$. Then Z too is exponentially distributed with
+parameter $\lambda _{1}+...+\lambda_{k}$, and thus has mean equal to the
+reciprocal of that parameter
+
+\end{theorem}
+
+{\bf Comments:}
+
+\begin{itemize}
+
+\item In ``notebook'' terms, we would have k+1 columns, one each for the
+$W_i$ and one for Z.  For any given line, the value in the Z column will
+be the smallest of the values in the columns for $W_1,...,W_k$; Z will
+be equal to one of them, but not the same one in every line.  Then for
+instance $P(Z = W_3)$ is interpretable in notebook form as the long-run
+proportion of lines in which the Z column equals the $W_3$ column.
+
+\item It's pretty remarkable that the minimum of independent exponential
+random variables turns out again to be exponential.  Contrast that with
+Section \ref{minunif}, where it is found that the minimum of independent
+uniform random variables does NOT turn out to have a uniform
+distribution.
+
+\item The sum $\lambda_1+...+\lambda_n$ in (a) should make good
+intuitive sense to you, for the following reasons.  Recall from Section
+\ref{connpoi} that the parameter $\lambda$ in an exponential
+distribution is interpretable as a ``light bulb burnout rate.''
+
+Say we have persons 1 and 2.  Each has a lamp.  Person i uses Brand i
+light bulbs, i = 1,2.  Say Brand i light bulbs have exponential
+lifetimes with parameter $\lambda_i$.  Suppose each time person i
+replaces a bulb, he shouts out, ``New bulb!'' and each time {\it anyone}
+replaces a bulb, I shout out ``New bulb!'' Persons 1 and 2 are shouting
+at a rate of $\lambda_1$ and $\lambda_2$, respectively, so I am shouting
+at a rate of $\lambda_1 + \lambda_2$.
+
+\end{itemize}
+
+\begin{proof}
+
+\begin{eqnarray}
+F_{Z}(t) &=& P(Z \leq t) ~~~~ \textrm{(def. of cdf) }\\
+&=& 1-P(Z>t) \\
+&=& 1-P(W_{1}>t\textrm{ and }...\textrm{ and }W_{k}>t)  ~~~~
+\textrm{(min $> t$ iff all $W_i > t$)} \\
+&=& 1-\Pi_{i}\textrm{ } P(W_i > t)  ~~~~ \textrm{(indep.) }\\
+&=& 1-\Pi_{i}\textrm{ }e^{-\lambda_{i}t} ~~~~ \textrm{ (expon. distr.)} \\
+&=& 1 - e^{-(\lambda_1+...+\lambda_n) t}
+\end{eqnarray}
+
+Taking $\frac{d}{dt}$ of both sides proves the theorem.
+
+\end{proof}
+
+Also:
+
+\begin{theorem}
+Under the conditions in Theorem \ref{thm1}, 
+
+\begin{equation}
+\label{whichmin}
+P(W_i < W_1,...,W_{i-1}, W_{i+1},...,W_k) =
+\frac{\lambda_i}{\lambda_1+...+\lambda_k}
+\end{equation}
+
+(There are k terms in the denominator, not k-1.)
+
+\end{theorem}
+
+Equation (\ref{whichmin}) should be intuitively clear as well from the
+above ``thought experiment'' (in which we shouted out ``New bulb!''):
+On average, we have one new Brand 1 bulb every $1/\lambda_1$ time, so in
+a long time t, we'll have about $t \lambda_1$ shouts for this brand.
+We'll also have about $t \lambda_2$ shouts for Brand 2.  So, a
+proportion of about
+
+\begin{equation}
+\frac{t\lambda_1}{t\lambda_1 + t\lambda_2}
+\end{equation}
+
+of the shots are for Brand 1.  Also, at any given time, the memoryless
+property of exponential distributions implies that the time at which I
+shout next will be the {\it minimum} of the times at which persons 1 and
+2 shout next.  This intuitively implies (\ref{whichmin}).
+
+\begin{proof}
+
+Again consider the case k = 2, and then use induction.
+
+Let $Z = \min(W_1,W_2)$ as before.  Then
+
+\begin{equation}
+P(Z = W_1 | W_1 = t) = P(W_2 > t ~|~ W_1 = t)
+\end{equation}
+
+(Note:  We are working with continuous random variables here, so
+quantities like $P(W_1 = t)$ are 0 (though actually $P(Z = W_1)$ is
+nonzero).  So, as mentioned in Section \ref{adamscontinprob}, quantities
+like $P(Z = W_1 ~|~ W_1 = t)$ really mean ``the probability that $W_2 >
+t$ in the conditional distribution of Z given $W_1$.) 
+
+Since $W_1$ and $W_2$ are independent, 
+
+\begin{equation}
+P(W_2 > t ~|~ W_1 = t) = P(W_2 > t) = e^{-\lambda_2 t}
+\end{equation}
+
+Now use (\ref{adamscontinprob}):
+
+\begin{equation}
+P(Z = W_1) = \int_{0}^{\infty} \lambda_1 e^{-\lambda_1 t} e^{-\lambda_2 t} ~ dt
+= \frac{\lambda_1}{\lambda_1 + \lambda_2}
+\end{equation}
+
+as claimed.
+
+\end{proof}
+
+% {\bf Note carefully:}  Just as the probability that a continuous random
+% variable takes on a specific value is 0, the probability that two
+% continuous and independent random variables are equal to each other is
+% 0.  Thus in the above analysis, $P(W_1 = W_2) = 0$.
+
+This property of minima of independent exponentially-distributed random
+variables developed in this section is key to the structure of
+continuous-time Markov chains, in Chapter \ref{conmarkov}.
+
+\subsection{Example:  Computer Worm}
+\label{senthi}
+
+A computer science graduate student at UCD, Senthilkumar Cheetancheri,
+was working on a worm alert mechanism.  A simplified version of the
+model is that network hosts are divided into groups of size g, say on
+the basis of sharing the same router.  Each infected host tries to
+infect all the others in the group.  When g-1 group members are
+infected, an alert is sent to the outside world.
+
+The student was studying this model via simulation, and found some
+surprising behavior.  No matter how large he made g, the mean time until
+an external alert was raised seemed bounded.  He asked me for advice.
+
+I modeled the nodes as operating independently, and assumed that if node
+A is trying to infect node B, it takes an exponentially-distributed
+amount of time to do so.  This is a continuous-time Markov chain.
+Again, this topic is much more fully developed in Chapter
+\ref{conmarkov}, but all we need here is the result of Section
+\ref{minexp}, that exponential distributions are ``memoryless.''. 
+
+In state i, there are i infected hosts, each trying to infect all of the
+g-i noninfected hosts.  When the process reaches state g-1, the process
+ends; we call this state an {\bf absorbing state}, i.e. one from which
+the process never leaves.
+
+Scale time so that for hosts A and B above, the mean time to infection
+is 1.0.  Since in state i there are i(g-i) such pairs, the time to the
+next state transition is the minimum of i(g-i) exponentially-distributed
+random variables with mean 1.  Theorem \ref{thm1} tells us that this
+minimum is also exponentially distributed, with parameter $i(g-i) \cdot
+1$.  Thus the mean time to go from state i to state i+1 is 1/[i(g-i)].
+
+% \checkpoint
+
+Then the mean time to go from state 1 to state g-1 is
+
+\begin{equation}
+\label{s1}
+\sum_{i=1}^{g-1} \frac{1}{i(g-i)}
+\end{equation}
+
+Using a calculus approximation, we have
+
+\begin{equation}
+\int_1^{g-1} \frac{1}{x(g-x)} ~ dx = \frac{1}{g} \int_1^{g-1}
+(\frac{1}{x} +
+\frac{1}{g-x}) ~ dx = \frac{2}{g} \ln(g-1)
+\end{equation}
+
+The latter quantity goes to zero as $g \rightarrow \infty$.  This
+confirms that the behavior seen by the student in simulations holds in
+general.  In other words, (\ref{s1}) remains bounded as $g \rightarrow
+\infty$.  This is a very interesting result, since it says that the mean
+time to alert is bounded no matter how big our group size is.
+
+So, even though our model here was quite simple, probably overly so, it
+did explain why the student was seeing the surprising behavior in his
+simulations.
+
+\subsection{Example:  Electronic Components}
+
+Suppose we have three electronic parts, with independent lifetimes that
+are exponentially distributed with mean 2.5.  They are installed
+simultaneously.  Let's find the mean time until the last failure occurs.
+
+Actually, we can use the same reasoning as for the computer worm example
+in Section \ref{senthi}:  The mean time is simply
+
+\begin{equation}
+1/(3 \cdot 0.4) + 1/(2 \cdot 0.4) + 1/(1 \cdot 0.4)
+\end{equation}
+
+\section{A Cautionary Tale:  the Bus Paradox}
+\label{busparadox}
+
+Suppose you arrive at a bus stop, at which buses arrive according to a
+Poisson process with intensity parameter 0.1, i.e. 0.1 arrival per
+minute.  Recall that the means that the interarrival times have an
+exponential distribution with mean 10 minutes. What is the expected
+value of your waiting time until the next bus?
+
+Well, our first thought might be that since the exponential distribution
+is memoryless, ``time starts over'' when we reach the bus stop.
+Therefore our mean wait should be 10.
+
+On the other hand, we might think that on average we will arrive halfway
+between two consecutive buses. Since the mean time between buses is 10
+minutes, the halfway point is at 5 minutes. Thus it would seem that our
+mean wait should be 5 minutes.
+
+Which analysis is correct? Actually, the correct answer is 10 minutes.
+So, what is wrong with the second analysis, which concluded that the
+mean wait is 5 minutes?  The problem is that the second analysis did not
+take into account the fact that although inter-bus intervals have an
+exponential distribution with mean 10, \textit{the particular inter-bus
+interval that we encounter is special.}
+
+\subsection{Length-Biased Sampling}
+\label{lbsamp}
+
+Imagine a bag full of sticks, of different lengths. We reach into the
+bag and choose a stick at random. The key point is that not all pieces
+are equally likely to be chosen; the longer pieces will have a greater
+chance of being selected.
+
+Say for example there are 50 sticks in the bag, with ID numbers from 1
+to 50.  Let X denote the length of the stick we obtain if select a stick
+on an equal-probability basis, i.e. each stick having probability 1/50
+of being chosen.  (We select a random number I from 1 to 50, and choose
+the stick with ID number I.)  On the other hand, let Y denote the length
+of the stick we choose by reaching into the bag and pulling out
+whichever stick we happen to touch first.  Intuitively, the distribution
+of Y should favor the longer sticks, so that for instance $EY > EX$.
+
+Let's look at this from a ``notebook'' point of view.  We pull a stick
+out of the bag by random ID number, and record its length in the X
+column of the first line of the notebook.  Then we replace the stick,
+and choose a stick out by the ``first touch'' method, and record its
+length in the Y column of the first line.  Then we do all this again,
+recording on the second line, and so on.  Again, because the ``first
+touch'' method will favor the longer sticks, the long-run average of the
+Y column will be larger than the one for the X column.
+
+
+Another example was suggested to me by UCD grad student Shubhabrata
+Sengupta.  Think of a large parking lot on which hundreds of buckets are
+placed of various diameters.  We throw a ball high into the sky, and see
+what size bucket it lands in.  Here the density would be proportional to
+area of the bucket, i.e. to the square of the diameter. 
+
+Similarly, the particular inter-bus interval that we hit is likely to be
+a longer interval.  To see this, suppose we observe the comings and
+goings of buses for a very long time, and plot their arrivals on a time
+line on a wall.  In some cases two successive marks on the time line are
+close together, sometimes far apart.  If we were to stand far from the
+wall and throw a dart at it, we would hit the interval between some pair of
+consecutive marks.  Intuitively we are more apt to hit a wider interval
+than a narrower one.
+
+The formal name for this is \textbf{length-biased sampling}.
+
+Once one recognizes this and carefully derives the density of that
+interval (see below), we discover that that interval does indeed tend to
+be longer---so much so that the expected value of this interval is 20
+minutes!  Thus the halfway point comes at 10 minutes, consistent with
+the analysis which appealed to the memoryless property, thus resolving
+the ``paradox.''
+
+In other words, if we throw a dart at the wall, say, 1000
+times, the mean of the 1000 intervals we would hit would be about 20.
+This in contrast to the mean of all of the intervals on the wall, which
+would be 10.
+
+\subsection{Probability Mass Functions and Densities in Length-Biased
+Sampling}
+
+Actually, we can intuitively reason out what the density is of the
+length of the particular inter-bus interval that we hit, as follows.
+
+First consider the bag-of-sticks example, and suppose (somewhat
+artificially) that stick length X is a discrete random variable.  Let Y
+denote the length of the stick that we pick by randomly touching a stick
+in the bag.  
+
+Again, note carefully that for the reasons we've been discussing here,
+the distributions of X and Y are different.  Say we have a list of all
+sticks, and we choose a stick at random from the list.  Then the length
+of that stick will be X.  But if we choose by touching a stick in the
+bag, that length will be Y.
+
+Now suppose that, say, stick lengths 2 and 6 each comprise 10\% of the
+sticks in the bag, i.e.
+
+\begin{equation}
+p_X(2) = p_X(6) = 0.1
+\end{equation}
+
+Intuitively, one would then reason that 
+
+\begin{equation}
+p_Y(6) = 3 p_Y(2) 
+\end{equation}
+
+In other words, even though the sticks of length 2 are just as numerous
+as those of length 6, the latter are three times as long, so they should
+have triple the chance of being chosen.  So, the chance of our choosing
+a stick of length j depends not only on $p_X(j)$ but also on j itself.
+
+We could write that formally as
+
+\begin{equation}
+p_Y(j) \propto j p_X(j)
+\end{equation}
+
+where $\propto$ is the ``is proportional to'' symbol.  Thus
+
+\begin{equation}
+p_Y(j) = c j p_X(j)
+\end{equation}
+
+for some constant of proportionality c.
+
+But a probability mass function must sum to 1.  So, summing over all
+possible values of j (whatever they are), we have
+
+\begin{equation}
+1 = \sum_{j} p_Y(j) = \sum_{j} c j p_X(j) 
+\end{equation}
+
+That last term is c E(X)!  So, c = 1/EX, and
+
+\begin{equation}
+\label{lbs}
+p_Y(j) = \frac{1}{EX} \cdot j p_X(j)
+\end{equation}
+
+% Note that this is not some absolute physical law.  Different people
+% might draw sticks from the bag in different ways.  But it is a
+% reasonable model.
+
+The continuous analog of (\ref{lbs}) is
+
+\begin{equation}
+\label{lbscontin}
+f_Y(t) = \frac{1}{EX} \cdot t f_X(t)
+\end{equation}
+
+So, for our bus example, in which $f_X(t) = 0.1e^{-0.1 t}, ~ t > 0$ and
+EX = 10,
+
+\begin{equation}
+f_Y(t) = 0.01 t e^{-0.1 t}
+\end{equation}
+
+You may recognize this as an Erlang density with r = 2 and $\lambda =
+0.1$.  That distribution does indeed have mean 20, consistent with the
+discussion at the end of Section \ref{lbsamp}.

@@ -1,0 +1,127 @@
+\chapter*{Preface}
+\label{preface}
+
+Why is this book different from all other books on mathematical
+probability and statistics?  The key aspect is the book's
+consistently {\it applied} approach, especially important for
+engineering students.
+
+The applied nature comes is manifested in a number of senses.
+First, there is a strong emphasis on intution, with less mathematical
+formalism.  In my experience, defining probability via sample spaces,
+the standard approach, is a major impediment to doing good applied work.
+The same holds for defining expected value as a weighted average.
+Instead, I use the intuitive, informal approach of long-run frequency
+and long-run average.  I believe this is especially helpful when
+explaining conditional probability and expectation, concepts that
+students tend to have trouble with.  (They often think they understand
+until they actually have to work a problem using the concepts.)
+
+On the other hand, in spite of the relative lack of formalism, all
+models and so on are described precisely in terms of random variables
+and distributions.  And the material is actually somewhat more
+mathematical than most at this level in the sense that it makes
+extensive usage of linear algebra.
+
+Second, the book stresses {\it real-world} applications.  Many similar
+texts, notably the elegant and interesting book for computer science
+students by Mitzenmacher, focus on probability, in fact discrete
+probability.  Their intended class of ``applications'' is the
+theoretical analysis of algorithms.  I instead focus on the actual use
+of the material in the real world; which tends to be more continuous
+than discrete, and more in the realm of statistics than probability.
+This should prove especially valuable, as ``big data'' and machine
+learning now play a significant role in applications of computers.
+
+Third, there is a strong emphasis on modeling.  Considerable emphasis is
+placed on questions such as: What do probabilistic models really mean,
+in real-life terms?  How does one choose a model?  How do we assess the
+practical usefulness of models?  This aspect is so important that there
+is a separate chapter for this, titled Introduction to Model Building.
+Throughout the text, there is considerable discussion of the real-world
+meaning of probabilistic concepts.  For instance, when probability
+density functions are introduced, there is an extended discussion
+regarding the intuitive meaning of densities in light of the
+inherently-discrete nature of real data, due to the finite precision of
+measurement.  
+
+Finally, the R statistical/data analysis language is used
+throughout.  Again, several excellent texts on probability and
+statistics have been written that feature R, but this book, by virtue of
+having a computer science audience, uses R in a more sophisticated
+manner.  My open source tutorial on R programming, {\it R for
+Programmers} (\url{http://heather.cs.ucdavis.edu/~matloff/R/RProg.pdf}),
+can be used as a supplement.  (More advanced R programming is covered in
+my book, {\it The Art of R Programming}, No Starch Press, 2011.)
+
+There is a large amount of material here.  For my one-quarter
+undergraduate course, I usually cover Chapters 
+\ref{probcalc},
+\ref{dis},
+\ref{dismarkov},
+\ref{chap:contin},
+\ref{chap:normal},
+\ref{stopandreview},
+\ref{randvec},
+\ref{chap:statprologue},
+\ref{chap:confints},
+\ref{chap:sigtests},
+\ref{chap:est} and
+\ref{chap:linreg}.  
+My lecture style is conversational, referring to
+material in the book and making lots of supplementary remarks (``What if
+we changed the assumption here to such-and-such?'' etc.).  Students read
+the details on their own.  For my one-quarter graduate course, I cover
+Chapters
+\ref{stopandreview},
+\ref{conmarkov},
+\ref{chap:mix},
+\ref{mar},
+\ref{haz},
+\ref{chap:nonpardens},
+\ref{chap:mod},
+\ref{chap:linreg},  
+\ref{chap:class},  
+\ref{chap:nonparregclass} and 
+\ref{chap:among}.  
+
+As prerequisites, the student must know calculus, basic matrix algebra, and
+have some skill in programming.  As with any text in probability and
+statistics, it is also necessary that the student has a good sense
+of math intuition, and does not treat mathematics as simply memorization
+of formulas.
+
+The \LaTeX source {\bf .tex} files for this book are in
+\url{http://heather.cs.ucdavis.edu/~matloff/132/PLN}, so readers can
+copy the R code and experiment with it.  (It is not recommanded to
+copy-and-paste from the PDF file, as hidden characters may be copied.)
+The PDF file is searchable.
+
+The following, among many, provided valuable feedback for which I am
+very grateful:  Ibrahim Ahmed; Ahmed Ahmedin; Stuart Ambler; Earl Barr;
+Benjamin Beasley; Matthew Butner; Michael Clifford; Dipak Ghosal; Noah
+Gift; Laura Matloff; Nelson Max, Connie Nguyen, Jack Norman, Richard
+Oehrle, Michael Rea, Sana Vaziri, Yingkang Xie, and Ivana Zetko.  The
+cover picture, by the way, is inspired by an example in Romaine
+Francois' old R Graphics Gallery, sadly now defunct.
+
+Many of the data sets used in the book are from the UC Irvine Machine
+Learning Repository, \url{http://archive.ics.uci.edu/ml/}.  Thanks to
+UCI for making available this very valuable resource.
+
+The book contains a number of references for further reading.  Since the
+audience includes a number of students at my institution, the University
+of California, Davis, I often refer to work by current or former UCD
+faculty, so that students can see what their professors do in research.
+
+This work is licensed under a Creative Commons Attribution-No Derivative
+Works 3.0 United States License.  The details may be viewed at
+\url{http://creativecommons.org/licenses/by-nd/3.0/us/}, but in essence
+it states that you are free to use, copy and distribute the work, but
+you must attribute the work to me and not ``alter, transform, or build
+upon'' it.  If you are using the book, either in teaching a class or for
+your own learning, I would appreciate your informing me.  I retain
+copyright in all non-U.S. jurisdictions, but permission to use these
+materials in teaching is still granted, provided the licensing
+information here is displayed.  
+

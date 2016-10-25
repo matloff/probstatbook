@@ -1,0 +1,430 @@
+\chapter{Transform Methods}
+\label{chap:xform}
+
+We often use the idea of \textbf{transform} functions.  For example, you
+may have seen \textbf{Laplace transforms} in a math or engineering
+course.  The functions we will see here differ from this by just
+a change of variable. 
+
+Though in the form used here they involve only univariate distributions,
+their applications are often multivariate, as will be the case here.
+
+\section{Generating Functions}
+
+Let's start with the \textbf{generating function}.
+For any nonnegative-integer valued
+random variable V, its generating function is defined by
+
+\begin{equation}
+\label{genftn}
+g_V(s)=E(s^{V}) = \sum_{i=0}^\infty s^i p_V(i), ~ 0 \leq s \leq 1
+\end{equation}
+
+For instance, suppose N has a geometric distribution with parameter p,
+so that $p_N(i) = (1-p) p^{i-1}$, i = 1,2,...  Then
+
+\begin{equation}
+g_N(s) = \sum_{i=1}^\infty s^i \cdot (1-p) p^{i-1} 
+= \frac{1-p}{p} \sum_{i=1}^\infty s^i \cdot p^i 
+= \frac{1-p}{p} \frac{ps}{1-ps}
+= \frac{(1-p)s}{1-ps}
+\end{equation}
+
+Why restrict s to the interval [0,1]?  The answer is that for $s > 1$
+the series in (\ref{genftn}) may not converge.  for $0 \leq s \leq 1$,
+the series does converge.  To see this, note that if s = 1, we just get
+the sum of all probabilities, which is 1.0.  If a nonnegative s is less
+than 1, then $s^i$ will also be less than 1, so we still have
+convergence.
+
+One use of the generating function is, as its name implies, to generate
+the probabilities of values for the random variable in question.  In
+other words, if you have the generating function but not the
+probabilities, you can obtain the probabilities from the function.
+Here's why:  For clarify, write (\ref{genftn}) as
+
+\begin{equation}
+g_V(s) = P(V=0) + s P(V=1) + s^2 P(V=2) + ...  
+\end{equation}
+
+From this we see that 
+
+\begin{equation}
+g_V(0) = P(V = 0)
+\end{equation}
+
+So, we can obtain P(V = 0) from the generating function.  Now
+differentiating (\ref{genftn}) with respect to s, we have
+
+\begin{eqnarray}
+g'_V(s) &=&
+\frac{d}{ds} \left [ P(V=0) + s P(V=1) + s^2 P(V=2) + ...  \right ]
+\nonumber \\
+&=&
+P(V=1) + 2s P(V=2) + ...  
+\end{eqnarray}
+
+So, we can obtain P(V = 2) from $g'_V(0)$, and in a similar manner can
+calculate the other probabilities from the higher derivatives.
+
+\section{Moment Generating Functions}
+
+The generating function is handy, but it is limited to discrete random
+variables.  More generally, we can use the {\bf moment generating
+function}, defined for any random variable X as
+
+\begin{equation}
+\label{momgen}
+m_X(t) = E[e^{tX}] 
+\end{equation}
+
+for any t for which the expected value exists.
+
+That last restriction is anathema to mathematicians, so they use the
+characteristic function, 
+
+\begin{equation}
+\phi_X(t) = E[e^{itX}] 
+\end{equation}
+
+which exists for any t.  However, it makes use of pesky complex numbers,
+so we'll stay clear of it here.
+
+Differentiating (\ref{momgen}) with respect to t, we have
+
+\begin{equation}
+m_X'(t) = E[X e^{tX}] 
+\end{equation}
+
+We see then that
+
+\begin{equation}
+m_X'(0) = EX
+\end{equation}
+
+So, if we just know the moment-generating function of X, we can obtain
+EX from it.  Also,
+
+\begin{equation}
+m_X''(t) = E(X^2 e^{tX})
+\end{equation}
+
+so
+
+\begin{equation}
+m_X''(0) = E(X^2)
+\end{equation}
+
+In this manner, we can for various k obtain $E(X^k)$, the {\bf k$th$
+moment} of X, hence the name.
+
+\section{Transforms of Sums of Independent Random Variables}
+\label{tranfssums}
+
+Suppose X and Y are independent and their moment generating functions
+are defined.  Let Z = X+Y.  then
+
+\begin{equation}
+m_Z(t) = E[e^{t(X+Y)}] = E[e^{tX} e^{tY}] = E(e^{tX}) \cdot E(e^{tY}) =
+m_X(t) m_Y(t)
+\end{equation}
+
+In other words, the mgf of the sum is the product of the mgfs!  This is
+true for other transforms, by the same reasoning.
+
+Similarly, it's clear that the mgf of a sum of three independent
+variables is again the product of their mgfs, and so on.
+
+\section{Example:  Network Packets}
+
+As an example, suppose say the number of packets N received on a network
+link in a given time period has a Poisson distribution with mean $\mu$,
+i.e.
+
+\begin{equation}
+P(N = k) = \frac{e^{-\mu} \mu^k}{k!}, k = 0,1,2,3,...  
+\end{equation}
+
+\subsection{Poisson Generating Function}
+
+Let's first find its generating function.
+
+\begin{equation}
+g_N(t) = \sum_{k=0}^{\infty} t^k  \frac{e^{-\mu} \mu^k}{k!} 
+= e^{-\mu} \sum_{k=0}^{\infty} \frac{(\mu t)^k}{k!}
+= e^{-\mu+\mu t}
+\end{equation}
+
+where we made use of the Taylor series from calculus,
+
+\begin{equation}
+e^u =  \sum_{k=0}^{\infty} u^k/k!
+\end{equation}
+
+\subsection{Sums of Independent Poisson Random Variables Are Poisson
+Distributed}
+\label{sumpoi}
+
+Supposed packets come in to a network node from two independent links,
+with counts $N_1$ and $N_2$, Poisson distributed with means $\mu_1$ and
+$\mu_2$.  Let's find the distribution of $N = N_1+N_2$, using a
+transform approach.
+
+From Section \ref{tranfssums}:
+
+\begin{equation}
+\label{sumpoieqn}
+g_N(t) = g_{N_1}(t) g_{N_2}(t) = e^{-\nu + \nu t}
+\end{equation}
+
+where $\nu = \mu_1 + \mu_2$.
+
+But the last expression in (\ref{sumpoieqn}) is the generating function for
+a Poisson distribution too!  And since there is a one-to-one
+correspondence between distributions and transforms, we can conclude
+that N has a Poisson distribution with parameter $\nu$.  We of
+course knew that N would have mean $\nu$ but did not know that N would
+have a Poisson distribution.
+
+So:  A sum of two independent Poisson variables itself has a Poisson
+distribution.  By induction, this is also true for sums of k independent
+Poisson variables.
+
+% \section{Random Number of Bits in Packets on One Link}
+% \label{randomn}
+% 
+% Consider just one of the two links now, and for convenience denote the
+% number of packets on the link by N, and its mean as $\mu$.  Continue to
+% assume that N has a Poisson distribution.
+% 
+% Let B denote the number of bits in a packet, with $B_1,...,B_N$ denoting
+% the bit counts in the N packets.  We assume the $B_i$ are independent
+% and identically distributed. The total number of bits received during
+% that time period is
+% 
+% \begin{equation}
+% T=B_1+...+B_N
+% \end{equation}
+% 
+% Suppose the generating function of B is known to be h(s). Then what is
+% the generating function of T?
+% 
+% \begin{eqnarray}
+% g_T(s) & = & E(s^{T})\\
+%  & = & E[E(s^{T}|N)]\\
+%  & = & E[E(s^{B_1+...+B_N}|N)]\\
+%  & = & E[E(s^{B_1}|N)...E(s^{B_N}|N)]\\
+%  & = & E[h(s)^{N}]\\
+%  & = & g_N[h(s)]\\
+%  & = & e^{-\mu+\mu h(s)}
+% \end{eqnarray}  
+% 
+% Here is how these steps were made: 
+% 
+% \begin{itemize}
+% 
+% \item From the first line to the second, we used
+% the Theorem of Total Expectation. 
+% 
+% \item From the second to the third, we just used the definition of T.
+% 
+% \item From the third to the fourth lines, we have used algebra plus the
+% fact that the expected value of a product of independent random
+% variables is the product of their individual expected
+% values.
+% 
+% \item From the fourth to the fifth, we used the definition of h(s).
+% 
+% \item From the fifth to the sixth, we used the definition of $g_N$.
+% 
+% \item From the sixth to the last we used the formula for the generating
+% function for a Poisson distribution with mean $\mu$.
+% 
+% \end{itemize}
+% 
+% We can then get all the information about T we need from this formula, such
+% as its mean, variance, probabilities and so on, as seen previously. 
+
+\section{Other Uses of Transforms}
+
+Transform techniques are used heavily in queuing analysis, including for
+models of computer networks.  The techniques are also used extensively
+in modeling of hardware and software reliability.
+
+Transforms also play key roles in much of theoretical probability, the
+Central Limit Theorems\footnote{The plural is used here because there
+are many different versions, which for instance relax the condition that
+the summands be independent and identically distributed.} being a good
+example.  Here's an outline of the proof of the basic CLT, assuming the
+notation of Section \ref{formalclt}:
+
+First rewrite Z as
+
+\begin{equation}
+Z = \sum_{i=1}^n \frac{X_i - m}{v \sqrt{n}}
+\end{equation}
+
+Then work with the characteristic function of Z:
+
+\begin{eqnarray}
+c_Z(t) &=& E(e^{itZ}) ~~~~ \textrm{(def.)} \\ 
+&=& \Pi_{i=1}^n E[e^{it(X_i-m)/(v\sqrt{n})}] ~~~~ \textrm{(indep.)} \\
+&=&  \Pi_{i=1}^n E[e^{it(X_1-m)/(v\sqrt{n})}] ~~~~ \textrm{(ident. distr.)} \\
+&=& [g(\frac{it}{\sqrt{n}})]^n
+\label{gpower}
+\end{eqnarray}
+
+where g(s) is the characteristic function of $(X_1-m)/v$, i.e.
+
+\begin{equation}
+g(s) = E[e^{is \cdot \frac{X_1 - m}{v}}]
+\end{equation}
+
+Now expand (\ref{gpower}) in a Taylor series around 0, and use the fact
+that $g'(0)$ is the expected value of $(X_1-m)/v$, which is 0:
+
+\begin{eqnarray}
+[g(\frac{t}{\sqrt{n}})]^n 
+&=& \left [1 - \frac{t^2}{2n} + o(\frac{t^2}{n}) \right ]^n \\
+&\rightarrow& e^{-t^2/2} \textrm{ as } n \rightarrow \infty
+\label{ourcltgoal}
+\end{eqnarray}
+
+where we've also used the famous fact that $(1 - s/n)^n$ converges to
+$e^{-s}$ as $n \rightarrow \infty$.
+
+But (\ref{ourcltgoal}) is the density of N(0,1), so we have proved the
+Central Limit Theorem.
+
+\startproblemset
+
+\oneproblem
+Use transform methods to derive some properties of the Poisson family:
+
+\begin{itemize}
+
+\item [(a)] Show that for any Poisson random variable, its mean and
+variance are equal.
+
+\item [(b)] Suppose $X$ and $Y$ are independent random variables, each
+having a Poisson distribution.  Show that $Z = X+Y$ again has a Poisson
+distribution.
+
+\end{itemize}
+
+\oneproblem
+In our ordinary coins which we use every day, each one has a slightly 
+different probability of heads, which we'll call $H$.  Say $H$ has 
+the distribution $N(0.5, 0.03^2)$.  We choose a coin from a batch at 
+random, then toss it 10 times.  Let $N$ be the number of heads we get.  
+Find $Var(N)$.
+
+
+\oneproblem
+Suppose the number N of bugs in a certain number of lines of code has a
+Poisson distribution, with parameter L, where L varies from one
+programmer to another. Show that Var(N) = EL + Var(L).
+
+\oneproblem
+Let X denote the number we obtain when we roll a single die
+once.  Let $G_X(s)$ denote the generating function of X.
+
+\begin{itemize}
+
+\item [(a)] Find $G_X(s)$.
+
+\item [(b)] Suppose we roll the die 5 times, and let T denote the
+total number of dots we get from the 5 rolls.  Find $G_T(s)$.
+
+\end{itemize}
+
+% Plot of 2-D normal, adapted from R Graph Gallery,
+% http://addictedtor.free.fr/graphiques/graphcode.php?graph=42:
+% 
+% mu1 <- 0  # EX1
+% mu2 <- 0  # EX2
+% s11 <- 10  # Var(X1) = 10
+% s22 <- 10  # Var(X2) = 15
+% x1 <- seq(-10,10,length=41) 
+% x2 <- x1 
+% 
+% # bivariate normal density
+% f <- function(x1,x2,rho){
+%         term1 <- 1/(2*pi*sqrt(s11*s22*(1-rho^2)))                               
+%         term2 <- -1/(2*(1-rho^2))                                               
+%         term3 <- (x1-mu1)^2/s11                                                 
+%         term4 <- (x2-mu2)^2/s22                                                 
+%         term5 <- 2*rho*((x1-mu1)*(x2-mu2))/(sqrt(s11)*sqrt(s22))               
+%         term1*exp(term2*(term3+term4-term5))                                    
+% } 
+% 
+% plot2dnorm <- function(x1,x2,f,rho) {
+%    z <- outer(x1,x2,f,rho)
+%    persp(x1, x2, z,
+%       col="lightgreen",                                                         
+%       theta=30, phi=20,                                                         
+%       r=50,                                                                     
+%       d=0.1,                                                                    
+%       expand=0.5,                                                               
+%       ltheta=90, lphi=180,                                                      
+%       shade=0.75,                                                               
+%       ticktype="detailed",                                                      
+%       nticks=5) 
+% }
+% 
+% 
+% 
+% # simulation of dice game; NOT efficient R code
+% 
+% # game:  roll a die 50 times; each time, get $5 for a 1, $2 for a 2 or 3
+% 
+% # random multinomial generator (R has one too)
+% rmn <- function(pcdf) {  # pcdf is the cdf vector of the multinomial
+%    u <- runif(1)
+%    ncats <- length(pcdf)
+%    for (i in 1:(ncats-1))
+%       if (u <= pcdf[i]) return(i)
+%    return(ncats)
+% }
+% 
+% # do the simulation
+% nplays <- 50
+% nreps <- 1000
+% p1 <- 1/6
+% p23 <- 3/6
+% prest <- 1
+% nums <- matrix(nrow=nreps,ncol=2)
+% wins <- vector(length=nreps)
+% for (rep in 1:nreps) {
+%    totwin <- 0
+%    numones <- 0
+%    numtwosthrees <- 0
+%    for (i in 1:nplays) {
+%       r <- rmn(c(p1,p23,prest))
+%       if (r == 1) numones <- numones + 1
+%       else if (r == 2) numtwosthrees <- numtwosthrees + 1
+%    }
+%    nums[rep,] <- c(numones,numtwosthrees)
+%    wins[rep] <- 5*numones + 2*numtwosthrees
+% }
+% 
+% # analyze the data
+% # find F(,)
+% up1 <- 12
+% up2 <- 16
+% print(nrow(nums[nums[,1] <= up1 & nums[,2] <= up2,])/nreps)
+% # winnings should be approx normal distributed
+% hist(wins)
+% # find P(win > $90)
+% print(length(wins[wins>90])/nreps)
+% 
+% 
+% # plotting the double integral
+% plot(c(0,1),c(0,1),type="n",xlab="s",ylab="t")
+% polygon(c(0,1,1,0),c(0,0,1,0),col="gray")
+% polygon(c(1,1,0.5,1),c(0,1,0.5,0),density=5)
+% lines(c(0.7,0.7),c(0.3,0.7),lwd=3)
+% text(locator(1),"t=1-s")
+% locator(1)
+% text(locator(1),"t=s")
+

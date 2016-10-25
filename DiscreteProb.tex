@@ -1,0 +1,1728 @@
+\chapter{Discrete Random Variables}
+\label{dis}
+
+This chapter will introduce entities called {\it discrete random
+variables}.  Some properties will be derived for means of such
+variables, with most of these properties actually holding for random
+variables in general.  Well, all of that seems abstract to you at this
+point, so let's get started.
+
+\section{Random Variables}
+
+\begin{definition}
+A {\bf random variable} is a numerical outcome of our experiment.
+\end{definition}
+
+For instance, consider our old example in which we roll two dice, with X
+and Y denoting the number of dots we get on the blue and yellow dice,
+respectively.  Then X and Y are random variables, as they are numerical
+outcomes of the experiment.  Moreover, X+Y, 2XY, sin(XY) and so on are
+also random variables.
+
+In a more mathematical formulation, with a formal sample space defined,
+a random variable would be defined to be a real-valued function whose
+domain is the sample space.
+
+\section{Discrete Random Variables}
+\label{support}
+
+In our dice example, the random variable X could take on six values
+in the set \{1,2,3,4,5,6\}.  We say that the {\bf support} of X is 
+\{1,2,3,4,5,6\}.  This is a finite set.  
+
+In the ALOHA example, $X_1$ and $X_2$ each have support \{0,1,2\}, again
+a finite set.\footnote{We could even say that $X_1$ takes on only values
+in the set \{1,2\}, but if we were to look at many epochs rather than
+just two, it would be easier not to make an exceptional case.}
+
+Now think of another experiment, in which we toss a coin until we get
+heads.  Let N be the number of tosses needed.  Then the support of N is
+the set \{1,2,3,...\}  This is a countably infinite set.\footnote{This
+is a concept from the fundamental theory of mathematics.  Roughly
+speaking, it means that the set can be assigned an integer labeling,
+i.e. item number 1, item number 2 and so on.  The set of positive even
+numbers is countable, as we can say 2 is item number 1, 4 is item number
+2 and so on.  It can be shown that even the set of all rational numbers
+is countable.}
+
+Now think of one more experiment, in which we throw a dart at the
+interval (0,1), and assume that the place that is hit, R, can take on
+any of the values between 0 and 1.  Here the support is an uncountably
+infinite set.
+
+We say that X, $X_1$, $X_2$ and N are {\bf discrete} random variables,
+while R is {\bf continuous}.  We'll discuss continuous random variables
+in a later chapter.
+
+\section{Independent Random Variables}
+\label{indepdef}
+
+We already have a definition for the independence of events; what about
+independence of random variables?  Here it is:
+
+\begin{quote}
+
+Random variables X and Y are said to be {\bf independent} if for any
+sets I and J, the events \{X is in I\} and \{Y is in J\} are
+independent, i.e.  P(X is in I and Y is in J) = P(X is in I) P(Y is in
+J). 
+
+\end{quote}
+
+Sounds innocuous, but the notion of independent random variables is
+absolutely central to the field of probability and statistics, and will
+pervade this entire book.  
+
+\section{Example:  The Monty Hall Problem}
+
+This is an example of how the use of random variables in ``translating''
+a probability problem to mathematical terms can simplify and clarify
+one's thinking.  Imagine, {\bf this simple device of introducing named
+random variables into our analysis makes a problem that has vexed famous
+mathematicians quite easy to solve!}
+
+The Monty Hall Problem, which gets its name from a popular TV game show
+host, involves a contestant choosing one of three doors.  Behind one
+door is a new automobile, while the other two doors lead to goats.  The
+contestant chooses a door and receives the prize behind the door.
+
+The host knows which door leads to the car.  To make things interesting,
+after the contestant chooses, the host will open one of the other doors
+not chosen, showing that it leads to a goat.  Should the contestant now
+change her choice to the remaining door, i.e.\ the one that she didn't
+choose and the host didn't open?
+
+Many people answer No, reasoning that the two doors not opened yet each
+have probability 1/2 of leading to the car.  But the correct answer is
+actually that the remaining door (not chosen by the contestant and not
+opened by the host) has probability 2/3, and thus the contestant should
+switch to it.  Let's see why.
+
+Let
+
+\begin{itemize}
+
+\item C = contestant's choice of door (1, 2 or 3)
+\item H = host's choice of door (1, 2 or 3)
+\item A = door that leads to the automobile
+ 
+\end{itemize}
+
+We can make things more concrete by considering the case $C = 1, ~ H = 2$.
+The mathematical formulation of the problem is then to find
+
+\begin{equation}
+\label{montyhall1}
+P(A = 3 ~|~ C = 1, ~ H = 2) =
+\frac
+{P(A = 3, ~ C = 1, ~ H = 2)}
+{P(C = 1, ~ H = 2)}
+\end{equation}
+
+The key point, commonly missed even by mathematically sophisticated
+people, is the role of the host.  Write the numerator above as
+
+\begin{equation}
+\label{mhnumerator}
+P(A = 3, ~ C = 1) ~ P(H = 2 ~|~ A = 3, ~ C = 1)
+\end{equation}
+
+Since $C$ and $A$ are independent random variables, the value of the
+first factor in (\ref{mhnumerator}) is 
+
+\begin{equation}
+\frac{1}{3} \cdot
+\frac{1}{3} = \frac{1}{9}
+\end{equation}
+
+What about the second factor?  Remember, the host knows that $A = 3$,
+and since the contestant has chosen door 1, the host will open the only
+remaining door that conceals a goat, i.e.\ door 2.  In other words,
+
+\begin{equation}
+P(H = 2 ~|~ A = 3, ~ C = 1) = 1
+\end{equation}
+
+On the other hand, if say $A = 1$, the host would randomly choose
+between doors 2 and 3, so that
+
+\begin{equation}
+P(H = 2 ~|~ A = 1, ~ C = 1) = \frac{1}{2}
+\end{equation}
+
+It is left to the reader to complete the analysis, calculating the
+denominator of (\ref{montyhall1}), and then showing in the end that
+
+\begin{equation}
+P(A = 3 ~|~ C = 1, ~ H = 2) = \frac{2}{3}
+\end{equation}
+
+According to the ``Monty Hall problem'' entry in Wikipedia, even Paul
+Erd{\"o}s, one of the most famous mathematicians in history, gave the wrong
+answer to this problem.  Presumably he would have avoided this by
+writing out his analysis in terms of random variables, as above, rather
+than say, a wordy, imprecise and ultimately wrong solution.
+
+\section{Expected Value}
+\label{expval}
+
+\subsection{Generality---Not Just for \underline{Discrete} Random
+Variables}
+
+The concepts and properties introduced in this section form the very
+core of probability and statistics.  {\bf Except for some specific
+calculations, these apply to both discrete and continuous random
+variables.}
+
+The properties developed for {\it variance}, defined later in this
+chapter, also hold for both discrete and continuous random variables.
+
+\subsubsection{What Is It?}
+\label{whatisit}
+
+The term ``expected value'' is one of the many misnomers one encounters
+in tech circles.  The expected value is actually not something we
+``expect'' to occur.  On the contrary, it's often pretty unlikely.
+
+For instance, let H denote the number of heads we get in tossing a coin
+1000 times.  The expected value, you'll see later, is 500.  This is not
+surprising, given the symmetry of the situation, but P(H = 500) turns
+out to be about 0.025.  In other words, we certainly should not
+``expect'' H to be 500.
+
+Of course, even worse is the example of the number of dots that come up
+when we roll a fair die.  The expected value is 3.5, a value which not
+only rarely comes up, but in fact never does.
+
+In spite of being misnamed, expected value plays an absolutely central
+role in probability and statistics.
+
+\subsection{Definition}
+
+Consider a repeatable experiment with random variable X.  We say that
+the {\bf expected value} of X is the long-run average value of X, as we
+repeat the experiment indefinitely.
+
+In our notebook, there will be a column for X.  Let $X_i$ denote the
+value of X in the i$^{th}$ row of the notebook.  Then the long-run
+average of X is 
+
+\begin{equation}
+\label{longrunavg}
+\lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n}
+\end{equation}
+
+Suppose for instance our experiment is to toss 10 coins.  Let X denote
+the number of heads we get out of 10.  We might get four heads in the
+first repetition of the experiment, i.e. $X_1 = 4$, seven heads in the
+second repetition, so $X_2 = 7$, and so on.  Intuitively, the long-run
+average value of X will be 5.  (This will be proven below.) Thus we say
+that the expected value of X is 5, and write E(X) = 5.
+
+\subsection{Existence of the Expected Value}
+
+The above defintion puts the cart before the horse, as it presumes that
+the limit exists.  Theoretically speaking, this might not be the case.
+However, it does exist if the $X_i$ have finite lower and upper bounds,
+which is always true in the real world.  For instance, no person has
+height of 50 feet, say, and no one has negative height either.
+
+For the remainder of this book, we will usually speak of ``the''
+expected value of a random variable without adding the qualifier ``if it
+exists.''
+
+\subsection{Computation and Properties of Expected Value}
+
+Continuing the coin toss example above, let $K_{in}$ be the number of
+times the value i occurs among $X_1,...,X_n$, i = 0,...,10, n =
+1,2,3,...  For instance, $K_{4,20}$ is the number of times we get four
+heads, in the first 20 repetitions of our experiment.  Then
+
+\begin{eqnarray}
+E(X) &=& \lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n} \\
+&=& \lim_{n \rightarrow \infty} \frac{0 \cdot K_{0n}+1 \cdot K_{1n}+2 \cdot
+K_{2n}...+10 \cdot K_{10,n}}{n} \\
+&=& \sum_{i=0}^{10} i \cdot \lim_{n \rightarrow \infty} \frac{K_{in}}{n}
+\end{eqnarray}
+
+To understand that second equation, suppose when n = 5 we have
+2, 3, 1, 2 and 1 for our values of $X_1,X_2,X_3,X_4,X_5,$.  Then we can
+group the 2s together and group the 1s together, and write
+
+\begin{equation}
+2 +3 + 1 + 2 + 1 = 2 \times 2 + 2 \times 1 + 1 \times 3
+\end{equation}
+
+But $\lim_{n \rightarrow \infty} \frac{K_{in}}{n}$ is the long-run
+fraction of the time that X = i.  In other words, it's P(X = i)!
+So,
+
+\begin{equation}
+E(X) = \sum_{i=0}^{10} i \cdot P(X = i)
+\end{equation}
+
+So in general we have: 
+
+{\bf Property A:} 
+
+The expected value of a discrete random variable X which takes values in
+the set A is 
+
+\begin{equation}
+\label{a}
+E(X) = \sum_{c \in A} c ~ P(X = c)
+\end{equation}
+
+Note that (\ref{a}) is the formula we'll use.  The preceding equations
+were derivation, to motivate the formula.  Note too that (\ref{a}) is not
+the {\it definition} of expected value; that was in \ref{longrunavg}.
+It is quite important to distinguish between all of these, in terms of
+goals.\footnote{The matter is made a little more confusing by the fact
+that many books do in fact treat (\ref{a}) as the definition, with
+(\ref{longrunavg}) being the consequence.}
+
+By the way, note the word {\it discrete} above.  For the case of
+continuous random variables, the sum in (\ref{a}) will become an
+integral.
+
+It will be shown in Section \ref{binom} that in our example above in
+which X is the number of heads we get in 10 tosses of a coin,
+
+\begin{equation}
+P(X = i) =  \binom{10}{i} 0.5^i (1-0.5)^{10-i}  
+\end{equation}
+
+So
+
+\begin{equation}
+E(X) =  \sum_{i=0}^{10} i \binom{10}{i} 0.5^i (1-0.5)^{10-i}  
+\end{equation}
+
+It turns out that E(X) = 5.
+
+For X in our dice example, 
+
+\begin{equation}
+E(X) = \sum_{c=1}^6 c \cdot \frac{1}{6} = 3.5
+\end{equation}
+
+It is customary to use capital letters for random variables, e.g. X
+here, and lower-case letters for values taken on by a random variable,
+e.g. c here.  Please adhere to this convention.  
+
+By the way, it is also customary to write EX instead of E(X), whenever
+removal of the parentheses does not cause any ambiguity.  An example in
+which it would produce ambiguity is $E(U^2)$.  The expression $EU^2$
+might be taken to mean either $E(U^2)$, which is what we want, or
+$(EU)^2$, which is not what we want.
+
+For S = X+Y in the dice example,
+
+\begin{equation}
+\label{es}
+E(S) = 
+2 \cdot \frac{1}{36} +
+3 \cdot \frac{2}{36} +
+4 \cdot \frac{3}{36} +
+...
+12 \cdot \frac{1}{36} = 7
+\end{equation}
+
+In the case of N, tossing a coin until we get a head:
+
+\begin{equation}
+E(N) = \sum_{c=1}^\infty c \cdot \frac{1}{2^c} =  2
+\end{equation}
+
+(We will not go into the details here concerning how the sum of this
+particular infinite series is computed.  See Section \ref{geom}.)
+
+Some people like to think of E(X) using a center of gravity analogy.
+Forget that analogy!  Think notebook!  {\bf Intuitively, E(X) is the
+long-run average value of X among all the lines of the notebook.}  So
+for instance in our dice example, E(X) = 3.5, where X was the number of
+dots on the blue die, means that if we do the experiment thousands of
+times, with thousands of lines in our notebook, the average value of X
+in those lines will be about 3.5.   With S = X+Y, E(S) = 7.  This means
+that in the long-run average in column S in Table \ref{dicenotebook2} is
+7.
+
+\begin{table}
+\begin{center}
+\vskip 0.5in
+
+\begin{tabular}{|l|l|l|l|}
+\hline
+notebook line & outcome & blue+yellow = 6? & S \\ \hline 
+\hline
+1 & blue 2, yellow 6 & No & 8 \\ \hline 
+2 & blue 3, yellow 1 & No & 4 \\ \hline 
+3 & blue 1, yellow 1 & No & 2 \\ \hline 
+4 & blue 4, yellow 2 & Yes & 6 \\ \hline 
+5 & blue 1, yellow 1 & No & 2 \\ \hline 
+6 & blue 3, yellow 4 & No & 7 \\ \hline 
+7 & blue 5, yellow 1 & Yes & 6 \\ \hline 
+8 & blue 3, yellow 6 & No & 9 \\ \hline 
+9 & blue 2, yellow 5 & No & 7 \\ \hline 
+\end{tabular}
+
+\end{center}
+\caption{Expanded Notebook for the Dice Problem}
+\label{dicenotebook2} 
+\end{table}
+
+Of course, by symmetry, E(Y) will be 3.5 too, where Y is the number of
+dots showing on the yellow die.  That means we wasted our time
+calculating in Equation (\ref{es}); we should have realized beforehand
+that E(S) is $2 \times 3.5 = 7$. 
+
+In other words: 
+
+{\bf Property B:} 
+
+For any random variables U and V, the expected value of a new random
+variable D = U+V is the sum of the expected values of U and V:
+
+\begin{equation}
+\label{eofsum} 
+E(U+V) = E(U) + E(V)
+\end{equation}
+
+Note carefully that U and V do NOT need to be independent random
+variables for this relation to hold.  You should convince yourself of
+this fact intuitively {\bf by thinking about the notebook notion.}
+Say we look at 10000 lines of the notebook, which has columns for the
+values of U, V and U+V.  It makes no difference whether we average U+V
+in that column, or average U and V in their columns and then
+add---either way, we'll get the same result.
+
+While you are at it, use the notebook notion to convince yourself of the
+following:
+
+{\bf Properties C:}  
+
+\begin{itemize}
+
+\item For any random variable U and constant a, then
+
+\begin{equation}
+\label{eau}
+E(aU) = a EU
+\end{equation}
+
+\item For random variables X and Y---not necessarily independent---and
+constants a and b, we have
+
+\begin{equation}
+\label{aubv}
+E(aX+bY) = a EX + b EY
+\end{equation}
+
+This follows by taking U = aX and V = bY in (\ref{eofsum}), and then
+using (\ref{eau}).
+
+By induction, for constants $a_1,...,a_k$ and random variables
+$X_1,...,X_k$, form the new random variable 
+$a_1 X_1 +...+ a_k X_k$.  Then
+
+\begin{equation}
+\label{elincomb}
+E(a_1 X_1 +...+ a_n X_k) = 
+a_1 EX_1 +...+ a_n EX_k
+\end{equation}
+
+\item For any constant {\it b}, we have
+
+\begin{equation}
+\label{eofconst}
+E(b) = b
+\end{equation}
+
+\end{itemize}
+
+For instance, say U is temperature in Celsius.  Then the temperature in
+Fahrenheit is $W = \frac{9}{5} U + 32$.  So, W is a new random variable,
+and we can get its expected value from that of U by using (\ref{aubv})
+with $a = \frac{9}{5}$ and b = 32.
+
+If you combine (\ref{eofconst}) with (\ref{aubv}), we have an important
+special case:
+
+\begin{equation}
+\label{aub}
+E(aX+b) = a EX + b
+\end{equation}
+
+Another important point:
+
+{\bf Property D:} If U and V {\it are} independent, then
+
+\begin{equation}
+\label{factoring}
+E(UV) = EU \cdot EV
+\end{equation}
+
+
+In the dice example, for instance, let D denote the product of the
+numbers of blue dots and yellow dots, i.e. D = XY.  Then
+
+\begin{equation}
+E(D) = 3.5^2 = 12.25
+\end{equation}
+
+Equation (\ref{factoring}) doesn't have an easy ``notebook proof.'' It
+is proved in Section \ref{theyfactor}.
+
+Consider a function $g()$ of one variable, and let $W = g(X)$.  $W$ is then a
+random variable too.  Say $X$ has support $A$, as in (\ref{a}).  Then $W$ has
+support $B = \{g(c): c \epsilon A \}$.  (
+
+For instance, say {\it g()} is the squaring function, and $X$ takes on
+the values -1, 0 and 1, with probability 0.5, 0.4 and 0.1.  Then
+
+\begin{equation}
+A = \{ -1,0,1 \}
+\end{equation}
+
+and 
+
+\begin{equation}
+B = \{ 0,1 \}
+\end{equation}
+
+Define
+
+\begin{equation}
+A_d = \{c: c \in A, g(c) = d\}
+\end{equation}
+
+In our above squaring example, we will have
+
+\begin{equation}
+A_0 = \{ 0 \}, ~~ A_1 = \{ -1,1 \}
+\end{equation}
+
+Then 
+
+\begin{equation}
+P(W = d) = P(X \in A_d) 
+\end{equation}
+
+so
+
+\begin{eqnarray}
+E[g(X)] &=& E(W) \\
+&=& \sum_{d \in B} d P(W = d) \\ 
+&=& \sum_{d \in B} d \sum_{c \in A_d} P(X = c) \\
+&=& \sum_{c \in A} g(c) P(X = c) 
+\end{eqnarray}
+
+(Going from the next-to-last equation here to the last one is rather
+tricky.  Work through for the case of our squaring function example
+above in order to see why the final equation does follow.
+
+{\bf Property E:}
+
+If E[g(X)] exists, then
+
+\begin{equation}
+\label{egofx}
+E[g(X)] = \sum_{c \in A} g(c) \cdot P(X = c)
+\end{equation}
+
+where the sum ranges over all values c that can be taken on by X.
+
+For example, suppose for some odd reason we are interested in finding
+$E(\sqrt{X})$, where {\bf X} is the number of dots we get when we roll
+one die.  Let $W = \sqrt{X})$.  Then {\bf W} is another random variable,
+and is discrete, since it takes on only a finite number of values.  (The
+fact that most of the values are not integers is irrelevant.)  We want
+to find $EW$.
+
+Well, $W$ is a function of X, with $g(t) = \sqrt{t}$.  So,
+(\ref{egofx}) tells us to make a list of values in the support
+of W, i.e.  $\sqrt{1}, \sqrt{2}, ..., \sqrt{6}$, and a list of the
+corresponding probabilities for {\bf X}, which are all $\frac{1}{6}$.
+Substituting into (\ref{egofx}), we find that
+
+\begin{equation}
+E(\sqrt{X}) = \frac{1}{6} \sum_{i=1}^6 \sqrt{i}
+\end{equation}
+
+What about a function of several variables?  Say for instance 
+you are finding E(UV), where U has support, say, 1,2 and V has
+support 5,12,13.  In order to find E(UV), you need to know the support
+of UV, recognizing that it, the product UV, is a new random variable in
+its own right.  Let's call it W.  Then in this little example, W has
+support 5,12,13,10,24,26.  Then compute
+
+$$
+5 P(W = 5) + 12 P(W = 12) + ...
+= 5 P(U = 1, V = 5) + 12 P(U = 1, V = 12) + ...
+$$
+
+{\bf Note:}  Equation (\ref{egofx}) will be one of the most heavily used
+formulas in this book.  Make sure you keep it in mind.
+
+\subsection{``Mailing Tubes''}
+\label{mailingtubes2}
+
+{\bf The properties of expected value discussed above are key to the
+entire remainder of this book.  You should notice immediately when you
+are in a setting in which they are applicable.  For instance, if you see
+the expected value of the sum of two random variables, you should
+instinctively think of (\ref{eofsum}) right away.}  
+
+As discussed in Section \ref{mailingtubes1}, these properties are
+``mailing tubes.'' For instance, (\ref{eofsum}) is a ``mailing
+tube''--make a mental note to yourself saying, ``If I ever need to find
+the expected value of the sum of two random variables, I can use
+(\ref{eofsum}).''  Similarly, (\ref{egofx}) is a mailing tube;
+tell yourself, ``If I ever see a new random variable that is a function
+of one whose probabilities I already know, I can find the expected value
+of the new random variable using (\ref{egofx}).''
+
+You will encounter ``mailing tubes'' throughout this book.  For
+instance, (\ref{varcu}) below is a very important ``mailing tube.''
+Constantly remind yourself---``Remember the `mailing tubes'!''
+
+\subsection{Casinos, Insurance Companies and ``Sum Users,'' Compared
+to Others}
+
+The expected value is intended as a {\bf measure of central tendency}
+(also called a {\bf measure of location}, i.e.  as some sort of
+definition of the probablistic ``middle'' in the range of a random
+variable.  There are various other such measures one can use, such as
+the {\bf median}, the halfway point of a distribution, and today they
+are recognized as being superior to the mean in certain senses.  For
+historical reasons, the mean plays an absolutely central role in
+probability and statistics.  Yet one should understand its limitations.
+(This discussion will be general, not limited to discrete random
+variables.)
+
+({\bf Warning:}  The concept of the mean is likely so ingrained in your
+consciousness that you simply take it for granted that you know what the
+mean means, no pun intended.  But try to take a step back, and think of
+the mean afresh in what follows.)
+
+First, the term {\it expected value} itself is a misnomer.  We do not
+\underline{expect} the number of dots D to be 3.5 in the die example in
+Section \ref{whatisit}; in fact, it is impossible for W to take on that
+value.  
+
+Second, the expected value is what we call the {\bf mean} in everyday
+life.  And the mean is terribly overused.  Consider, for example, an
+attempt to describe how wealthy (or not) people are in the city of
+Davis.  If suddenly Bill Gates were to move into town, that would skew
+the value of the mean beyond recognition.  
+
+But even without Gates, there is a question as to whether the mean has
+that much meaning.  After all, what is so meaningful about summing our
+data and dividing by the number of data points?  The median has an easy
+intuitive meaning, but although the mean has familiarity, one would be
+hard pressed to justify it as a measure of central tendency.
+
+What, for example, does Equation (\ref{longrunavg}) mean in the context
+of people's heights in Davis?  We would sample a person at random and
+record his/her height as $X_1$.  Then we'd sample another person, to get
+$X_2$, and so on.  Fine, but in that context, what would
+(\ref{longrunavg}) mean?  The answer is, not much.  So the significance
+of the mean height of people in Davis would be hard to explain.
+
+For a casino, though, (\ref{longrunavg}) means plenty.  Say X is the
+amount a gambler wins on a play of a roulette wheel, and suppose
+(\ref{longrunavg}) is equal to \$1.88.  Then after, say, 1000 plays of
+the wheel (not necessarily by the same gambler), the casino knows from
+\ref{longrunavg} it will have paid out a total of about \$1,880.  So
+if the casino charges, say \$1.95 per play, it will have made a profit
+of about \$70 over those 1000 plays.  It might be a bit more or less
+than that amount, but the casino can be pretty sure that it will be
+around \$70, and they can plan their business accordingly.
+
+The same principle holds for insurance companies, concerning how much
+they pay out in claims.  With a large number of customers, they know
+(``expect''!) approximately how much they will pay out, and thus can
+set their premiums accordingly.  Here the mean has a tangible, practical
+meaning.
+
+The key point in the casino and insurance companies examples is that
+they are interested in {\it totals}, such as {\it total} payouts on a
+blackjack table over a month's time, or {\it total} insurance claims
+paid in a year.  Another example might be the number of defectives in a
+batch of computer chips; the manufacturer is interested in the {\it
+total} number of defectives chips produced, say in a month.  Since the
+mean is by definition a {\it total} (divided by the number of data
+points), the mean will be of direct interest to casinos etc.
+
+By contrast, in describing how wealthy people of a town are, the total
+height of all the residents is not relevant.  Similarly, in describing
+how well students did on an exam, the sum of the scores of all the
+students doesn't tell us much.  (Unless the professor gets \$10 for each
+point in the exam scores of each of the students!) A better description
+for heights and exam scores might be the median height or score.
+
+Nevertheless, the mean has certain mathematical properties, such as
+(\ref{eofsum}), that have allowed the rich development of the fields of
+probability and statistics over the years.  The median, by contrast,
+does not have nice mathematical properties.  In many cases, the mean
+won't be too different from the median anyway (barring Bill Gates moving
+into town), so you might think of the mean as a convenient substitute
+for the median.  The mean has become entrenched in statistics, and we
+will use it often.
+
+\section{Variance}
+\label{variance}
+
+As in Section \ref{expval}, the concepts and properties introduced in
+this section form the very core of probability and statistics.  {\bf
+Except for some specific calculations, these apply to both discrete and
+continuous random variables.}
+
+\subsection{Definition}
+
+While the expected value tells us the average value a random variable
+takes on, we also need a measure of the random variable's
+variability---how much does it wander from one line of the notebook to
+another?  In other words, we want a measure of {\bf dispersion}.  The
+classical measure is {\bf variance}, defined to be the mean squared
+difference between a random variable and its mean:
+
+\begin{definition}  For a random variable U for which the expected
+values written below exist, the {\bf variance} of U is defined to be
+
+\begin{equation}
+\label{vardef}
+Var(U) = E[(U-EU)^2]
+\end{equation}
+
+\end{definition}
+
+For X in the die example, this would be
+
+\begin{equation}
+\label{dievar} 
+Var(X) = E[(X-3.5)^2]
+\end{equation}
+
+Remember what this means:  We have a random variable {\bf X}, and we're
+creating a new random variable, $W = (X-3.5)^2$, which is a function of
+the old one.  We are then finding the expected value of that new random
+variable W.
+
+In the notebook view, $E[(X-3.5)^2]$ is the long-run average of the W
+column:
+
+\vskip 0.5in
+\begin{tabular}{|r|r|r|}
+\hline
+line & X & W \\ \hline 
+\hline
+1 & 2 & 2.25 \\ \hline 
+2 & 5 & 2.25 \\ \hline 
+3 & 6 & 6.25 \\ \hline 
+4 & 3 & 0.25 \\ \hline 
+5 & 5 & 2.25 \\ \hline 
+6 & 1 & 6.25 \\ \hline 
+\end{tabular}
+
+To evaluate this, apply (\ref{egofx}) with $g(c) = (c-3.5)^2$:
+
+\begin{equation}
+Var(X) = \sum_{c=1}^6 (c-3.5)^2 \cdot \frac{1}{6} = 2.92
+\end{equation}
+
+You can see that variance does indeed give us a measure of dispersion.
+In the expression $Var(U) = E[(U-EU)^2]$, if the values of U are mostly
+clustered near its mean, then $(U-EU)^2$ will usually be small, and thus
+the variance of U will be small; if there is wide variation in U, the
+variance will be large.
+
+% The properties of E() in (\ref{eofsum}) and (\ref{aubv}) can be used
+% to show:
+
+{\bf Property F:}
+
+\begin{equation} 
+\label{varuformula}
+Var(U) = E(U^2) - (EU)^2
+\end{equation}
+
+The term $E(U^2)$ is again evaluated using (\ref{egofx}). 
+
+Thus for example, if X is the number of dots which come up when we roll
+a die.   Then, from (\ref{varuformula}), 
+
+\begin{equation}
+Var(X) = E(X^2) - (EX)^2
+\end{equation}
+
+Let's find that first term (we already know the second is $3.5^2$).  From
+(\ref{egofx}),
+
+\begin{equation}
+E(X^2) =  \sum_{i=1}^6 i^2 \cdot \frac{1}{6} = \frac{91}{6}
+\end{equation}
+
+Thus $Var(X) = E(X^2) - (EX)^2 = \frac{91}{6} - 3.5^2$
+
+Remember, though, that (\ref{varuformula}) is a shortcut formula for
+finding the variance, not the {\it definition} of variance.
+
+Below is the derivation of (\ref{varuformula}).  Keep in mind that EU is
+a constant.
+
+\begin{eqnarray}
+Var(U) &=& E[(U-EU)^2] \\ 
+&=& E[U^2 -2EU \cdot U + (EU)^2] ~~ \textrm{(algebra)} \\
+&=& E(U^2) + E(-2 EU \cdot U) + E[(EU)^2] ~~ (\ref{eofsum}) \\
+&=& E(U^2) -2 EU \cdot EU + (EU)^2 ~~ (\ref{eau}), (\ref{eofconst}) \\
+&=& E(U^2) - (EU)^2
+\end{eqnarray}
+
+An important behavior of variance is: 
+
+{\bf Property G:}
+
+\begin{equation}
+\label{varcu}
+Var(cU) = c^2 Var(U)
+\end{equation}
+
+for any random variable U and constant c. It should make sense to you:
+If we multiply a random variable by 5, say, then its average squared
+distance to its mean should increase by a factor of 25. 
+
+Let's prove (\ref{varcu}).  Define V = cU.  Then
+
+\begin{eqnarray}
+Var(V) &=& E[(V-EV)^2] \textrm{  (def.)} \\ 
+&=& E\{[cU - E(cU)]^2\} \textrm{  (subst.)} \\
+&=& E\{[cU - cEU]^2\} \textrm{  ((\ref{aubv}))} \\
+&=& E\{c^2 [U - EU]^2\} \textrm{  (algebra)} \\
+&=& c^2 E\{[U - EU]^2\} \textrm{  ((\ref{aubv}))} \\
+&=& c^2 Var(U) \textrm{  (def.)}
+\end{eqnarray}
+
+Shifting data over by a constant does not change the amount of variation
+in them:
+
+{\bf Property H:}
+
+\begin{equation}
+\label{affinevar}
+Var(U+d) = Var(U)
+\end{equation}
+
+for any constant d.
+
+Intuitively, the variance of a constant is 0---after all, it never
+varies!  You can show this formally using (\ref{varuformula}):
+
+\begin{equation}
+Var(c) = E(c^2) - [E(c)]^2 = c^2 - c^2 = 0
+\end{equation}
+
+The square root of the variance is called the {\bf standard deviation}.
+
+Again, we use variance as our main measure of dispersion for historical
+and mathematical reasons, not because it's the most meaningful measure.
+The squaring in the definition of variance produces some distortion, by
+exaggerating the importance of the larger differences.  It would be more
+natural to use the {\bf mean absolute deviation} (MAD), $E(|U-EU|)$.
+However, this is less tractable mathematically, so the statistical
+pioneers chose to use the mean squared difference, which lends itself to
+lots of powerful and beautiful math, in which the Pythagorean Theorem
+pops up in abstract vector spaces.  (See Section \ref{elegant} for
+details.)
+
+{\bf As with expected values, the properties of variance discussed
+above, and also in Section \ref{covar} below, are key to the entire
+remainder of this book.  You should notice immediately when you are in a
+setting in which they are applicable.  For instance, if you see the
+variance of the sum of two random variables, you should instinctively
+think of (\ref{varsum}) right away, and check whether they are
+independent.}
+
+\subsection{More Practice with the Properties of Variance}
+
+Suppose $X$ and $Y$ are independent random variables, with $EX = 1$, $EY
+= 2$, $Var(X) = 3$ and $Var(Y) = 4$.  Let's find $Var(XY)$.  (The reader
+should make sure to supply the reasons for each step, citing equation
+numbers from the material above.)
+
+\begin{eqnarray}
+Var(XY) &=& E(X^2 Y^2) - [E(XY)]^2 \\
+&=& E(X^2) \cdot E(Y^2) - (EX \cdot EY)^2 \\ 
+&=& [Var(X) + (EX)^2] \cdot
+[Var(Y) + (EY)^2] - (EX \cdot EY)^2 \label{genform} \\
+&=& (3 + 1^2) (4 + 2^2) - (1 \cdot 2)^2 \\
+&=& 28
+\end{eqnarray}
+
+\subsection{Central Importance of the Concept of Variance}
+
+No one needs to be convinced that the mean is a fundamental descriptor
+of the nature of a random variable.  But the variance is of central
+importance too, and will be used constantly throughout the remainder of
+this book.
+
+The next section gives a quantitative look at our notion of variance as
+a measure of dispersion.  
+
+\subsection{Intuition Regarding the Size of Var(X)}
+
+{\it A billion here, a billion there, pretty soon, you're talking real
+money}---attributed to the late Senator Everitt Dirksen, replying to a
+statement that some federal budget item cost ``only'' a billion dollars
+
+\bigskip
+
+Recall that the variance of a random variable X is supposed to be a
+measure of the dispersion of X, meaning the amount that X varies from
+one instance (one line in our notebook) to the next.  But if Var(X) is,
+say, 2.5, is that a lot of variability or not?  We will pursue this
+question here.
+
+\subsubsection{Chebychev's Inequality}
+\label{chebsection}
+
+This inequality states that for a random variable X with mean $\mu$ and
+variance $\sigma^2$, 
+
+\begin{equation}
+\label{cheb}
+P(|X - \mu| \geq c \sigma) \leq \frac{1}{c^2}
+\end{equation}
+
+In other words, X strays more than, say, 3 standard deviations from its
+mean at most only 1/9 of the time.  This gives some concrete meaning to
+the concept of variance/standard deviation.
+
+You've probably had exams in which the instructor says something like
+``An A grade is 1.5 standard deviations above the mean.''  Here c in
+(\ref{cheb}) would be 1.5.
+
+We'll prove the inequality in Section \ref{chebproof}.
+
+\subsubsection{The Coefficient of Variation}
+
+Continuing our discussion of the magnitude of a variance, look at our
+remark following (\ref{cheb}):
+
+\begin{quote}
+In other words, X does not often stray more than, say, 3 standard
+deviations from its mean.  This gives some concrete meaning to the
+concept of variance/standard deviation.
+\end{quote}
+
+Or, think of the price of, say, widgets.  If the price hovers around a
+\$1 million, but the variation around that figure is only about a
+dollar, you'd say there is essentially no variation.  But a variation
+of about a dollar in the price of a hamburger would be a lot.
+
+These considerations suggest that any discussion of the size of Var(X)
+should relate to the size of E(X).  Accordingly, one often looks at the
+{\bf coefficient of variation}, defined to be the ratio of the standard
+deviation to the mean:
+
+\begin{equation}
+\textrm{coef. of var.} = \frac{\sqrt{Var(X)}}{EX}
+\end{equation}
+
+This is a scale-free measure (e.g. inches divided by inches), and serves
+as a good way to judge whether a variance is large or not.
+
+\section{A Useful Fact}
+\label{usefulfact}
+
+\label{mingcpage}
+For a random variable X, consider the function
+
+\begin{equation}
+g(c) = E[(X-c)^2]
+\end{equation}
+
+Remember, the quantity $E[(X-c)^2]$ is a number, so g(c) really is a
+function, mapping a real number c to some real output.  
+
+We can ask the question, What value of c minimizes g(c)?  To answer that
+question, write:
+
+\begin{equation}
+\label{gofc}
+g(c) = E[(X-c)^2] = E(X^2 -2cX + c^2) = E(X^2) - 2c EX + c^2
+\end{equation}
+
+where we have used the various properties of expected value derived in
+recent sections.
+
+To make this concrete, suppose we are guessing people's
+weights---without seeing them and without knowing anything about them at
+all.  (This is a somewhat artificial question, but it will become highly
+practical in Chapter \ref{linreg}.)  Since we know nothing at all about
+these people, we will make the same guess for each of them.
+
+What should that guess-in-common be?  Your first inclination would be to
+guess everyone to be the mean weight of the population.  If that value
+in our target population is, say, 142.8 pounds, then we'll guess
+everyone to be that weight.  Actually, that guess turns out to be
+optimal in a certain sense, as follows.
+
+Say $X$ is a person's weight.  It's a random variable, because these
+people are showing up at random from the population.  Then $X-c$ is our
+prediction error.  How well will do in our predictions?  We can't
+measure that as
+
+\begin{equation}
+E(\textrm{error}) 
+\end{equation}
+
+because that quantity is 0!  (What mailing tube is at work here?)
+
+A reasonable measure would be
+
+\begin{equation}
+\label{minabs}
+E(|X - c|) 
+\end{equation}
+
+However, due to tradition, we use
+
+\begin{equation}
+\label{minsq}
+E[(X - c)^2] 
+\end{equation}
+
+Now differentiate with respect to c, and set the result to 0.
+Remembering that $E(X^2)$ and EX are constants, we have
+
+\begin{equation}
+0 = -2 EX + 2c
+\end{equation}
+
+so the minimizing c is c = EX!  
+
+In other words, the minimum value of $E[(X-c)^2]$ occurs at c = EX.  Our
+intuition was right!
+
+Moreover:  Plugging c = EX into (\ref{gofc}) shows that the minimum value
+of g(c) is $E(X-EX)^2]$ , which is Var(X)!
+
+In notebook terms, think of guessing many, many people, meaning many
+lines in the notebook, one per person.  Then (\ref{minsq}) is the
+long-run average squared error in our guesses, and we find that we
+minimize that by guessing everyone's weight to be the population mean
+weight.
+
+But why look at average squared error?  It accentuates the large errors.
+Instead, we could minimize (\ref{minabs}).  It turns out that the best
+$c$ here is the population {\it median} weight.
+
+\section{Covariance} 
+
+This is a topic we'll cover fully in Chapter \ref{randvec}, but at least
+introduce here.
+
+A measure of the degree to which U and V vary together is their {\bf
+covariance},
+
+\begin{equation}
+\label{covdef1}
+Cov(U,V) = E[(U-EU)(V-EV)]
+\end{equation}
+
+Except for a divisor, this is essentially {\bf correlation}.  If U is
+usually large (relative to its expectation) at the same time V is
+small (relative to its expectation), for instance, then you can
+see that the covariance between them will be negative.  On the other
+hand, if they are usually large together or small together, the
+covariance will be positive.
+
+For example, suppose U and V are the height and weight, respectively, of
+a person chosen at random from some population, and think in notebook
+terms.  Each line shows the data for one person, and we'll have columns
+for U, V, U - EU, V - EV and (U - EU) (V - EV).  Then (\ref{covdef1}) is
+the long-run average of that last column.  Will it be positive or
+negative?  Reason as follows:
+
+Think of the lines in the notebook for people who are taller than
+average, i.e.\ for whom $U - EU > 0$.  Most such people are also heavier
+than average, i.e.\ $V - EV > 0$, so that $(U - EU) (V - EV) > 0$.  
+On the other hand, shorter people also tend to be lighter, so most lines
+with shorter people will have $U - EU <0$ and $V -EV < 0$---but still
+$(U - EU) (V - EV) > 0$.  In other words, the long-run average of the (U
+- EU) (V - EV) column will be positive.
+
+The point is that, if two variables are positively related, e.g.\ height
+and weight, their covariance should be positive.  This is the intuitive
+underlying defining covariance as in (\ref{covdef1}).
+
+
+Again, one can use the properties of E() to show that
+
+\begin{equation}
+\label{covshortcut}
+Cov(U,V) = E(UV) - EU \cdot EV
+\end{equation}
+
+Again, this will be derived fully in Chapter \ref{chap:randvec}, but you
+think about how to derive it yourself.  Just use our old mailing tubes,
+e.g. E(X+Y) = EX + EY, E(cX) for a constant c, etc.  Note that EU and EV
+are constants!
+
+Also 
+
+\begin{equation}
+\label{genvarsum}
+Var(U+V) = Var(U) + Var(V) + 2 Cov(U,V)
+\end{equation}
+
+and more generally,
+
+\begin{equation}
+\label{covabuv}
+Var(aU+bV) = a^2 Var(U) + b^2 Var(V) + 2ab Cov(U,V)
+\end{equation}
+
+for any constants $a$ and $b$.
+
+(\ref{covshortcut}) imply that Cov(U,V) = 0.  In that case,
+
+\begin{equation}
+\label{varsum}
+Var(U+V) = Var(U) + Var(V) 
+\end{equation}
+
+By the way, (\ref{varsum}) is actually the Pythagorean Theorem in a
+certain esoteric, infinite-dimesional vector space (related to a similar
+remark made earlier).  This is pursued in Section \ref{elegant} for
+the mathematically inclined.
+
+Generalizing (\ref{covabuv}), for constants $a_1,...,a_k$ and random
+variables $X_1,...,X_k$, form the new random variable $a_1 X_1 +...+ a_k
+X_k$.  Then
+
+\begin{equation}
+Var(a_1 X_1 +...+ a_k X_k) = 
+\sum_{i=1}^k a_i^2 Var(X_i) + 2 \sum_{1 \leq i < j \leq k}^k
+Cov(X_i,X_j)
+\end{equation}
+
+If the $X_i$ are independent, then we have the special case
+
+\begin{equation}
+Var(a_1 X_1 +...+ a_k X_k) = 
+\sum_{i=1}^k a_i^2 Var(X_i) 
+\end{equation}
+
+\section{Indicator Random Variables, and Their Means and Variances}
+\label{indicator}
+
+\begin{definition}
+
+A random variable that has the value 1 or 0, according to whether a
+specified event occurs or not is called an {\bf indicator random
+variable} for that event.  
+
+\end{definition}
+
+You'll often see later in this book that the notion of an indicator
+random variable is a very handy device in certain derivations.  But for
+now, let's establish its properties in terms of mean and variance.
+
+\begin{quote}
+
+{\bf Handy facts:}  Suppose X is an indicator random variable for the
+event A.  Let p denote P(A).  Then 
+
+\begin{equation}
+\label{eofxeqp}
+E(X) = p
+\end{equation}
+
+\begin{equation}
+\label{varofeqp1p}
+Var(X) = p(1-p)
+\end{equation}
+
+\end{quote}
+
+These two facts are easily derived.  In the first case we have, using our
+properties for expected value,
+
+\begin{equation}
+EX = 1 \cdot P(X = 1) + 0 \cdot P(X = 0) = P(X = 1) = P(A) = p
+\end{equation}
+
+The derivation for Var(X) is similar (use (\ref{varuformula})).
+
+For example, say Coin A has probability 0.6 of heads, Coin B is fair, and
+Coin C has probability 0.2 of heads.  I toss A once, getting X heads,
+then toss B once, getting Y heads, then toss C once, getting Z heads.
+Let W = X + Y + Z, i.e. the total number of heads from the three tosses
+(W ranges from 0 to 3).  Let's find P(W = 1) and Var(W).
+
+The first one uses old methods:
+
+\begin{eqnarray}
+P(W = 1) &=&
+   P(X = 1 \textrm{ and }  Y = 0 \textrm{ and }  Z = 0 \textrm{ or }  ...) \\
+   &=& 0.6 \cdot 0.5 \cdot 0.8 +
+       0.4 \cdot 0.5 \cdot 0.8 +
+       0.4 \cdot 0.5 \cdot 0.2
+\end{eqnarray}
+
+For Var(W), let's use what we just learned about indicator random
+variables; each of X, Y and Z are such variables.  Var(W) = Var(X) +
+Var(Y) + Var(Z), by independence and (\ref{varsum}).  Since X is an
+indicator random variable, $Var(X) = 0.6 \cdot 0.4$, etc.  The answer is
+then
+
+\begin{equation}
+0.6 \cdot 0.4 +
+0.5 \cdot 0.5 +
+0.2 \cdot 0.8
+\end{equation}
+
+\subsection{Example:  Return Time for Library Books}
+
+Suppose at some public library, patrons return books
+exactly 7 days after borrowing them, never early or late.  However, they
+are allowed to return their books to another branch, rather than the
+branch where they borrowed their books.  In that situation, it takes 9
+days for a book to return to its proper library, as opposed to the
+normal 7.  Suppose 50\% of patrons return their books to a ``foreign''
+library.  Find Var(T), where T is the time, either 7 or 9 days, for a
+book to come back to its proper location.
+
+Note that
+
+\begin{equation}
+T = 7 + 2 I, 
+\end{equation}
+
+where I is an indicator random variable for the event that the book is
+returned to a ``foreign'' branch.  Then
+
+\begin{equation}
+Var(T) = Var(7 + 2I) =  4 Var(I) = 4 \cdot 0.5 (1 - 0.5)
+\end{equation}
+
+Now let's look at a somewhat more general model.  Here we will assume
+that borrowers return books after 4, 5, 6 or 7 days, with probabilities
+0.1, 0.2, 0.3, 0.4, respectively. As before, 50\% of patrons return
+their books to a ``foreign'' branch, resulting in an extra 2-day delay
+before the book arrives back to its proper location.  The library is
+open 7 days a week.
+
+Suppose you wish to borrow a certain book, and inquire at the library
+near the close of business on Monday. Assume too that no one else is
+waiting for the book.  You are told that it had been checked out the
+previous Thursday. Find the probability that you will need to wait until
+Wednesday evening to get the book. (You check every evening.)
+
+Let B denote the time needed for the book to arrive back at its home
+branch, and define I as before.  Then
+
+\begin{eqnarray}
+P(B = 6 ~|~ B > 4) &=& \frac{P(B = 6 \textrm{ and } B > 4)}{P(B > 4)}\\ 
+&=& \frac{P(B = 6)}{P(B > 4)} \\
+&=& \frac{P(B = 6 \textrm{ and I = 0 \textrm{ or } B = 6 \textrm{ and }
+I = 1})}
+{1 - P(B = 4)} \\
+&=& \frac{0.5 \cdot 0.3 + 0.5 \cdot 0.1}
+{1 - 0.5 \cdot 0.1} \\
+&=& \frac{4}{19}
+\end{eqnarray}
+
+Here is a simulation check:
+
+\begin{lstlisting}
+libsim <- function(nreps) {
+   # patron return time
+   prt <- sample(c(4,5,6,7),nreps,replace=T,prob=c(0.1,0.2,0.3,0.4))
+   # indicator for foreign branch
+   i <- sample(c(0,1),nreps,replace=T)
+   b <- prt + 2*i
+   x <- cbind(prt,i,b)
+   # look only at the relevant notebook lines
+   bgt4 <- x[b > 4,]
+   # among those lines, what proportion have B = 6?
+   mean(bgt4[,3] == 6)
+}                               
+\end{lstlisting}
+
+\subsection{Example:  Indicator Variables in a Committee Problem}
+\label{combex}
+
+A committee of four people is drawn at random from a set of six men and
+three women.  Suppose we are concerned that there may be quite a gender
+imbalance in the membership of the committee.  Toward that end, let M
+and W denote the numbers of men and women in our committee, and let D =
+M-W.  Let's find E(D), in two different ways.
+
+D has support consisting of the values 4-0, 3-1, 2-2 and 1-3, i.e. 4, 2,
+0 and -2.  So from (\ref{a})
+
+\begin{equation}
+\label{ed}
+ED = 
+-2 \cdot P(D = -2) +
+0 \cdot P(D = 0) +
+2 \cdot P(D = 2) +
+4 \cdot P(D = 4) 
+\end{equation}
+
+Now, using reasoning along the lines in Section \ref{comb}, we have
+
+\begin{equation}
+P(D = -2) = P(M = 1 \textrm{ and } W = 3) =
+\frac
+{\binom{6}{1} \binom{3}{3}}
+{\binom{9}{4}} 
+\end{equation}
+
+After similar calculations for the other probabilities in (\ref{ed}),
+we find the $ED = \frac{4}{3}$.  
+
+Note what this means: If we were to perform this experiment many times,
+i.e. choose committees again and again, on average we would have a
+little more than one more man than women on the committee.
+
+Now let's use our ``mailing tubes'' to derive ED a different way:
+
+\begin{eqnarray}
+ED &=& E(M - W) \\ 
+&=& E[ M - (4-M)] \\
+&=& E(2 M - 4) \\
+&=& 2 EM - 4 ~~ (\textrm{from } (\ref{aubv})) 
+\end{eqnarray}
+
+Now, let's find EM by using indicator random variables.  Let $G_i$
+denote the indicator random variable for the event that the i$^{th}$
+person we pick is male, i = 1,2,3,4.  Then
+
+\begin{equation}
+\label{massum}
+M = G_1 + G_2 + G_3 + G_4
+\end{equation}
+
+so 
+
+\begin{eqnarray}
+EM &=& E(G_1 + G_2 + G_3 + G_4) \\ 
+&=& EG_1 + EG_2 + EG_3 + EG_4 ~~  [\textrm{ from } (\ref{eofsum})] \\
+&=& P(G_1 = 1) + P(G_2 = 1) + P(G_3 = 1) + P(G_4 = 1) ~~ [\textrm{ from } (\ref{eofxeqp})]
+\label{4g}
+\end{eqnarray}
+
+Note carefully that the second equality here, which uses (\ref{eofsum}),
+is true in spite of the fact that the $G_i$ are not independent.
+Equation (\ref{eofsum}) does \underline{not} require independence.
+
+Another key point is that, due to symmetry, $P(G_i = 1)$ is the same for
+all i.  Note that we did not write a {\it conditional} probability
+here!  Once again, think of the notebook view:  {\large \bf By
+definition}, $(P(G_2 = 1)$ is the long-run proportion of the number of
+notebook lines in which $G_2 = 1$---regardless of the value of $G_1$ in
+those lines.
+
+Now, to see that $P(G_i = 1)$ is the same for all i, suppose the six men
+that are available for the committee are named Alex, Bo, Carlo, David,
+Eduardo and Frank.  When we select our first person, any of these men
+has the same chance of being chosen (1/9).  {\it But that is also true
+for the second pick.}  Think of a notebook, with a column named ``second
+pick.''  In some lines, that column will say Alex, in some it will say
+Bo, and so on, and in some lines there will be women's names.  But in
+that column, Bo will appear the same fraction of the time as Alex, due
+to symmetry, and that will be the same fraction as for, say, Alice,
+again 1/9.
+
+Now,
+
+\begin{equation}
+P(G_1 = 1) = \frac{6}{9} = \frac{2}{3}
+\end{equation}
+
+Thus 
+
+\begin{equation}
+ED = 2 \cdot (4 \cdot \frac{2}{3}) -4  = \frac{4}{3}
+\end{equation}
+
+\subsection{Example:  Spinner Game}
+
+In a certain game, Person A spins a spinner and wins $S$ dollars, with
+mean 10 and variance 5.  Person B flips a coin.  If it comes up heads,
+Person A must give B whatever A won, but if it comes up tails, B wins
+nothing.  Let T denote the amount B wins.  Let's find $Var(T)$.
+
+We can use (\ref{genform}), in this case with X = I, where I is an
+indicator variable for the event that B gets a head, and with Y = S.
+Then $T = I \cdot S$, and I and S are independent, so
+
+\begin{equation}
+Var(T) = Var(IS) = 
+[Var(I) + (EI)^2] \cdot
+[Var(S) + (ES)^2] - (EI \cdot ES)^2 
+\end{equation}
+
+Then use the facts that I has mean 0.5 and variance 0.5(1-0.5)
+(Equations (\ref{eofxeqp}) and (\ref{varofeqp1p}), with S having the
+mean 10 and variance 5, as given in the problem.
+
+\section{Expected Value, Etc. in the ALOHA Example}
+
+Finding expected values etc. in the ALOHA example is straightforward.
+For instance, 
+
+\begin{equation}
+EX_1 = 0 \cdot P(X_1 = 0) + 1 \cdot P(X_1 = 1) + 2 \cdot P(X_1 = 2)
+= 1 \cdot 0.48 + 2 \cdot 0.52 = 1.52
+\end{equation}
+
+Here is R code to find various values approximately by simulation:
+
+\begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
+# finds E(X1), E(X2), Var(X2), Cov(X1,X2)
+sim <- function(p,q,nreps) {
+   sumx1 <- 0
+   sumx2 <- 0
+   sumx2sq <- 0
+   sumx1x2 <- 0
+   for (i in 1:nreps) {
+      numtrysend <- 
+         sum(sample(0:1,2,replace=TRUE,prob=c(1-p,p)))
+      if (numtrysend == 1)  X1 <- 1
+      else X1 <- 2
+      numactive <- X1
+      if (X1 == 1 && runif(1) < q) numactive <- numactive + 1
+      if (numactive == 1)
+         if (runif(1) < p) X2 <- 0
+         else X2 <- 1
+      else {  # numactive = 2
+         numtrysend <- 0
+         for (i in 1:2)
+            if (runif(1) < p) numtrysend <- numtrysend + 1
+         if (numtrysend == 1) X2 <- 1
+         else X2 <- 2
+      }
+      sumx1 <- sumx1 + X1
+      sumx2 <- sumx2 + X2
+      sumx2sq <- sumx2sq + X2^2
+      sumx1x2 <- sumx1x2 + X1*X2
+   }
+   # print results
+   meanx1 <- sumx1 /nreps
+   cat("E(X1):",meanx1,"\n")
+   meanx2 <- sumx2 /nreps
+   cat("E(X2):",meanx2,"\n")
+   cat("Var(X2):",sumx2sq/nreps - meanx2^2,"\n")
+   cat("Cov(X1,X2):",sumx1x2/nreps - meanx1*meanx2,"\n")
+}
+\end{Verbatim}
+
+As a check on your understanding so far, you should find at least one of
+these values by hand, and see if it jibes with the simulation output.
+
+\section{Example:  Measurements at Different Ages}
+
+Say a large research program measures boys' heights at age
+10 and age 15.  Call the two heights X and Y.  So, each boy has an X
+and a Y.  Each boy is a ``notebook line'', and the notebook has two
+columns, for X and Y.  We are interested in Var(Y-X).  Which of the
+following is true?
+
+\begin{itemize}
+
+\item [(i)] $Var(Y-X) = Var(Y) + Var(X)$
+\item [(ii)] $Var(Y-X) = Var(Y) - Var(X)$
+\item [(iii)] $Var(Y-X) < Var(Y) + Var(X)$
+\item [(iv)] $Var(Y-X) < Var(Y) - Var(X)$
+\item [(v)] $Var(Y-X) > Var(Y) + Var(X)$
+\item [(vi)] $Var(Y-X) > Var(Y) - Var(X)$
+\item [(vii)] None of the above.
+
+\end{itemize}
+
+Use the mailing tube (\ref{covabuv}):
+
+\begin{equation}
+Var(Y-X) = Var[Y+(-X)] = 
+Var(Y) + Var(X) - 2Cov(X,Y)
+\end{equation}
+
+Since X and Y are positively correlated, their covariance is positive,
+so the answer is (iii).
+
+\section{Example:  Bus Ridership Model}
+
+In the bus ridership model, Section \ref{busridership}, let's find
+$Var(L_1)$:
+
+\begin{equation}
+Var(L_1) = E(L^2_1) - (EL_1)^2
+\end{equation}
+
+\begin{equation}
+EL_1 = EB_1 = 0 \cdot 0.5 + 1 \cdot 0.4 + 2 \cdot 0.1
+\end{equation}
+
+\begin{equation}
+E(L^2_1) = 0^2 \cdot 0.5 + 1^2 \cdot 0.4 + 2^2 \cdot 0.1
+\end{equation}
+
+Then put it all together.
+
+\section{Distributions}
+\label{dstrdef}
+
+The idea of the {\bf distribution} of a random variable is central to
+probability and statistics.
+
+\begin{definition}
+Let U be a discrete random variable.  Then the distribution of U is 
+simply the support of U, together with  the associated probabilities. 
+\end{definition}
+
+{\bf Example:}  Let X denote the number of dots one gets in rolling a
+die.  Then the values X can take on are 1,2,3,4,5,6, each with
+probability 1/6.  So
+
+\begin{equation}
+\textrm{distribution of } X =
+\{
+(1,\frac{1}{6}),
+(2,\frac{1}{6}),
+(3,\frac{1}{6}),
+(4,\frac{1}{6}),
+(5,\frac{1}{6}),
+(6,\frac{1}{6})
+\}
+\end{equation}
+
+{\bf Example:}  Recall the ALOHA example. There $X_1$ took on the values
+1 and 2, with probabilities 0.48 and 0.52, respectively (the case of 0
+was impossible).  So, 
+
+\begin{equation}
+\textrm{distribution of } X_1 =
+\{
+(0,0.00),
+(1,0.48),
+(2,0.52)
+\}
+\end{equation}
+
+{\bf Example:}  Recall our example in which N is the number of tosses of a
+coin needed to get the first head.  N has support 1,2,3,..., the 
+probabilities of which we found earlier to be 1/2, 1/4, 1/8,...  So, 
+
+\begin{equation}
+\textrm{distribution of } N =
+\label{geomdie}
+\{
+(1,\frac{1}{2}),
+(2,\frac{1}{4}),
+(3,\frac{1}{8}),
+...
+\}
+\end{equation}
+
+It is common to express this in functional notation:  
+
+\begin{definition}
+The {\bf probability mass function} (pmf) of a 
+discrete random variable V, denoted $p_V$, as
+
+\begin{equation}
+p_V(k) = P(V = k)
+\end{equation}
+
+for any value k in the support of V.
+\end{definition}
+
+(Please keep in mind the notation.  It is customary to use the
+lower-case p, with a subscript consisting of the name of the random
+variable.)
+
+Note that $p_V()$ is just a function, like any function (with integer
+domain) you've had in your previous math courses.  For each input value,
+there is an output value.
+
+\subsection{Example:  Toss Coin Until First Head}
+
+In (\ref{geomdie}),
+
+\begin{equation}
+\label{geompre}
+p_N(k) = \frac{1}{2^k}, k = 1,2,...
+\end{equation}
+
+\subsection{Example:  Sum of Two Dice}
+
+In the dice example, in which S = X+Y,
+
+\begin{equation}
+\label{dicesum}
+p_S(k) = 
+\begin{cases}
+\frac{1}{36}, & k = 2 \cr
+\frac{2}{36}, & k = 3 \cr
+\frac{3}{36}, & k = 4 \cr
+... \cr
+\frac{1}{36}, & k = 12
+\end{cases}
+\end{equation}
+
+It is important to note that there may not be some nice closed-form
+expression for $p_V$ like that of (\ref{geompre}).  There was no such
+form in (\ref{dicesum}), nor is there in our ALOHA example for
+$p_{X_1}$ and $p_{X_2}$.
+
+\subsection{Example:  Watts-Strogatz Random Graph Model}
+\label{strogatz}
+
+Random graph models are used to analyze many types of link systems, such
+as power grids, social networks and even movie stars.  We saw our first
+example in Section \ref{prefattach}, and here is another, a variation on
+a famous model of that type, due to Duncan Watts and Steven Strogatz.
+
+\subsubsection{The Model} 
+
+We have a graph of n nodes, e.g. in which each node is a person).\footnote{The
+word {\it graph} here doesn't mean ``graph'' in the sense of a picture.
+Here we are using the computer science sense of the word, meaning a
+system of vertices and edges.  It's common to call those {\it nodes} and
+{\it links}.} Think of them as being linked in a circle---we're just
+talking about relations here, not physical locations---so we already
+have n links.  One can thus reach any node in the graph from any other,
+by following the links of the circle.  (We'll assume all links are
+bidirectional.)
+
+We now randomly add k more links (k is thus a parameter of the model),
+which will serve as ``shortcuts.''  There are$\binom{n}{2} = n(n-1)/2$
+possible links between nodes, but remember, we already have n of those
+in the graph, so there are only $n(n-1)/2 - n = n^2/2 - 3n/2$
+possibilities left.  We'll be forming k new links, chosen at random from
+those $n^2/2 - 3n/2$ possibilities.
+
+Let M denote the number of links attached to a particular node, known
+as the {\bf degree} of a node.  M is a random variable (we are choosing
+the shortcut links randomly), so we can talk of its pmf, $p_M$, termed
+the {\bf degree distribution} of M, which we'll calculate now.
+
+Well, $p_M(r)$ is the probability that this node has r links.  Since the
+node already had 2 links before the shortcuts were constructed, $p_M(r)$
+is the probability that r-2 of the k shortcuts attach to this node.
+
+This problem is similar in spirit to (though admittedly more difficult
+to think about than) kings-and-hearts example of Section \ref{hearts}.
+Other than the two neighboring links in the original circle and the
+``link'' of a node to itself, there are n-3 possible shortcut links to
+attach to our given node.  We're interested in the probability that r-2
+of them are chosen, and that k-(r-2) are chosen from the other possible
+links.  Thus our probability is:
+
+\begin{equation}
+p_M(r) =
+\frac
+{\binom{n-3}{r-2}
+\binom{n^2/2-3n/2-(n-3)}{k-(r-2)}}
+{\binom{n^2/2-3n/2}{k}} =
+\frac
+{\binom{n-3}{r-2}
+\binom{n^2/2-5n/2+3}{k-(r-2)}}
+{\binom{n^2/2-3n/2}{k}} 
+\end{equation}
+
+\subsubsection{Further Reading}
+
+UCD professor Raissa D'Souza specializes in random graph models.  See
+for instance Beyond Friendship: Modeling User activity Graphs on Social
+Network-Based Gifting Applications, A. Nazir, A. Waagen, V.
+Vijayaraghavan, C.-N. Chuah, R. M.  D'Souza, B. Krishnamurthy, {\it ACM
+Internet Measurement Conference (IMC 2012)}, Nov 2012. 
+
+\section{Proof of Chebychev's Inequality (optional section)}
+\label{chebproof}
+
+To prove (\ref{cheb}), let's first state and prove Markov's Inequality:
+For any nonnegative random variable Y and positive constant d,
+
+\begin{equation}
+\label{mi}
+P(Y \geq d) \leq \frac{EY}{d}
+\end{equation}
+
+To prove (\ref{mi}), let Z be the indicator random variable for the
+event $Y \geq d$ (Section \ref{indicator}). 
+
+Now note that
+
+\begin{equation}
+Y \geq d Z
+\end{equation}
+
+To see this, just think of a notebook, say with d = 3.  Then the
+notebook might look like Table \ref{ygeqz}.
+
+\begin{table}
+\begin{center}
+\vskip 0.5in
+
+\begin{tabular}{|r|r|r|r|}
+\hline
+notebook line & Y & dZ & $Y \geq dZ$? \\ \hline
+\hline
+1 & 0.36 & 0 & yes \\ \hline
+2 & 3.6 & 3 & yes \\ \hline
+3 & 2.6 & 0 & yes \\ \hline
+\end{tabular}
+
+\end{center}
+\caption{Illustration of Y and Z}
+\label{ygeqz}
+\end{table}
+
+So
+
+\begin{equation}
+\label{eyez}
+EY \geq d EZ
+\end{equation}
+
+(Again think of the notebook.  The long-run average in the Y column will
+be $\geq$ the corresponding average for the dZ column.)
+
+The right-hand side of (\ref{eyez}) is $d P(Y \geq d)$, so (\ref{mi})
+follows.
+
+Now to prove (\ref{cheb}), define
+
+\begin{equation}
+Y = (X-\mu)^2
+\end{equation}
+
+and set $d = c^2 \sigma^2$.  Then (\ref{mi}) says
+
+\begin{equation}
+\label{miout}
+P [ (X-\mu)^2 \geq c^2 \sigma^2 ]
+\leq 
+\frac
+{E [(X-\mu)^2]}
+{c^2 \sigma^2}
+\end{equation}
+
+Since
+
+\begin{equation}
+(X-\mu)^2 \geq c^2 \sigma^2 \textrm{ if and only if }
+|X-\mu| \geq c \sigma
+\end{equation}
+
+the left-hand side of (\ref{miout}) is the same as the left-hand side of
+(\ref{cheb}).  The numerator of the right-hand size of (\ref{miout}) is
+simply Var(X), i.e. $\sigma^2$, so we are done.
+
