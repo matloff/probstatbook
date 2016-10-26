@@ -1182,6 +1182,28 @@ in terms of the $B_i$?  Well, $L_1 > 0$ means that $B_1$ is either 1 or
 The remainder of the computation is similar to what we did earlier in
 this example.
 
+Here is another computation:  An observer at the second stop notices
+that no one alights there, but it is dark and the observer couldn't see
+whether anyone was on the bus. Find the probability that there was one
+passenger on the bus at the time.
+
+Let $A_i$ denote the number of passengers alighting at stop i.
+
+\begin{eqnarray}
+P(L_1 = 1 | A_2 = 0)
+&=& \frac
+{P(L_1 = 1 \textrm{ and } A_2 = 0)}
+{P(A_2 = 0)} \\ 
+&=& \frac
+{P(L_1 = 1 \textrm{ and } A_2 = 0)}
+{\sum_{j=0}^2
+P(L_1 = j \textrm{ and } A_2 = 0)} \\
+&=& 
+\frac
+{0.4 \cdot 0.8}
+{0.5 \cdot 1 + 0.4 \cdot 0.8 + 0.1 \cdot 0.8^2}
+\end{eqnarray}
+
 \section{Random Graph Models}
 \label{randomgraph}
 A {\it graph} consists of {\it vertices} and {\it edges}.  To understand
@@ -1437,7 +1459,7 @@ cases, make it much faster.\footnote{You can measure times using R's
 system.time(probtotk(3,7,10000))}.}  Note, though, that this comes at
 the expense of using more memory.
 
-\subsection{Simulation of Conditional Probability in Dice Problem}
+\subsection{Example: Dice Problem}
 
 Suppose three fair dice are rolled.  We wish to find the approximate
 probability that the first die shows fewer than 3 dots, given that the
@@ -1463,7 +1485,7 @@ dicesim <- function(nreps) {
 Note carefully that we did NOT use (\ref{condba}).  That would defeat
 the purpose of simulation, which is the model the actual process.
 
-\subsection{Simulation of the ALOHA Example}
+\subsection{Example: ALOHA Network (cont'd.)}
 \label{alohasim}
 
 Following is a computation via simulation of the {\it approximate}
@@ -1531,7 +1553,7 @@ other hand, if you are using simulation because you CAN'T derive
 something mathematically (the usual situation), using some of the
 mailing tubes might speed up the computation.
 
-\subsection{Example:  Bus Ridership, cont'd.}
+\subsection{Example:  Bus Ridership (cont'd.)}
 \label{busridershipsim}
 
 Consider the example in Section \ref{busridership}.  Let's find the
@@ -1568,7 +1590,7 @@ probabilities 0.5 and so on.  Since the third argument for {\bf
 sample()} is {\bf replace}, not {\bf prob}, we need to specify the
 latter in our call.
 
-\subsection{Example: Board Game con'd.}
+\subsection{Example: Board Game (cont'd.)}
 
 Recall the board game in Section \ref{boardgame}.  Below is simulation
 code to find the probability in (\ref{condboard}):
@@ -1627,6 +1649,31 @@ in order to call R's {\bf diff()} function.  The latter finds
 differences between successvie values of its argument, which in our case
 will give us the lengths of the pieces.  We then find the minimum
 length.
+
+\subsection{Example: Toss a Coin Until $k$ Consecutive Heads}
+
+We toss a coin until we get $k$ heads in a row.  Let $N$ denote the
+number of tosses needed, so that for instance the pattern HTHHH gives $N
+= 5$ for $k = 3$.  Here is code that finds the approximate probability
+that $N > m$:
+
+\begin{lstlisting}
+ngtm <- function(k,m,nreps) {
+   count <- 0
+   for (rep in 1:nreps) {
+      consech <- 0
+      for (i in 1:m) {
+         toss <- sample(0:1,1)
+         if (toss) {
+            consech <- consech + 1
+            if (consech == k) break
+         } else consech <- 0
+      }
+      if (consech < k) count <- count + 1
+   }
+   return(count/nreps)
+}
+\end{lstlisting}
 
 \subsection{How Long Should We Run the Simulation?}
 
