@@ -10,9 +10,9 @@ ProbStatBook.pdf:  ProbStatBook.tex \
 		   DisMarkovIntro.tex ExponDistr.tex PauseToReflect.tex \
 		   ConMarkovIntro.tex NonparDens.tex NonparRegClass.tex \
 		   Intro.tex StatPrologue.tex \
-		   ../../../MiscPLN/AuthorBio.tex \
+		   AuthorBio.tex \
 		   GGPlot2Intro.tex DiscreteParFams.tex \
-		   ../../../MiscPLN/MatrixReview.tex \
-		   ../../../MiscPLN/R5MinIntro.tex
-	pdflatex ProbStatBook.tex; xpdf -remote 127.0.0.1 -reload
+		   MatrixReview.tex \
+		   R5MinIntro.tex
+	pdflatex ProbStatBook.tex
 

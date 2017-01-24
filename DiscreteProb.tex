@@ -1184,7 +1184,7 @@ then
 0.2 \cdot 0.8
 \end{equation}
 
-\subsection{Example:  Return Time for Library Books}
+\subsection{Example:  Return Time for Library Books, Version I}
 
 Suppose at some public library, patrons return books
 exactly 7 days after borrowing them, never early or late.  However, they
@@ -1207,6 +1207,8 @@ returned to a ``foreign'' branch.  Then
 \begin{equation}
 Var(T) = Var(7 + 2I) =  4 Var(I) = 4 \cdot 0.5 (1 - 0.5)
 \end{equation}
+
+\subsection{Example:  Return Time for Library Books, Version II}
 
 Now let's look at a somewhat more general model.  Here we will assume
 that borrowers return books after 4, 5, 6 or 7 days, with probabilities
@@ -1251,6 +1253,12 @@ libsim <- function(nreps) {
    mean(bgt4[,3] == 6)
 }                               
 \end{lstlisting}
+
+Note that in this simulation. all {\bf nreps} values of $I$, $B$ and the
+patron return time are generated first.  This uses more memory space
+(though not an issue in this small problem), but makes things easier to
+code, as we can exploit R's vector operations.  Those not only are more
+convenient, but also faster running.
 
 \subsection{Example:  Indicator Variables in a Committee Problem}
 \label{combex}
