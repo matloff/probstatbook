@@ -531,6 +531,11 @@ with success parameter p are:
 
 \end{itemize}
 
+Here {\bf size} is our $r$.  Note, though, that as with the {\bf geom()}
+family, R defines the distribution in terms of number of failures.  So,
+in {\bf dbinom()}, the argument {\bf i} is the number of failures, and
+{\bf i + r} is our $X$.
+
 \subsection{Example:  Backup Batteries}
 
 A machine contains one active battery and two spares.  Each
