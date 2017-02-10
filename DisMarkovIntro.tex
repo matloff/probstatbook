@@ -502,6 +502,7 @@ threeinrow <- function(ntimesteps) {
    consec <- 0  # number of consec Hs
    nwins <- 0  # number of wins
    wintimes <- 0  # total of times to win
+   # startplay will be the time at which we started the current game
    startplay <- 0  # time step 0
    for (i in 1:ntimesteps) {
       if (toss() == 'H') {
@@ -616,7 +617,7 @@ transmat[2,1] <- q1 * p
 transmat[2,2] <- 2 * q * p * p1 + q1 * p1
 transmat[3,1] <- 0
 transmat[3,2] <- 2 * p * p1
-transmat[,3] <- 1 - p[,1] - p[,2]
+transmat[,3] <- 1 - transmat[,1] - transmat[,2]
 findpi1(transmat)
 \end{Verbatim}
 
