@@ -559,8 +559,9 @@ position X of the read/write head as a number between 0 and 1,
 representing the innermost and outermost tracks, respectively.  Say we
 assume X has a uniform distribution on (0,1), as discussed above.
 Consider two consecutive positions (i.e.  due to two consecutive seeks),
-$X_1$ and $X_2$, which we'll assume are independent.  Let's find $Var(X_1 +
-X_2)$.
+$X_1$ and $X_2$, which we'll assume are independent.\footnote{NOT a good
+assumption for consecutive seeks; think about why.} Let's find $Var(X_1
++ X_2)$.
 
 We know from Section \ref{unifprops} that the variance of a U(0,1)
 distribution is 1/12.  Then by independence,
@@ -716,9 +717,10 @@ Now, what about Var(W)?  As is often the case, it's easier to use
 becomes
 
 \begin{equation}
-E(W^2) = \int_{0}^{\infty} g^2(t) ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt
-= \int_{0}^{1} 1.5^2 t ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt +
-\int_{1}^{\infty} (t+0.5)^2 ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt
+E(W^2) 
+= \int_{0}^{\infty} g^2(t) ~ f_W (t) dt
+= \int_{0}^{1} t^2 1.5 t ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt +
+  \int_{1}^{\infty} (t+0.5)^2 ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt
 \end{equation}
 
 After evaluating this, we subtract $(EW)^2$, giving us the variance of
