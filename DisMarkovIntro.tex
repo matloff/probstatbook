@@ -689,7 +689,7 @@ That latter probability, for instance, is
 P(D_j = 2) 
 &=& 
 P(A_j = 20 \textrm{ and } B_j = 2 \textrm{ and } G_j = 0) \\ 
-&=& P(A_j = 20) ~ P(B_j = 2) ~ P(G_j = 0) \\
+&=& P(A_j = 20) ~ P(B_j = 2) ~ P(G_j = 0 ~|~ A_j = 20) \\
 &=& P(A_j = 20) \cdot 0.1 \cdot 0.8^{20}
 \end{eqnarray}
 
@@ -700,9 +700,8 @@ left as an exercise for the reader.)
 
 Taking the limits as $j \rightarrow \infty$, we have the long-run
 average number of disappointed customers on the left, and on the right,
-the terms $P(A_j = 19)$ and $P(A_j = 20)$ go to $\pi_{19}$ and
-$\pi_{20}$, which we have and thus can obtain the value regarding
-disappointed customers.
+the term $P(A_j = 20)$ goes to $\pi_{20}$, which we have and thus can
+obtain the value regarding disappointed customers.
 
 Let's find the long-run average number of customers who alight from the
 bus.  This can be done by considering all the various cases, but
