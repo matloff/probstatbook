@@ -1,4 +1,4 @@
-\chapter{The Normal Family of Distributions} 
+
 \label{chap:normal}
 
 Again, these are the famous ``bell-shaped curves,'' so called because
@@ -134,7 +134,7 @@ distribution, for any constants c and d.
 More generally:
 
 \begin{quote}
-For constants $a_1,...,a_k$ and random variables
+For constants $a_1,...,a_k$ and {\it independent} random variables
 $X_1,...,X_k$, with
 
 \begin{equation}
@@ -145,9 +145,36 @@ form the new random variable $Y = a_1 X_1 +...+ a_k X_k$.   Then
 
 \begin{equation}
 \label{lincombnormal}
-Y ~ \widetilde{ } ~ N(\sum_{i=1}^k \mu_i, \sum_{i=1}^k \sigma_i^2)
+Y ~ \widetilde{ } ~ N(\sum_{i=1}^k a_i \mu_i, \sum_{i=1}^k a_i^2 \sigma_i^2)
 \end{equation}
 \end{quote}
+
+{\bf Lack of intuition:}
+
+The reader should ponder how remarkable this property of the normal
+family is, because there is no intuitive explanation for it.
+
+Imagine random variables $X$ and $Y$, each with a normal distribution.
+Say the mean and variances are 10 and 4 for $X$, and 18 and 6 for $Y$.
+We repeat our experiment 1000 times for our ``notebook,'' i.e.\ 1000
+lines with 2 columns.  If we draw a histogram of the $X$ column, we'll
+get a bell-shaped curve, and the same will be true for the $Y$ column.
+
+But now add a $Z$ column, for $Z = X + Y$.  Why in the world should a
+histogram of the $Z$ column also be bell-shaped?
+
+\section{R Functions}
+
+\begin{lstlisting}
+dnorm(x, mean = 0, sd = 1)
+pnorm(q, mean = 0, sd = 1)
+qnorm(p, mean = 0, sd = 1)
+rnorm(n, mean = 0, sd = 1)
+\end{lstlisting}
+
+Here {\bf mean} and {\bf sd} are of course the mean and standard
+deviation of the distribution.  The other arguments are as in our
+previous examples.
 
 \section{The Standard Normal Distribution}
 \label{stdnorm}
@@ -701,8 +728,8 @@ We can derive the mean of a chi-squared distribution as follows.  First,
 EY = E(Z_1^2+...+Z_k^2) = k E(Z_1^2)
 \end{equation}
 
-Well, $E(Z_1^2)$ sounds somewhat like variance, and we do know that
-$Var(Z_1) = 1$.  Let's use that fact:
+Well, $E(Z_1^2)$ sounds somewhat like variance, suggesting that we use
+(\ref{varuformula}).  This works:
 
 \begin{equation}
 E(Z_1^2) = Var(Z_1) +  [E(Z_1)]^2 = Var(Z_1) = 1
