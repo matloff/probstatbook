@@ -29,22 +29,26 @@ double, character, logical \\ \hline
 logical values & true, false & TRUE, FALSE (abbreviated T, F) \\ \hline
 mechanism for combining modules & include, link & library() \\ \hline
 run method & batch & interactive, batch \\ \hline
+comment symbol & // & \#\\ \hline
 \end{tabular}
 
 \section{Starting R}
 
-To invoke R, just type ``R'' into a terminal window. On a Windows
-machine, you probably have an R icon to click.  
+To invoke R, just type ``R'' into a terminal window, e.g.\ {\bf xterm}
+in Linux or Macs, {\bf CMD} in Windows.
 
 If you prefer to run from an IDE, you may wish to consider ESS for
 Emacs, StatET for Eclipse or RStudio, all open source.  ESS is the
 favorite among the ``hard core coder'' types, while the colorful,
 easy-to-use, RStudio is a big general crowd pleaser.  If you are already
-an Eclipse user, StatET will be just what you need.
+an Eclipse user, StatET will be just what you need.\footnote{I personally use
+{\bf vim}, as I want to have the same text editor no matter what kind of
+work I am doing.  But I have my own macros to help with R work.}
 
 R is normally run in interactive mode, with $>$ as the prompt.  Among 
 other things, that makes it easy to try little experiments to learn
-from; remember my slogan, ``When in doubt, try it out!''
+from; remember my slogan, ``When in doubt, try it out!''  For batch
+work, use {\bf Rscript}, which is in the R package.
 
 \section{First Sample Programming Session}
 
@@ -63,14 +67,14 @@ oddcount <- function(x)  {
 }
 \end{lstlisting}
 
-By the way, we could have written that last statement as simply
+By the way, we could have written that last statement as simply 
 
 \begin{lstlisting}[numbers=left]
    k
 \end{lstlisting}
 
 because the last computed value of an R function is returned
-automatically.
+automatically.  This is actually preferred style in the R community.
 
 The R session is shown below.  You may wish to type it yourself as you
 go along, trying little experiments of your own along the
@@ -147,37 +151,6 @@ function(x)  {
 # we can also determine which elements are odd
 > which(y %% 2 == 1)
 [1] 1 3
-
-> # now have ftn return odd count AND the odd numbers themselves, using
-> # the R list type
-> source("odd.R")
-> oddcount
-function(x)  {
-   x1 <- x[x %% 2 == 1]
-   return(list(odds=x1, numodds=length(x1)))
-}
-> # R's list type can contain any type; components delineated by $
-> oddcount(y)
-$odds
-[1]  5 13
-
-$numodds
-[1] 2
-
-> ocy <- oddcount(y)  # save the output in ocy, which will be a list
-> ocy  
-$odds
-[1]  5 13
-
-$numodds
-[1] 2
-
-> ocy$odds
-[1]  5 13
-> ocy[[1]]  # can get list elements using [[ ]] instead of $
-[1]  5 13
-> ocy[[2]]
-[1] 2
 \end{lstlisting}
 
 Note that the function of the R function {\bf function()} is to produce
@@ -193,6 +166,8 @@ oddcount <- function(x)  {
   
 We created some code, and then used {\bf function()} to create a function
 object, which we assigned to {\bf oddcount}.
+
+\section{Vectorization}
 
 Note that we eventually {\bf vectorized} our function {\bf oddcount()}.
 This means taking advantage of the vector-based, functional language
@@ -269,6 +244,8 @@ the numbers of rows and columns.
 [2,]    2    0    6
 \end{lstlisting}
 
+\section{Recycling}
+
 The ``scalar multiplication'' above is not quite what you may think,
 even though the result may be.  Here's why:
 
@@ -287,6 +264,8 @@ express \verb^2.5 * m3^, the number 2.5 was recycled to the matrix
 \end{equation}
 
 in order to conform with {\bf m3} for (elementwise) multiplication.
+
+\section{More on Vectorization}
 
 The {\bf ifelse()} function is another example of vectorization.  Its
 call has the form
@@ -432,6 +411,37 @@ $s
 > for (i in 1:length(g)) print(g[[i]])
 [1] 4 5 6
 [1] "abc"
+
+# now have ftn oddcount() return odd count AND the odd numbers themselves, 
+# using the R list type
+> source("odd.R")
+> oddcount
+function(x)  {
+   x1 <- x[x %% 2 == 1]
+   return(list(odds=x1, numodds=length(x1)))
+}
+> # R's list type can contain any type; components delineated by $
+> oddcount(y)
+$odds
+[1]  5 13
+
+$numodds
+[1] 2
+
+> ocy <- oddcount(y)  # save the output in ocy, which will be a list
+> ocy  
+$odds
+[1]  5 13
+
+$numodds
+[1] 2
+
+> ocy$odds
+[1]  5 13
+> ocy[[1]]  # can get list elements using [[ ]] instead of $
+[1]  5 13
+> ocy[[2]]
+[1] 2
 \end{lstlisting}
 
 \subsection{The Reduce() Function}
@@ -523,7 +533,68 @@ attr(,"class")
 [1] "employee"
 \end{lstlisting}
 
-\subsection{Handy Utilities}
+\section{Some Workhorse Functions}
+
+\begin{lstlisting}
+> m <- matrix(sample(1:5,12,replace=TRUE),ncol=2)
+> m
+[,1] [,2]
+[1,]    2    1
+[2,]    2    5
+[3,]    5    4
+[4,]    5    1
+[5,]    2    1
+[6,]    1    3
+# call sum() on each row
+> apply(m,1,sum)
+[1] 3 7 9 6 3 4
+# call sum() on each column
+> apply(m,2,sum)
+[1] 17 15
+> f <- function(x) sum(x[x >= 4])
+# call f() on each row
+> apply(m,1,f)
+[1] 0 5 9 5 0 0
+> l <- list(x = 5, y = 12, z = 13)
+# apply the given funciton to each element of l, producing a new list
+> lapply(l,function(a) a+1)
+$x
+[1] 6                       
+
+$y 
+[1] 13
+   
+$z
+[1] 14
+# group the first column of m by the second
+> sout <- split(m[,1],m[,2])               
+> sout
+$`1`
+[1] 2 5 2
+$`3`
+[1] 1
+$`4`          
+[1] 5         
+                                                                                $`5`
+[1] 2
+# find the size of each group, by applying the length() function
+> lapply(sout,length)
+$`1`
+[1] 3
+                                                                                $`3`          
+[1] 1                                                                           
+$`4`
+[1] 1
+
+$`5`                        
+[1] 1
+# like lapply(), but sapply() attempts to make vector output
+> sapply(sout,length)
+1 3 4 5
+3 1 1 1
+\end{lstlisting}
+
+\section{Handy Utilities}
 
 R functions written by others, e.g. in base R or in the CRAN repository
 for user-contributed code, often return values which are class objects.
