@@ -1,0 +1,281 @@
+\chapter{Pause to Reflect}
+\label{reflect}
+
+Now that we have some basics, let's step back a bit, and think about
+what we've learned.
+
+\section{A Cautionary Tale}
+\label{caution}
+
+Intuition is great, but it can lead you astray!  The example in this
+section shows how things can go wrong.
+
+\subsection{Trick Coins, Tricky Example}
+
+Suppose we have two trick coins in a box. They look identical, but one
+of them, denoted coin 1, is heavily weighted toward heads, with a 0.9
+probability of heads, while the other, denoted coin 2, is biased in the
+opposite direction, with a 0.9 probability of tails.  Let $C_1$ and
+$C_2$ denote the events that we get coin 1 or coin 2, respectively.
+
+Our experiment consists of choosing a coin at random from the box, and
+then tossing it n times. Let $B_i$ denote the outcome of the $i^{th}$
+toss, i = 1,2,3,..., where $B_i = 1$ means heads and $B_i = 0$ means
+tails.  Let $X_i = B_1+...+B_i$, so $X_i$ is a count of the number of
+heads obtained through the $i^{th}$ toss.
+
+The question is: ``Does the random variable $X_i$ have a binomial
+distribution?''  Or, more simply, the question is, ``Are the random
+variables $B_i$ independent?'' To most people's surprise, the answer is
+No (to both questions).  Why not?
+
+The variables $B_i$ are indeed 0-1 variables, and they have a common
+success probability.  But they are not independent!  Let's see why they
+aren't.
+
+Consider the events $A_i = \{B_i=1\}$, i = 1,2,3,...  In fact, just look
+at the first two.  By definition, they are independent if and only if 
+
+\begin{equation}
+\label{notindep}
+P(A_1\textrm{~and~}A_2) = P(A_1)P(A_2)
+\end{equation}
+
+First, what is $P(A_1)$?   {\bf \Large Now, wait a minute!}  Don't
+answer, ``Well, it depends on which coin we get,'' because this is NOT a
+conditional probability.  Yes, the {\it conditional} probabilities
+$P(A_1 | C_1)$ and $P(A_1 | C_2)$ are 0.9 and 0.1, respectively, but the
+{\it unconditional} probability is $P(A_1) = 0.5$.  You can deduce that
+either by the symmetry of the situation, or by 
+
+\begin{equation}
+P(A_1) = P(C_1) P(A_1 |
+C_1) + P(C_2) P(A_1 | C_2) = (0.5) (0.9) + (0.5) (0.1) = 0.5
+\end{equation}
+
+You should think of all this in the notebook context.  Each line of the
+notebook would consist of a report of three things:  which coin we get;
+the outcome of the first toss; and the outcome of the second toss.
+(Note by the way that in our experiment we don't know which coin we get,
+but conceptually it should have a column in the notebook.)  If we do this
+experiment for many, many lines in the notebook, about 90\% of the lines
+in which the coin column says ``1'' will show Heads in the second
+column.  But 50\% of the lines {\it overall} will show Heads in that
+column.
+
+So, the right hand side of Equation (\ref{notindep}) is equal to 0.25.
+What about the left hand side?
+
+\begin{eqnarray}
+P(A_1\textrm{ and }A_2) & = & P(A_1\textrm{ and }A_2\textrm{ and
+}C_1)+P(A_1\textrm{ and }A_2\textrm{ and }C_2)\textrm{ }\label{lhs} \\
+ & = & P(A_1\textrm{ and }A_2|C_1)P(C_1)+P(A_1\textrm{ and}A_2|C_2)
+ P(C_2)\\
+ & = & (0.9)^2(0.5)+(0.1)^{2}(0.5)\\
+ & = & 0.41
+\end{eqnarray}
+
+Well, 0.41 is not equal to 0.25, so you can see that the events are not
+independent, contrary to our first intuition.  And that also means that
+$X_i$ is not binomial.
+
+\subsection{Intuition in Retrospect} 
+
+To get some intuition here, think about what would happen if we tossed
+the chosen coin 10000 times instead of just twice. If the tosses were
+independent, then for example knowledge of the first 9999 tosses should
+not tell us anything about the 10000th toss. But that is not the case at
+all. After 9999 tosses, we are going to have a very good idea as to
+which coin we had chosen, because by that time we will have gotten
+about 9000 heads (in the case of coin $C_1$) or about 1000 heads
+(in the case of $C_2$). In the former case, we know that the
+10000th toss is likely to be a head, while in the latter case it is
+likely to be tails. \textbf{In other words, earlier tosses do indeed
+give us information about later tosses, so the tosses aren't
+independent.}
+
+\subsection{Implications for Modeling}
+
+The lesson to be learned is that independence can definitely be a tricky
+thing, not to be assumed cavalierly.   And in creating probability
+models of real systems, we must give very, very careful thought to the
+conditional and unconditional aspects of our models----it can make a
+huge difference, as we saw above.  Also, the conditional aspects often
+play a key role in formulating models of nonindependence. 
+
+This trick coin example is just that---tricky---but similar situations
+occur often in real life.  If in some medical study, say, we sample
+people at random from the population, the people are independent of each
+other.  But if we sample {\it families} from the population, and then
+look at children within the families, the children within a family are
+not independent of each other.
+
+% \section{More on the ``Notebook'' Idea}
+% 
+% Consider a multistage experiment, with stages of identical form.  A good
+% example of this was our ALOHA model in Section \ref{aloha}.  There we
+% looked at two epochs, which we are calling ``stages'' here.  Each line
+% of our notebook (Table \ref{alohanotebook}) consisted of the 2-tuple
+% $(X_1,X_2)$ (plus information derived from this 2-tuple).
+% 
+% Another example would be an experiment in which we toss a die five
+% times.  Let $X_i$ denote the outcome of the $i^{th}$ roll of the die.
+% Each line of our notebook would consist of the 5-tuple
+% $(X_1,X_2,X_3,X_4,X_5)$.
+% 
+% We could also consider an experiment in which we toss a die infinitely
+% many times.  Or, since this may seem rather artificial, consider the
+% experiment in which the ALOHA network runs for infinitely many epochs,
+% which is realistic because the network is an ongoing process.  Here
+% each line of the notebook would consist of the infinite-tuple
+% $(X_1,X_2,X_3,\ldots)$. 
+% 
+% With this in mind, let's return to our discussion of the Strong Law of
+% Large Numbers (SLLN) from Section \ref{reconcil}.  While Equation
+% (\ref{slln}) made good intuitive sense, it was incomplete.  In what
+% sense does the limit exist?  The actual SLLN says that the limit exists
+% ``with probability 1.''  This is a very subtle issue, but be patient and
+% you should feel more comfortable with it.
+% 
+% For concreteness, let's use the example of tossing the die infinitely
+% many times.  Let $X_i$ denote the outcome of the $i^{th}$ toss of the
+% die, i = 1,2,3,...   Recall that E(X) = 3.5.  Then the mathematically
+% precise statement of the SLLN is then
+% 
+% \begin{equation}
+% \label{sllnprecise}
+% P \left [\lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n} = 3.5 \right ] = 1 
+% \end{equation}
+% 
+% In light of our concept of a multistage experiment, that means again
+% that each line of our notebook consists of the infinite-tuple
+% $(X_1,X_2,X_3,\ldots)$.  We have infinitely many lines in our notebook,
+% reflecting the fact that we are tossing the die infinitely many times,
+% {\it infinitely many times}!  Even though (\ref{sllnprecise}) looks
+% abstract, all it's saying is the following.
+% 
+% In each line of the notebook, the long-run average of all the $X_i$ values
+% in that line is either 3.5---or not.  So imagine a new column added to
+% the notebook, labeld ``limit exists?'', with the entries being Yes or
+% No.  What (\ref{sllnprecise}) says is, as we go from line to line in the
+% notebook, the long-run fraction of lines which say Yes is 1.
+% 
+% No doubt about it, this is pretty abstract.  But it has practical
+% implications.  For example, suppose we wish to write a program
+% simulating the ALOHA system, and we wish to find the long-run average
+% number of nodes which have a message to send.  What (\ref{sllnprecise})
+% says is that one line of the notebook suffices; we can simulate the
+% system until some large number of epochs, say 100000, and compute the
+% average number of ready messages among those 100 epochs. 
+
+\section{What About ``Iterated Variance''?}
+
+In analogy to (\ref{adamsdiscrete}), one would think that
+
+\begin{equation}
+\label{wrongvar}
+Var(V) = \sum_c P(U = c) ~ Var(V ~|~ U = c) 
+\end{equation}
+
+In terms of the student heights example above, this wouldn't make sense,
+because it doesn't take into account the variation in means from one
+department to another.  (This matter, because $Var(V) = E[(V - EV)^2]$.)
+So, it's not surprising that another term must be added to
+(\ref{wrongvar}).  This topic is discussed in Section \ref{totvar}, but
+for now the point is that although good intuition is essential, we must
+not overrely on it..
+
+\section{Why Not Just Do All Analysis by Simulation?}
+
+Now that computer speeds are so fast, one might ask why we need to do
+mathematical probability analysis; why not just do everything by
+simulation?  There are a number of reasons:
+
+\begin{itemize}
+
+\item Even with a fast computer, simulations of complex systems can take
+days, weeks or even months.
+
+\item Mathematical analysis can provide us with insights that may not
+be clear in simulation.
+
+\item Like all software, simulation programs are prone to bugs.  The
+chance of having an uncaught bug in a simulation program is reduced by
+doing mathematical analysis for a special case of the system being
+simulated.  This serves as a partial check.
+
+\item Statistical analysis is used in many professions, including
+engineering and computer science, and in order to conduct meaningful,
+\underline{useful} statistical analysis, one needs a firm understanding
+of probability principles.
+
+\end{itemize}
+
+An example of that second point arose in the computer security research
+of a graduate student at UCD, Senthilkumar Cheetancheri, who was working
+on a way to more quickly detect the spread of a malicious computer worm.
+He was evaluating his proposed method by simulation, and found that
+things ``hit a wall'' at a certain point.  He wasn't sure if this was a
+real limitation; maybe, for example, he just wasn't running his
+simulation on the right set of parameters to go beyond this limit.  But
+a mathematical analysis showed that the limit was indeed real.
+
+\section{Reconciliation of Math and Intuition (optional section)} 
+\label{reconcil}
+
+Here is a more theoretical definition of probability, as opposed to the
+intuitive ``notebook'' idea in this book.  The definition is an
+abstraction of the notions of events (the sets A in $\cal W$ below) and
+probabilities of those events (the values of the function P(A)):
+
+\begin{definition}
+Let S be a set, and let $\cal W$ be a collection of
+subsets of S.  Let P be a real-valued function on $\cal W$.  Then S,
+$\cal W$ and P form a {\bf probability space} if the following
+conditions hold:
+
+\begin{itemize}
+
+\item P(S) = 1.
+
+\item $S \in \cal W$.
+
+\item $\cal W$ is closed under complements (if a set is in $\cal W$,
+then the set's complement with respect to S is in $\cal W$ too) and
+under unions of countably many members of $\cal W$.
+
+\item $P(A) \geq 0$ for any A in $\cal W$.
+
+\item If $A_1, A_2,... \in \cal W$ and the $A_i$ are pairwise disjoint,
+then
+
+\begin{equation}
+P(\cup_i A_i) = \sum_i P(A_i)
+\end{equation}
+
+\end{itemize}
+
+A {\bf random variable} is any function $X: S \rightarrow \cal
+R$.\footnote{The function must also have a property called {\bf
+measurability}, which we will not discuss here.}
+
+\end{definition}
+
+Using just these simple axioms, one can prove (with lots of heavy math)
+theorems like the Strong Law of Large Numbers:
+
+\begin{theorem}
+Consider a random variable U, and a sequence of independent random
+variables $U_1, U_2, ...$ which all have the same distribution as U,
+Then
+
+\begin{equation}
+\label{slln}
+\lim_{n \rightarrow \infty} \frac{U_1+...+U_n}{n} = E(U) \textrm{ with
+probability 1}
+\end{equation}
+\end{theorem}
+
+In other words, the average value of U in all the lines of the notebook
+will indeed converge to EU.
+

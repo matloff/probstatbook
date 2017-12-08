@@ -1,0 +1,404 @@
+\BOOKMARK [0][-]{chapter.1}{Time Waste Versus Empowerment}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Basic Probability Models}{}% 2
+\BOOKMARK [1][-]{section.2.1}{ALOHA Network Example}{chapter.2}% 3
+\BOOKMARK [1][-]{section.2.2}{The Crucial Notion of a Repeatable Experiment}{chapter.2}% 4
+\BOOKMARK [1][-]{section.2.3}{Our Definitions}{chapter.2}% 5
+\BOOKMARK [1][-]{section.2.4}{``Mailing Tubes''}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.5}{Example: ALOHA Network}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.6}{Bayes' Rule}{chapter.2}% 8
+\BOOKMARK [1][-]{section.2.7}{ALOHA in the Notebook Context}{chapter.2}% 9
+\BOOKMARK [1][-]{section.2.8}{A Note on Modeling}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.9}{Solution Strategies}{chapter.2}% 11
+\BOOKMARK [1][-]{section.2.10}{Example: Divisibility of Random Integers}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.11}{Example: A Simple Board Game}{chapter.2}% 13
+\BOOKMARK [1][-]{section.2.12}{Example: Bus Ridership}{chapter.2}% 14
+\BOOKMARK [1][-]{section.2.13}{Random Graph Models}{chapter.2}% 15
+\BOOKMARK [2][-]{subsection.2.13.1}{Example: Preferential Attachment Graph Model}{section.2.13}% 16
+\BOOKMARK [1][-]{section.2.14}{Simulation}{chapter.2}% 17
+\BOOKMARK [2][-]{subsection.2.14.1}{Example: Rolling Dice}{section.2.14}% 18
+\BOOKMARK [2][-]{subsection.2.14.2}{First Improvement}{section.2.14}% 19
+\BOOKMARK [2][-]{subsection.2.14.3}{Second Improvement}{section.2.14}% 20
+\BOOKMARK [2][-]{subsection.2.14.4}{Third Improvement}{section.2.14}% 21
+\BOOKMARK [2][-]{subsection.2.14.5}{Example: Dice Problem}{section.2.14}% 22
+\BOOKMARK [2][-]{subsection.2.14.6}{Example: ALOHA Network \(cont'd.\)}{section.2.14}% 23
+\BOOKMARK [2][-]{subsection.2.14.7}{Example: Bus Ridership \(cont'd.\)}{section.2.14}% 24
+\BOOKMARK [2][-]{subsection.2.14.8}{Example: Board Game \(cont'd.\)}{section.2.14}% 25
+\BOOKMARK [2][-]{subsection.2.14.9}{Example: Broken Rod}{section.2.14}% 26
+\BOOKMARK [2][-]{subsection.2.14.10}{Example: Toss a Coin Until k Consecutive Heads}{section.2.14}% 27
+\BOOKMARK [2][-]{subsection.2.14.11}{How Long Should We Run the Simulation?}{section.2.14}% 28
+\BOOKMARK [1][-]{section.2.15}{Combinatorics-Based Probability Computation}{chapter.2}% 29
+\BOOKMARK [2][-]{subsection.2.15.1}{Which Is More Likely in Five Cards, One King or Two Hearts?}{section.2.15}% 30
+\BOOKMARK [2][-]{subsection.2.15.2}{Example: Random Groups of Students}{section.2.15}% 31
+\BOOKMARK [2][-]{subsection.2.15.3}{Example: Lottery Tickets}{section.2.15}% 32
+\BOOKMARK [2][-]{subsection.2.15.4}{``Association Rules'' in Data Mining}{section.2.15}% 33
+\BOOKMARK [2][-]{subsection.2.15.5}{Multinomial Coefficients}{section.2.15}% 34
+\BOOKMARK [2][-]{subsection.2.15.6}{Example: Probability of Getting Four Aces in a Bridge Hand}{section.2.15}% 35
+\BOOKMARK [0][-]{chapter.3}{Discrete Random Variables}{}% 36
+\BOOKMARK [1][-]{section.3.1}{Random Variables}{chapter.3}% 37
+\BOOKMARK [1][-]{section.3.2}{Discrete Random Variables}{chapter.3}% 38
+\BOOKMARK [1][-]{section.3.3}{Independent Random Variables}{chapter.3}% 39
+\BOOKMARK [1][-]{section.3.4}{Example: The Monty Hall Problem}{chapter.3}% 40
+\BOOKMARK [1][-]{section.3.5}{Expected Value}{chapter.3}% 41
+\BOOKMARK [2][-]{subsection.3.5.1}{Generality\204Not Just for Discrete Random Variables}{section.3.5}% 42
+\BOOKMARK [3][-]{subsubsection.3.5.1.1}{What Is It?}{subsection.3.5.1}% 43
+\BOOKMARK [2][-]{subsection.3.5.2}{Definition}{section.3.5}% 44
+\BOOKMARK [2][-]{subsection.3.5.3}{Existence of the Expected Value}{section.3.5}% 45
+\BOOKMARK [2][-]{subsection.3.5.4}{Computation and Properties of Expected Value}{section.3.5}% 46
+\BOOKMARK [2][-]{subsection.3.5.5}{``Mailing Tubes''}{section.3.5}% 47
+\BOOKMARK [2][-]{subsection.3.5.6}{Casinos, Insurance Companies and ``Sum Users,'' Compared to Others}{section.3.5}% 48
+\BOOKMARK [1][-]{section.3.6}{Variance}{chapter.3}% 49
+\BOOKMARK [2][-]{subsection.3.6.1}{Definition}{section.3.6}% 50
+\BOOKMARK [2][-]{subsection.3.6.2}{More Practice with the Properties of Variance}{section.3.6}% 51
+\BOOKMARK [2][-]{subsection.3.6.3}{Central Importance of the Concept of Variance}{section.3.6}% 52
+\BOOKMARK [2][-]{subsection.3.6.4}{Intuition Regarding the Size of Var\(X\)}{section.3.6}% 53
+\BOOKMARK [3][-]{subsubsection.3.6.4.1}{Chebychev's Inequality}{subsection.3.6.4}% 54
+\BOOKMARK [3][-]{subsubsection.3.6.4.2}{The Coefficient of Variation}{subsection.3.6.4}% 55
+\BOOKMARK [1][-]{section.3.7}{A Useful Fact}{chapter.3}% 56
+\BOOKMARK [1][-]{section.3.8}{Covariance}{chapter.3}% 57
+\BOOKMARK [1][-]{section.3.9}{Indicator Random Variables, and Their Means and Variances}{chapter.3}% 58
+\BOOKMARK [2][-]{subsection.3.9.1}{Example: Return Time for Library Books, Version I}{section.3.9}% 59
+\BOOKMARK [2][-]{subsection.3.9.2}{Example: Return Time for Library Books, Version II}{section.3.9}% 60
+\BOOKMARK [2][-]{subsection.3.9.3}{Example: Indicator Variables in a Committee Problem}{section.3.9}% 61
+\BOOKMARK [2][-]{subsection.3.9.4}{Example: Spinner Game}{section.3.9}% 62
+\BOOKMARK [1][-]{section.3.10}{Expected Value, Etc. in the ALOHA Example}{chapter.3}% 63
+\BOOKMARK [1][-]{section.3.11}{Example: Measurements at Different Ages}{chapter.3}% 64
+\BOOKMARK [1][-]{section.3.12}{Example: Bus Ridership Model}{chapter.3}% 65
+\BOOKMARK [1][-]{section.3.13}{Distributions}{chapter.3}% 66
+\BOOKMARK [2][-]{subsection.3.13.1}{Example: Toss Coin Until First Head}{section.3.13}% 67
+\BOOKMARK [2][-]{subsection.3.13.2}{Example: Sum of Two Dice}{section.3.13}% 68
+\BOOKMARK [2][-]{subsection.3.13.3}{Example: Watts-Strogatz Random Graph Model}{section.3.13}% 69
+\BOOKMARK [3][-]{subsubsection.3.13.3.1}{The Model}{subsection.3.13.3}% 70
+\BOOKMARK [3][-]{subsubsection.3.13.3.2}{Further Reading}{subsection.3.13.3}% 71
+\BOOKMARK [1][-]{section.3.14}{Proof of Chebychev's Inequality \(optional section\)}{chapter.3}% 72
+\BOOKMARK [0][-]{chapter.4}{Discrete Parametric Distribution Families}{}% 73
+\BOOKMARK [1][-]{section.4.1}{The Case of Importance to Us: Parameteric Families of pmfs}{chapter.4}% 74
+\BOOKMARK [1][-]{section.4.2}{The Geometric Family of Distributions}{chapter.4}% 75
+\BOOKMARK [2][-]{subsection.4.2.1}{R Functions}{section.4.2}% 76
+\BOOKMARK [2][-]{subsection.4.2.2}{Example: a Parking Space Problem}{section.4.2}% 77
+\BOOKMARK [1][-]{section.4.3}{The Binomial Family of Distributions}{chapter.4}% 78
+\BOOKMARK [2][-]{subsection.4.3.1}{R Functions}{section.4.3}% 79
+\BOOKMARK [2][-]{subsection.4.3.2}{Example: Parking Space Model}{section.4.3}% 80
+\BOOKMARK [1][-]{section.4.4}{The Negative Binomial Family of Distributions}{chapter.4}% 81
+\BOOKMARK [2][-]{subsection.4.4.1}{R Functions}{section.4.4}% 82
+\BOOKMARK [2][-]{subsection.4.4.2}{Example: Backup Batteries}{section.4.4}% 83
+\BOOKMARK [1][-]{section.4.5}{The Poisson Family of Distributions}{chapter.4}% 84
+\BOOKMARK [2][-]{subsection.4.5.1}{R Functions}{section.4.5}% 85
+\BOOKMARK [2][-]{subsection.4.5.2}{Example: Broken Rod}{section.4.5}% 86
+\BOOKMARK [1][-]{section.4.6}{The Power Law Family of Distributions}{chapter.4}% 87
+\BOOKMARK [2][-]{subsection.4.6.1}{The Model}{section.4.6}% 88
+\BOOKMARK [2][-]{subsection.4.6.2}{Further Reading}{section.4.6}% 89
+\BOOKMARK [1][-]{section.4.7}{Recognizing Some Parametric Distributions When You See Them}{chapter.4}% 90
+\BOOKMARK [1][-]{section.4.8}{Example: a Coin Game}{chapter.4}% 91
+\BOOKMARK [1][-]{section.4.9}{Example: Tossing a Set of Four Coins}{chapter.4}% 92
+\BOOKMARK [1][-]{section.4.10}{Example: the ALOHA Example Again}{chapter.4}% 93
+\BOOKMARK [1][-]{section.4.11}{Example: the Bus Ridership Problem Again}{chapter.4}% 94
+\BOOKMARK [1][-]{section.4.12}{Example: Flipping Coins with Bonuses}{chapter.4}% 95
+\BOOKMARK [1][-]{section.4.13}{Example: Analysis of Social Networks}{chapter.4}% 96
+\BOOKMARK [1][-]{section.4.14}{Multivariate Distributions}{chapter.4}% 97
+\BOOKMARK [1][-]{section.4.15}{Iterated Expectations}{chapter.4}% 98
+\BOOKMARK [2][-]{subsection.4.15.1}{Conditional Distributions}{section.4.15}% 99
+\BOOKMARK [2][-]{subsection.4.15.2}{The Theorem}{section.4.15}% 100
+\BOOKMARK [2][-]{subsection.4.15.3}{Example: Coin and Die Game}{section.4.15}% 101
+\BOOKMARK [2][-]{subsection.4.15.4}{Example: Flipping Coins with Bonuses}{section.4.15}% 102
+\BOOKMARK [0][-]{chapter.5}{Pause to Reflect}{}% 103
+\BOOKMARK [1][-]{section.5.1}{A Cautionary Tale}{chapter.5}% 104
+\BOOKMARK [2][-]{subsection.5.1.1}{Trick Coins, Tricky Example}{section.5.1}% 105
+\BOOKMARK [2][-]{subsection.5.1.2}{Intuition in Retrospect}{section.5.1}% 106
+\BOOKMARK [2][-]{subsection.5.1.3}{Implications for Modeling}{section.5.1}% 107
+\BOOKMARK [1][-]{section.5.2}{What About ``Iterated Variance''?}{chapter.5}% 108
+\BOOKMARK [1][-]{section.5.3}{Why Not Just Do All Analysis by Simulation?}{chapter.5}% 109
+\BOOKMARK [1][-]{section.5.4}{Reconciliation of Math and Intuition \(optional section\)}{chapter.5}% 110
+\BOOKMARK [0][-]{chapter.6}{Introduction to Discrete Markov Chains}{}% 111
+\BOOKMARK [1][-]{section.6.1}{Matrix Formulation}{chapter.6}% 112
+\BOOKMARK [1][-]{section.6.2}{Example: Die Game}{chapter.6}% 113
+\BOOKMARK [1][-]{section.6.3}{Long-Run State Probabilities}{chapter.6}% 114
+\BOOKMARK [2][-]{subsection.6.3.1}{Stationary Distribution}{section.6.3}% 115
+\BOOKMARK [2][-]{subsection.6.3.2}{Calculation of }{section.6.3}% 116
+\BOOKMARK [3][-]{subsubsection.6.3.2.1}{Example: \040in Die Game}{subsection.6.3.2}% 117
+\BOOKMARK [3][-]{subsubsection.6.3.2.2}{Another Way to Find }{subsection.6.3.2}% 118
+\BOOKMARK [1][-]{section.6.4}{Example: 3-Heads-in-a-Row Game}{chapter.6}% 119
+\BOOKMARK [2][-]{subsection.6.4.1}{Markov Analysis}{section.6.4}% 120
+\BOOKMARK [2][-]{subsection.6.4.2}{Back to the word ``Stationary''}{section.6.4}% 121
+\BOOKMARK [1][-]{section.6.5}{A Modified Notebook Analysis}{chapter.6}% 122
+\BOOKMARK [2][-]{subsection.6.5.1}{A Markov-Chain Notebook}{section.6.5}% 123
+\BOOKMARK [2][-]{subsection.6.5.2}{Example: 3-Heads-in-a-Row Game}{section.6.5}% 124
+\BOOKMARK [1][-]{section.6.6}{Simulation of Markov Chains}{chapter.6}% 125
+\BOOKMARK [1][-]{section.6.7}{Example: ALOHA}{chapter.6}% 126
+\BOOKMARK [1][-]{section.6.8}{Example: Bus Ridership Problem}{chapter.6}% 127
+\BOOKMARK [1][-]{section.6.9}{Example: an Inventory Model}{chapter.6}% 128
+\BOOKMARK [1][-]{section.6.10}{Expected Hitting Times}{chapter.6}% 129
+\BOOKMARK [0][-]{chapter.7}{Continuous Probability Models}{}% 130
+\BOOKMARK [1][-]{section.7.1}{Running Example: a Random Dart}{chapter.7}% 131
+\BOOKMARK [1][-]{section.7.2}{Individual Values Now Have Probability Zero}{chapter.7}% 132
+\BOOKMARK [1][-]{section.7.3}{But Now We Have a Problem}{chapter.7}% 133
+\BOOKMARK [2][-]{subsection.7.3.1}{Our Way Out of the Problem: Cumulative Distribution Functions}{section.7.3}% 134
+\BOOKMARK [2][-]{subsection.7.3.2}{Density Functions}{section.7.3}% 135
+\BOOKMARK [2][-]{subsection.7.3.3}{Properties of Densities}{section.7.3}% 136
+\BOOKMARK [2][-]{subsection.7.3.4}{Intuitive Meaning of Densities}{section.7.3}% 137
+\BOOKMARK [2][-]{subsection.7.3.5}{Expected Values}{section.7.3}% 138
+\BOOKMARK [1][-]{section.7.4}{A First Example}{chapter.7}% 139
+\BOOKMARK [1][-]{section.7.5}{The Notion of Support in the Continuous Case}{chapter.7}% 140
+\BOOKMARK [1][-]{section.7.6}{Famous Parametric Families of Continuous Distributions}{chapter.7}% 141
+\BOOKMARK [2][-]{subsection.7.6.1}{The Uniform Distributions}{section.7.6}% 142
+\BOOKMARK [3][-]{subsubsection.7.6.1.1}{Density and Properties}{subsection.7.6.1}% 143
+\BOOKMARK [3][-]{subsubsection.7.6.1.2}{R Functions}{subsection.7.6.1}% 144
+\BOOKMARK [3][-]{subsubsection.7.6.1.3}{Example: Modeling of Disk Performance}{subsection.7.6.1}% 145
+\BOOKMARK [3][-]{subsubsection.7.6.1.4}{Example: Modeling of Denial-of-Service Attack}{subsection.7.6.1}% 146
+\BOOKMARK [2][-]{subsection.7.6.2}{The Normal \(Gaussian\) Family of Continuous Distributions}{section.7.6}% 147
+\BOOKMARK [3][-]{subsubsection.7.6.2.1}{Density and Properties}{subsection.7.6.2}% 148
+\BOOKMARK [2][-]{subsection.7.6.3}{The Exponential Family of Distributions}{section.7.6}% 149
+\BOOKMARK [3][-]{subsubsection.7.6.3.1}{Density and Properties}{subsection.7.6.3}% 150
+\BOOKMARK [3][-]{subsubsection.7.6.3.2}{R Functions}{subsection.7.6.3}% 151
+\BOOKMARK [3][-]{subsubsection.7.6.3.3}{Example: Refunds on Failed Components}{subsection.7.6.3}% 152
+\BOOKMARK [3][-]{subsubsection.7.6.3.4}{Example: Garage Parking Fees}{subsection.7.6.3}% 153
+\BOOKMARK [3][-]{subsubsection.7.6.3.5}{Importance in Modeling}{subsection.7.6.3}% 154
+\BOOKMARK [2][-]{subsection.7.6.4}{The Gamma Family of Distributions}{section.7.6}% 155
+\BOOKMARK [3][-]{subsubsection.7.6.4.1}{Density and Properties}{subsection.7.6.4}% 156
+\BOOKMARK [3][-]{subsubsection.7.6.4.2}{Example: Network Buffer}{subsection.7.6.4}% 157
+\BOOKMARK [3][-]{subsubsection.7.6.4.3}{Importance in Modeling}{subsection.7.6.4}% 158
+\BOOKMARK [2][-]{subsection.7.6.5}{The Beta Family of Distributions}{section.7.6}% 159
+\BOOKMARK [3][-]{subsubsection.7.6.5.1}{Density Etc.}{subsection.7.6.5}% 160
+\BOOKMARK [3][-]{subsubsection.7.6.5.2}{Importance in Modeling}{subsection.7.6.5}% 161
+\BOOKMARK [1][-]{section.7.7}{Choosing a Model}{chapter.7}% 162
+\BOOKMARK [1][-]{section.7.8}{Finding the Density of a Function of a Random Variable}{chapter.7}% 163
+\BOOKMARK [1][-]{section.7.9}{Quantile Functions}{chapter.7}% 164
+\BOOKMARK [1][-]{section.7.10}{Using cdf Functions to Find Probabilities}{chapter.7}% 165
+\BOOKMARK [1][-]{section.7.11}{A General Method for Simulating a Random Variable}{chapter.7}% 166
+\BOOKMARK [1][-]{section.7.12}{Example: Writing a Set of R Functions for a Certain Power Family}{chapter.7}% 167
+\BOOKMARK [1][-]{section.7.13}{Multivariate Densities}{chapter.7}% 168
+\BOOKMARK [1][-]{section.7.14}{Iterated Expectations}{chapter.7}% 169
+\BOOKMARK [2][-]{subsection.7.14.1}{The Theorem}{section.7.14}% 170
+\BOOKMARK [2][-]{subsection.7.14.2}{Example: Another Coin Game}{section.7.14}% 171
+\BOOKMARK [1][-]{section.7.15}{Continuous Random Variables Are ``Useful Unicorns''}{chapter.7}% 172
+\BOOKMARK [1][-]{section.7.16}{Density and Properties}{chapter.7}% 173
+\BOOKMARK [2][-]{subsection.7.16.1}{Closure Under Affine Transformation}{section.7.16}% 174
+\BOOKMARK [2][-]{subsection.7.16.2}{Closure Under Independent Summation}{section.7.16}% 175
+\BOOKMARK [1][-]{section.7.17}{R Functions}{chapter.7}% 176
+\BOOKMARK [1][-]{section.7.18}{The Standard Normal Distribution}{chapter.7}% 177
+\BOOKMARK [1][-]{section.7.19}{Evaluating Normal cdfs}{chapter.7}% 178
+\BOOKMARK [1][-]{section.7.20}{Example: Network Intrusion}{chapter.7}% 179
+\BOOKMARK [1][-]{section.7.21}{Example: Class Enrollment Size}{chapter.7}% 180
+\BOOKMARK [1][-]{section.7.22}{More on the Jill Example}{chapter.7}% 181
+\BOOKMARK [1][-]{section.7.23}{Example: River Levels}{chapter.7}% 182
+\BOOKMARK [1][-]{section.7.24}{Example: Upper Tail of a Light Bulb Distribution}{chapter.7}% 183
+\BOOKMARK [1][-]{section.7.25}{The Central Limit Theorem}{chapter.7}% 184
+\BOOKMARK [1][-]{section.7.26}{Example: Cumulative Roundoff Error}{chapter.7}% 185
+\BOOKMARK [1][-]{section.7.27}{Example: R Evaluation of a Central Limit Theorem Approximation}{chapter.7}% 186
+\BOOKMARK [1][-]{section.7.28}{Example: Bug Counts}{chapter.7}% 187
+\BOOKMARK [1][-]{section.7.29}{Example: Coin Tosses}{chapter.7}% 188
+\BOOKMARK [1][-]{section.7.30}{Example: Normal Approximation to Gamma Family}{chapter.7}% 189
+\BOOKMARK [1][-]{section.7.31}{Example: Museum Demonstration}{chapter.7}% 190
+\BOOKMARK [1][-]{section.7.32}{Importance in Modeling}{chapter.7}% 191
+\BOOKMARK [1][-]{section.7.33}{The Chi-Squared Family of Distributions}{chapter.7}% 192
+\BOOKMARK [2][-]{subsection.7.33.1}{Density and Properties}{section.7.33}% 193
+\BOOKMARK [2][-]{subsection.7.33.2}{Example: Error in Pin Placement}{section.7.33}% 194
+\BOOKMARK [2][-]{subsection.7.33.3}{Example: Generating Normal Random Numbers}{section.7.33}% 195
+\BOOKMARK [2][-]{subsection.7.33.4}{Importance in Modeling}{section.7.33}% 196
+\BOOKMARK [2][-]{subsection.7.33.5}{Relation to Gamma Family}{section.7.33}% 197
+\BOOKMARK [1][-]{section.7.34}{The Multivariate Normal Family}{chapter.7}% 198
+\BOOKMARK [1][-]{section.7.35}{Optional Topic: Precise Statement of the CLT}{chapter.7}% 199
+\BOOKMARK [2][-]{subsection.7.35.1}{Convergence in Distribution, and the Precisely-Stated CLT}{section.7.35}% 200
+\BOOKMARK [0][-]{chapter.8}{The Exponential Distributions}{}% 201
+\BOOKMARK [1][-]{section.8.1}{Connection to the Poisson Distribution Family}{chapter.8}% 202
+\BOOKMARK [1][-]{section.8.2}{Memoryless Property of Exponential Distributions}{chapter.8}% 203
+\BOOKMARK [2][-]{subsection.8.2.1}{Derivation and Intuition}{section.8.2}% 204
+\BOOKMARK [2][-]{subsection.8.2.2}{Uniquely Memoryless}{section.8.2}% 205
+\BOOKMARK [2][-]{subsection.8.2.3}{Example: ``Nonmemoryless'' Light Bulbs}{section.8.2}% 206
+\BOOKMARK [1][-]{section.8.3}{Example: Minima of Independent Exponentially Distributed Random Variables}{chapter.8}% 207
+\BOOKMARK [2][-]{subsection.8.3.1}{Example: Computer Worm}{section.8.3}% 208
+\BOOKMARK [2][-]{subsection.8.3.2}{Example: Electronic Components}{section.8.3}% 209
+\BOOKMARK [1][-]{section.8.4}{A Cautionary Tale: the Bus Paradox}{chapter.8}% 210
+\BOOKMARK [2][-]{subsection.8.4.1}{Length-Biased Sampling}{section.8.4}% 211
+\BOOKMARK [2][-]{subsection.8.4.2}{Probability Mass Functions and Densities in Length-Biased Sampling}{section.8.4}% 212
+\BOOKMARK [0][-]{chapter.9}{Stop and Review: Probability Structures}{}% 213
+\BOOKMARK [0][-]{chapter.10}{Covariance and Random Vectors}{}% 214
+\BOOKMARK [1][-]{section.10.1}{Measuring Co-variation of Random Variables}{chapter.10}% 215
+\BOOKMARK [2][-]{subsection.10.1.1}{Covariance}{section.10.1}% 216
+\BOOKMARK [2][-]{subsection.10.1.2}{Example: Variance of Sum of Nonindependent Variables}{section.10.1}% 217
+\BOOKMARK [2][-]{subsection.10.1.3}{Example: the Committee Example Again}{section.10.1}% 218
+\BOOKMARK [1][-]{section.10.2}{Correlation}{chapter.10}% 219
+\BOOKMARK [2][-]{subsection.10.2.1}{Example: a Catchup Game}{section.10.2}% 220
+\BOOKMARK [1][-]{section.10.3}{Sets of Independent Random Variables}{chapter.10}% 221
+\BOOKMARK [2][-]{subsection.10.3.1}{Properties}{section.10.3}% 222
+\BOOKMARK [3][-]{subsubsection.10.3.1.1}{Expected Values Factor}{subsection.10.3.1}% 223
+\BOOKMARK [3][-]{subsubsection.10.3.1.2}{Covariance Is 0}{subsection.10.3.1}% 224
+\BOOKMARK [3][-]{subsubsection.10.3.1.3}{Variances Add}{subsection.10.3.1}% 225
+\BOOKMARK [2][-]{subsection.10.3.2}{Examples Involving Sets of Independent Random Variables}{section.10.3}% 226
+\BOOKMARK [3][-]{subsubsection.10.3.2.1}{Example: Dice}{subsection.10.3.2}% 227
+\BOOKMARK [3][-]{subsubsection.10.3.2.2}{Example: Variance of a Product}{subsection.10.3.2}% 228
+\BOOKMARK [3][-]{subsubsection.10.3.2.3}{Example: Ratio of Independent Geometric Random Variables}{subsection.10.3.2}% 229
+\BOOKMARK [1][-]{section.10.4}{Matrix Formulations}{chapter.10}% 230
+\BOOKMARK [2][-]{subsection.10.4.1}{Properties of Mean Vectors}{section.10.4}% 231
+\BOOKMARK [2][-]{subsection.10.4.2}{Covariance Matrices}{section.10.4}% 232
+\BOOKMARK [2][-]{subsection.10.4.3}{Covariance Matrices Linear Combinations of Random Vectors}{section.10.4}% 233
+\BOOKMARK [2][-]{subsection.10.4.4}{Example: \(X,S\) Dice Example Again}{section.10.4}% 234
+\BOOKMARK [2][-]{subsection.10.4.5}{Example: Easy Sum Again}{section.10.4}% 235
+\BOOKMARK [1][-]{section.10.5}{The Multivariate Normal Family of Distributions}{chapter.10}% 236
+\BOOKMARK [2][-]{subsection.10.5.1}{R Functions}{section.10.5}% 237
+\BOOKMARK [2][-]{subsection.10.5.2}{Special Case: New Variable Is a Single Linear Combination of a Random Vector}{section.10.5}% 238
+\BOOKMARK [1][-]{section.10.6}{Indicator Random Vectors}{chapter.10}% 239
+\BOOKMARK [1][-]{section.10.7}{Example: Dice Game}{chapter.10}% 240
+\BOOKMARK [2][-]{subsection.10.7.1}{Correlation Matrices}{section.10.7}% 241
+\BOOKMARK [2][-]{subsection.10.7.2}{Further Reading}{section.10.7}% 242
+\BOOKMARK [0][-]{chapter.11}{Multivariate PMFs and Densities}{}% 243
+\BOOKMARK [1][-]{subsection.11.0.1}{The Multivariate Normal Family of Distributions }{chapter.11}% 244
+\BOOKMARK [2][-]{subsubsection.11.0.1.1}{Densities}{subsection.11.0.1}% 245
+\BOOKMARK [3][-]{subsubsection.11.0.1.2}{Geometric Interpretation}{subsubsection.11.0.1.1}% 246
+\BOOKMARK [3][-]{subsubsection.11.0.1.3}{Properties of Multivariate Normal Distributions}{subsubsection.11.0.1.1}% 247
+\BOOKMARK [3][-]{subsubsection.11.0.1.4}{The Multivariate Central Limit Theorem}{subsubsection.11.0.1.1}% 248
+\BOOKMARK [3][-]{subsubsection.11.0.1.5}{Example: Finishing the Loose Ends from the Dice Game}{subsubsection.11.0.1.1}% 249
+\BOOKMARK [0][-]{chapter.12}{Statistics: Prologue}{}% 250
+\BOOKMARK [1][-]{section.12.1}{Sampling Distributions}{chapter.12}% 251
+\BOOKMARK [2][-]{subsection.12.1.1}{Random Samples}{section.12.1}% 252
+\BOOKMARK [1][-]{section.12.2}{The Sample Mean\204a Random Variable}{chapter.12}% 253
+\BOOKMARK [2][-]{subsection.12.2.1}{Toy Population Example}{section.12.2}% 254
+\BOOKMARK [2][-]{subsection.12.2.2}{Expected and Variance of X}{section.12.2}% 255
+\BOOKMARK [2][-]{subsection.12.2.3}{Toy Population Example Again}{section.12.2}% 256
+\BOOKMARK [2][-]{subsection.12.2.4}{Interpretation}{section.12.2}% 257
+\BOOKMARK [1][-]{section.12.3}{Sample Means Are Approximately Normal\204No Matter What the Population Distribution Is}{chapter.12}% 258
+\BOOKMARK [2][-]{subsection.12.3.1}{The Sample Variance\204Another Random Variable}{section.12.3}% 259
+\BOOKMARK [3][-]{subsubsection.12.3.1.1}{Intuitive Estimation of 2}{subsection.12.3.1}% 260
+\BOOKMARK [3][-]{subsubsection.12.3.1.2}{Easier Computation}{subsection.12.3.1}% 261
+\BOOKMARK [3][-]{subsubsection.12.3.1.3}{To Divide by n or n-1?}{subsection.12.3.1}% 262
+\BOOKMARK [1][-]{section.12.4}{Observational Studies}{chapter.12}% 263
+\BOOKMARK [1][-]{section.12.5}{A Good Time to Stop and Review!}{chapter.12}% 264
+\BOOKMARK [0][-]{chapter.13}{Introduction to Confidence Intervals}{}% 265
+\BOOKMARK [1][-]{section.13.1}{The ``Margin of Error'' and Confidence Intervals}{chapter.13}% 266
+\BOOKMARK [1][-]{section.13.2}{Confidence Intervals for Means}{chapter.13}% 267
+\BOOKMARK [2][-]{subsection.13.2.1}{Basic Formulation}{section.13.2}% 268
+\BOOKMARK [2][-]{subsection.13.2.2}{Example: Simulation Output}{section.13.2}% 269
+\BOOKMARK [1][-]{section.13.3}{Meaning of Confidence Intervals}{chapter.13}% 270
+\BOOKMARK [2][-]{subsection.13.3.1}{A Weight Survey in Davis}{section.13.3}% 271
+\BOOKMARK [2][-]{subsection.13.3.2}{More About Interpretation}{section.13.3}% 272
+\BOOKMARK [1][-]{section.13.4}{Confidence Intervals for Proportions}{chapter.13}% 273
+\BOOKMARK [2][-]{subsection.13.4.1}{Derivation}{section.13.4}% 274
+\BOOKMARK [2][-]{subsection.13.4.2}{That n vs. n-1 Thing Again}{section.13.4}% 275
+\BOOKMARK [2][-]{subsection.13.4.3}{Simulation Example Again}{section.13.4}% 276
+\BOOKMARK [2][-]{subsection.13.4.4}{Example: Davis Weights}{section.13.4}% 277
+\BOOKMARK [2][-]{subsection.13.4.5}{Interpretation}{section.13.4}% 278
+\BOOKMARK [2][-]{subsection.13.4.6}{\(Non-\)Effect of the Population Size}{section.13.4}% 279
+\BOOKMARK [2][-]{subsection.13.4.7}{Inferring the Number Polled}{section.13.4}% 280
+\BOOKMARK [2][-]{subsection.13.4.8}{Planning Ahead}{section.13.4}% 281
+\BOOKMARK [1][-]{section.13.5}{General Formation of Confidence Intervals from Approximately Normal Estimators}{chapter.13}% 282
+\BOOKMARK [2][-]{subsection.13.5.1}{The Notion of a Standard Error}{section.13.5}% 283
+\BOOKMARK [2][-]{subsection.13.5.2}{Forming General Confidence Intervals}{section.13.5}% 284
+\BOOKMARK [2][-]{subsection.13.5.3}{Standard Errors of Combined Estimators}{section.13.5}% 285
+\BOOKMARK [1][-]{section.13.6}{Confidence Intervals for Differences of Means or Proportions}{chapter.13}% 286
+\BOOKMARK [2][-]{subsection.13.6.1}{Independent Samples}{section.13.6}% 287
+\BOOKMARK [2][-]{subsection.13.6.2}{Example: Network Security Application}{section.13.6}% 288
+\BOOKMARK [2][-]{subsection.13.6.3}{Dependent Samples}{section.13.6}% 289
+\BOOKMARK [2][-]{subsection.13.6.4}{Example: Machine Classification of Forest Covers}{section.13.6}% 290
+\BOOKMARK [1][-]{section.13.7}{And What About the Student-t Distribution?}{chapter.13}% 291
+\BOOKMARK [1][-]{section.13.8}{R Computation}{chapter.13}% 292
+\BOOKMARK [1][-]{section.13.9}{Example: Pro Baseball Data}{chapter.13}% 293
+\BOOKMARK [2][-]{subsection.13.9.1}{R Code}{section.13.9}% 294
+\BOOKMARK [2][-]{subsection.13.9.2}{Analysis}{section.13.9}% 295
+\BOOKMARK [1][-]{section.13.10}{Example: UCI Bank Marketing Dataset}{chapter.13}% 296
+\BOOKMARK [1][-]{section.13.11}{Example: Amazon Links}{chapter.13}% 297
+\BOOKMARK [1][-]{section.13.12}{Example: Master's Degrees in CS/EE}{chapter.13}% 298
+\BOOKMARK [1][-]{section.13.13}{Other Confidence Levels}{chapter.13}% 299
+\BOOKMARK [1][-]{section.13.14}{One More Time: Why Do We Use Confidence Intervals?}{chapter.13}% 300
+\BOOKMARK [0][-]{chapter.14}{Introduction to Significance Tests}{}% 301
+\BOOKMARK [1][-]{section.14.1}{The Basics}{chapter.14}% 302
+\BOOKMARK [1][-]{section.14.2}{General Testing Based on Normally Distributed Estimators}{chapter.14}% 303
+\BOOKMARK [1][-]{section.14.3}{Example: Network Security}{chapter.14}% 304
+\BOOKMARK [1][-]{section.14.4}{The Notion of ``p-Values''}{chapter.14}% 305
+\BOOKMARK [1][-]{section.14.5}{Example: Bank Data}{chapter.14}% 306
+\BOOKMARK [1][-]{section.14.6}{One-Sided HA}{chapter.14}% 307
+\BOOKMARK [1][-]{section.14.7}{R Computation}{chapter.14}% 308
+\BOOKMARK [1][-]{section.14.8}{What's Wrong with Significance Testing\204and What to Do Instead}{chapter.14}% 309
+\BOOKMARK [2][-]{subsection.14.8.1}{History of Significance Testing, and Where We Are Today}{section.14.8}% 310
+\BOOKMARK [2][-]{subsection.14.8.2}{The Basic Fallacy}{section.14.8}% 311
+\BOOKMARK [2][-]{subsection.14.8.3}{You Be the Judge!}{section.14.8}% 312
+\BOOKMARK [2][-]{subsection.14.8.4}{What to Do Instead}{section.14.8}% 313
+\BOOKMARK [2][-]{subsection.14.8.5}{Decide on the Basis of ``the Preponderance of Evidence''}{section.14.8}% 314
+\BOOKMARK [2][-]{subsection.14.8.6}{Example: the Forest Cover Data}{section.14.8}% 315
+\BOOKMARK [2][-]{subsection.14.8.7}{Example: Assessing Your Candidate's Chances for Election}{section.14.8}% 316
+\BOOKMARK [0][-]{chapter.15}{Linear Regression}{}% 317
+\BOOKMARK [1][-]{section.15.1}{The Goals: Prediction and Description}{chapter.15}% 318
+\BOOKMARK [1][-]{section.15.2}{Example Applications: Software Engineering, Networks, Text Mining}{chapter.15}% 319
+\BOOKMARK [1][-]{section.15.3}{Adjusting for Covariates}{chapter.15}% 320
+\BOOKMARK [1][-]{section.15.4}{What Does ``Relationship'' Really Mean?}{chapter.15}% 321
+\BOOKMARK [2][-]{subsection.15.4.1}{Precise Definition}{section.15.4}% 322
+\BOOKMARK [2][-]{subsection.15.4.2}{\(Rather Artificial\) Example: Marble Problem}{section.15.4}% 323
+\BOOKMARK [1][-]{section.15.5}{Estimating That Relationship from Sample Data}{chapter.15}% 324
+\BOOKMARK [2][-]{subsection.15.5.1}{Parametric Models for the Regression Function m\(\)}{section.15.5}% 325
+\BOOKMARK [2][-]{subsection.15.5.2}{Estimation in Parametric Regression Models}{section.15.5}% 326
+\BOOKMARK [2][-]{subsection.15.5.3}{More on Parametric vs. Nonparametric Models}{section.15.5}% 327
+\BOOKMARK [1][-]{section.15.6}{Example: Baseball Data}{chapter.15}% 328
+\BOOKMARK [2][-]{subsection.15.6.1}{R Code}{section.15.6}% 329
+\BOOKMARK [2][-]{subsection.15.6.2}{A Look through the Output}{section.15.6}% 330
+\BOOKMARK [1][-]{section.15.7}{Multiple Regression: More Than One Predictor Variable}{chapter.15}% 331
+\BOOKMARK [1][-]{section.15.8}{Example: Baseball Data \(cont'd.\)}{chapter.15}% 332
+\BOOKMARK [1][-]{section.15.9}{Interaction Terms}{chapter.15}% 333
+\BOOKMARK [1][-]{section.15.10}{Parametric Estimation of Linear Regression Functions}{chapter.15}% 334
+\BOOKMARK [2][-]{subsection.15.10.1}{Meaning of ``Linear''}{section.15.10}% 335
+\BOOKMARK [2][-]{subsection.15.10.2}{Random-X and Fixed-X Regression}{section.15.10}% 336
+\BOOKMARK [2][-]{subsection.15.10.3}{Point Estimates and Matrix Formulation}{section.15.10}% 337
+\BOOKMARK [2][-]{subsection.15.10.4}{Approximate Confidence Intervals}{section.15.10}% 338
+\BOOKMARK [1][-]{section.15.11}{Example: Baseball Data \(cont'd.\)}{chapter.15}% 339
+\BOOKMARK [1][-]{section.15.12}{Dummy Variables}{chapter.15}% 340
+\BOOKMARK [1][-]{section.15.13}{Example: Baseball Data \(cont'd.\)}{chapter.15}% 341
+\BOOKMARK [1][-]{section.15.14}{Prediction}{chapter.15}% 342
+\BOOKMARK [2][-]{subsection.15.14.1}{Height/Weight Age Example}{section.15.14}% 343
+\BOOKMARK [2][-]{subsection.15.14.2}{R's predict\(\) Function}{section.15.14}% 344
+\BOOKMARK [1][-]{section.15.15}{Example: Turkish Teaching Evaluation Data}{chapter.15}% 345
+\BOOKMARK [2][-]{subsection.15.15.1}{The Data}{section.15.15}% 346
+\BOOKMARK [2][-]{subsection.15.15.2}{Data Prep}{section.15.15}% 347
+\BOOKMARK [2][-]{subsection.15.15.3}{Analysis}{section.15.15}% 348
+\BOOKMARK [1][-]{section.15.16}{What About the Assumptions?}{chapter.15}% 349
+\BOOKMARK [2][-]{subsection.15.16.1}{Exact Confidence Intervals and Tests}{section.15.16}% 350
+\BOOKMARK [2][-]{subsection.15.16.2}{Is the Homoscedasticity Assumption Important?}{section.15.16}% 351
+\BOOKMARK [2][-]{subsection.15.16.3}{Regression Diagnostics}{section.15.16}% 352
+\BOOKMARK [0][-]{chapter.16}{Classification}{}% 353
+\BOOKMARK [1][-]{section.16.1}{Classification = Regression}{chapter.16}% 354
+\BOOKMARK [2][-]{subsection.16.1.1}{What Happens with Regression in the Case Y = 0,1?}{section.16.1}% 355
+\BOOKMARK [1][-]{section.16.2}{Logistic Regression: a Common Parametric Model for the Regression Function in Classification Problems}{chapter.16}% 356
+\BOOKMARK [2][-]{subsection.16.2.1}{The Logistic Model: Motivations}{section.16.2}% 357
+\BOOKMARK [2][-]{subsection.16.2.2}{Esimation and Inference for Logit Coefficients}{section.16.2}% 358
+\BOOKMARK [1][-]{section.16.3}{Example: Forest Cover Data}{chapter.16}% 359
+\BOOKMARK [2][-]{subsubsection.16.3.0.1}{R Code}{section.16.3}% 360
+\BOOKMARK [2][-]{subsection.16.3.1}{Analysis of the Results}{section.16.3}% 361
+\BOOKMARK [0][-]{appendix.A}{R Quick Start}{}% 362
+\BOOKMARK [1][-]{section.A.1}{Correspondences}{appendix.A}% 363
+\BOOKMARK [1][-]{section.A.2}{Starting R}{appendix.A}% 364
+\BOOKMARK [1][-]{section.A.3}{First Sample Programming Session}{appendix.A}% 365
+\BOOKMARK [1][-]{section.A.4}{Vectorization}{appendix.A}% 366
+\BOOKMARK [1][-]{section.A.5}{Second Sample Programming Session}{appendix.A}% 367
+\BOOKMARK [1][-]{section.A.6}{Recycling}{appendix.A}% 368
+\BOOKMARK [1][-]{section.A.7}{More on Vectorization}{appendix.A}% 369
+\BOOKMARK [1][-]{section.A.8}{Third Sample Programming Session}{appendix.A}% 370
+\BOOKMARK [1][-]{section.A.9}{Default Argument Values}{appendix.A}% 371
+\BOOKMARK [1][-]{section.A.10}{The R List Type}{appendix.A}% 372
+\BOOKMARK [2][-]{subsection.A.10.1}{The Basics}{section.A.10}% 373
+\BOOKMARK [2][-]{subsection.A.10.2}{The Reduce\(\) Function}{section.A.10}% 374
+\BOOKMARK [2][-]{subsection.A.10.3}{S3 Classes}{section.A.10}% 375
+\BOOKMARK [1][-]{section.A.11}{Some Workhorse Functions}{appendix.A}% 376
+\BOOKMARK [1][-]{section.A.12}{Handy Utilities}{appendix.A}% 377
+\BOOKMARK [1][-]{section.A.13}{Data Frames}{appendix.A}% 378
+\BOOKMARK [1][-]{section.A.14}{Graphics}{appendix.A}% 379
+\BOOKMARK [1][-]{section.A.15}{Packages}{appendix.A}% 380
+\BOOKMARK [1][-]{section.A.16}{Other Sources for Learning R}{appendix.A}% 381
+\BOOKMARK [1][-]{section.A.17}{Online Help}{appendix.A}% 382
+\BOOKMARK [1][-]{section.A.18}{Debugging in R}{appendix.A}% 383
+\BOOKMARK [1][-]{section.A.19}{Complex Numbers}{appendix.A}% 384
+\BOOKMARK [1][-]{section.A.20}{Further Reading}{appendix.A}% 385
+\BOOKMARK [0][-]{appendix.B}{Review of Matrix Algebra}{}% 386
+\BOOKMARK [1][-]{section.B.1}{Terminology and Notation}{appendix.B}% 387
+\BOOKMARK [2][-]{subsection.B.1.1}{Matrix Addition and Multiplication}{section.B.1}% 388
+\BOOKMARK [1][-]{section.B.2}{Matrix Transpose}{appendix.B}% 389
+\BOOKMARK [1][-]{section.B.3}{Linear Independence}{appendix.B}% 390
+\BOOKMARK [1][-]{section.B.4}{Determinants}{appendix.B}% 391
+\BOOKMARK [1][-]{section.B.5}{Matrix Inverse}{appendix.B}% 392
+\BOOKMARK [1][-]{section.B.6}{Eigenvalues and Eigenvectors}{appendix.B}% 393
+\BOOKMARK [1][-]{section.B.7}{Rank of a Matrix}{appendix.B}% 394
+\BOOKMARK [1][-]{section.B.8}{Matrix Algebra in R}{appendix.B}% 395
+\BOOKMARK [0][-]{appendix.C}{Introduction to the ggplot2 Graphics Package}{}% 396
+\BOOKMARK [1][-]{section.C.1}{Introduction}{appendix.C}% 397
+\BOOKMARK [1][-]{section.C.2}{Installation and Use}{appendix.C}% 398
+\BOOKMARK [1][-]{section.C.3}{Basic Structures}{appendix.C}% 399
+\BOOKMARK [1][-]{section.C.4}{Example: Simple Line Graphs}{appendix.C}% 400
+\BOOKMARK [1][-]{section.C.5}{Example: Census Data}{appendix.C}% 401
+\BOOKMARK [1][-]{section.C.6}{Function Plots, Density Estimates and Smoothing}{appendix.C}% 402
+\BOOKMARK [1][-]{section.C.7}{What's Going on Inside}{appendix.C}% 403
+\BOOKMARK [1][-]{section.C.8}{For Further Information}{appendix.C}% 404

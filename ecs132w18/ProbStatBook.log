@@ -1,0 +1,1736 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.5.25)  7 DEC 2017 22:53
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**ProbStatBook.tex
+(./ProbStatBook.tex
+LaTeX2e <2015/01/01>
+Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2014/09/29 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk11.clo
+File: bk11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+\@input{Includes/Includes.aux}
+\openout2 = `Includes/Includes.aux'.
+
+(./Includes/Includes.tex
+(/usr/share/texlive/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz) (/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+\FV@CodeLineNo=\count88
+\FV@InFile=\read1
+\FV@TabBox=\box26
+\c@FancyVerbLine=\count89
+\FV@StepNumber=\count90
+\FV@OutFile=\write3
+) (/usr/share/texlive/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2013/03/29 ver 4.1
+)
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen103
+\Hy@linkcounter=\count91
+\Hy@pagecounter=\count92
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count93
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing OFF on input line 4463.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+\c@Hy@tempcnt=\count94
+
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip10
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen104
+\Fld@menulength=\count95
+\Field@Width=\dimen105
+\Fld@charsize=\dimen106
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing OFF on input line 6310.
+Package hyperref Info: Link coloring OFF on input line 6315.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count96
+\c@Item=\count97
+\c@Hfootnote=\count98
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2012/11/06 v6.83m Hyperref driver for pdfTeX
+\Fld@listcount=\count99
+\c@bookmark@seq@number=\count100
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip43
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2014/10/28 v1.0g Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2014/10/28 v1.0p Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 94.
+
+(/usr/share/texlive/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+\Gread@gobject=\count101
+))
+\Gin@req@height=\dimen107
+\Gin@req@width=\dimen108
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2014/10/28 v1.1a Standard LaTeX Color (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 142.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count102
+\lst@gtempboxa=\box27
+\lst@token=\toks15
+\lst@length=\count103
+\lst@currlwidth=\dimen109
+\lst@column=\count104
+\lst@pos=\count105
+\lst@lostspace=\dimen110
+\lst@width=\dimen111
+\lst@newlines=\count106
+\lst@lineno=\count107
+\lst@maxwidth=\dimen112
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+\c@lstnumber=\count108
+\lst@skipnumbers=\count109
+\lst@framebox=\box28
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2015/06/04 1.6 listings configuration
+))
+Package: listings 2015/06/04 1.6 (Carsten Heinz)
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip44
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks16
+\ex@=\dimen113
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen114
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count110
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count111
+\leftroot@=\count112
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count113
+\DOTSCASE@=\count114
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box29
+\strutbox@=\box30
+\big@size=\dimen115
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count115
+\c@MaxMatrixCols=\count116
+\dotsspace@=\muskip11
+\c@parentequation=\count117
+\dspbrk@lvl=\count118
+\tag@help=\toks17
+\row@=\count119
+\column@=\count120
+\maxfields@=\count121
+\andhelp@=\toks18
+\eqnshift@=\dimen116
+\alignsep@=\dimen117
+\tagshift@=\dimen118
+\tagwidth@=\dimen119
+\totwidth@=\dimen120
+\lineht@=\dimen121
+\@envbody=\toks19
+\multlinegap=\skip45
+\multlinetaggap=\skip46
+\mathdisplay@stack=\toks20
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+)
+\c@theorem=\count122
+\c@problemnum=\count123
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2015/06/04 1.6 listings language file
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang2.sty
+File: lstlang2.sty 2015/06/04 1.6 listings language file
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang3.sty
+File: lstlang3.sty 2015/06/04 1.6 listings language file
+))
+(./ProbStatBook.aux (./Preface.aux))
+\openout1 = `ProbStatBook.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 5.
+LaTeX Font Info:    ... okay on input line 5.
+\AtBeginShipoutBox=\box31
+Package hyperref Info: Link coloring OFF on input line 5.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count124
+)
+LaTeX Info: Redefining \ref on input line 5.
+LaTeX Info: Redefining \pageref on input line 5.
+LaTeX Info: Redefining \nameref on input line 5.
+
+(./ProbStatBook.out) (./ProbStatBook.out)
+\@outlinefile=\write4
+\openout4 = `ProbStatBook.out'.
+
+
+(/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count125
+\scratchdimen=\dimen122
+\scratchbox=\box32
+\nofMPsegments=\count126
+\nofMParguments=\count127
+\everyMPshowfont=\toks21
+\MPscratchCnt=\count128
+\MPscratchDim=\dimen123
+\MPnumerator=\count129
+\makeMPintoPDFobject=\count130
+\everyMPtoPDFconversion=\toks22
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\c@lstlisting=\count131
+
+(./Cover.tex
+\GPT@outputbox=\box33
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 36.
+
+Overfull \hbox (73.16452pt too wide) in paragraph at lines 27--42
+[][]   [] 
+ []
+
+<Bell.pdf, id=1628, 433.62pt x 433.62pt>
+File: Bell.pdf Graphic file (type pdf)
+ <use Bell.pdf>
+Package pdftex.def Info: Bell.pdf used on input line 46.
+(pdftex.def)             Requested size: 346.89621pt x 346.91632pt.
+) [1
+
+
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Bell.pdf>] (./AuthorBio.
+tex) [2]
+(./ProbStatBook.toc
+Underfull \vbox (badness 4144) has occurred while \output is active []
+
+ [1
+
+
+]
+[2] [3] [4]
+Underfull \vbox (badness 3168) has occurred while \output is active []
+
+ [5]
+[6] [7] [8]
+Underfull \vbox (badness 3168) has occurred while \output is active []
+
+ [9]
+Underfull \vbox (badness 3168) has occurred while \output is active []
+
+ [10]
+Underfull \vbox (badness 3108) has occurred while \output is active []
+
+ [11]
+[12] [13] [14]
+Underfull \vbox (badness 3108) has occurred while \output is active []
+
+ [15])
+\tf@toc=\write5
+\openout5 = `ProbStatBook.toc'.
+
+
+[16]
+\openout2 = `Preface.aux'.
+
+ (./Preface.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [17
+
+
+]
+
+LaTeX Warning: Reference `chap:est' on page xviii undefined on input line 69.
+
+
+LaTeX Warning: Reference `conmarkov' on page xviii undefined on input line 77.
+
+
+LaTeX Warning: Reference `chap:mix' on page xviii undefined on input line 78.
+
+
+LaTeX Warning: Reference `mar' on page xviii undefined on input line 79.
+
+
+LaTeX Warning: Reference `haz' on page xviii undefined on input line 80.
+
+
+LaTeX Warning: Reference `chap:nonpardens' on page xviii undefined on input lin
+e 81.
+
+
+LaTeX Warning: Reference `chap:mod' on page xviii undefined on input line 82.
+
+
+LaTeX Warning: Reference `chap:nonparregclass' on page xviii undefined on input
+ line 85.
+
+
+LaTeX Warning: Reference `chap:among' on page xviii undefined on input line 86.
+
+
+) [18] (./Intro.tex
+Chapter 1.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 37.
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
+been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.45 \item W
+            ittingly or unconsciously, you are using probability every time
+[1
+
+
+
+]) (./ProbCalc.texpdfTeX warning (ext4): destination with the same identifier (
+name{page.2}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.1 \chapter
+            {Basic Probability Models} [2]
+Chapter 2.
+[3
+
+] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+
+LaTeX Warning: Reference `bayesian' on page 13 undefined on input line 667.
+
+
+Underfull \vbox (badness 1264) has occurred while \output is active []
+
+ [13]
+[14] [15] [16] [17] [18] [19] [20] [21] [22] [23] [24] [25] [26]
+Underfull \hbox (badness 10000) in paragraph at lines 1459--1459
+[][][]\OT1/cmr/m/n/9 You can mea-sure times us-ing R's \OT1/cmr/bx/n/9 sys-tem.
+time() \OT1/cmr/m/n/9 func-tion, e.g. via the call \OT1/cmr/bx/n/9 sys-
+ []
+
+[27]
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 1471
+.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/omlcmr.fd
+File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/bx/n' in size <10.95> not available
+(Font)              Font shape `OML/cmm/b/it' tried instead on input line 1471.
+
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 1476.
+
+ [28] [29]
+[30]
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1636--1637
+[][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1653.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1653.
+
+[31] [32] [33] [34] [35]) (./DiscreteProb.tex [36]
+Chapter 3.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
+[37
+
+] [38] [39]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 170.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@@underline' on input line 170.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\hbox' on input line 170.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\mathsurround' on input line 170.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\z@' on input line 170.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 170.
+
+
+Underfull \vbox (badness 1895) has occurred while \output is active []
+
+ [40]
+[41] [42] [43] [44]
+
+LaTeX Warning: Reference `theyfactor' on page 45 undefined on input line 474.
+
+[45] [46]
+Underfull \vbox (badness 1237) has occurred while \output is active []
+
+ [47]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [48]
+[49] [50] [51]
+
+LaTeX Warning: Reference `elegant' on page 52 undefined on input line 835.
+
+[52] [53]
+
+LaTeX Warning: Reference `linreg' on page 54 undefined on input line 962.
+
+[54] [55]
+
+LaTeX Warning: Reference `chap:randvec' on page 56 undefined on input line 1068
+.
+
+[56]
+
+LaTeX Warning: Reference `elegant' on page 57 undefined on input line 1098.
+
+[57] [58]
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 1248.
+
+ [59] [60]
+Underfull \vbox (badness 1418) has occurred while \output is active []
+
+ [61]
+[62] [63] [64] [65]
+Underfull \vbox (badness 5331) has occurred while \output is active []
+
+ [66]
+[67]) (./DiscreteParFams.tex [68]
+Chapter 4.
+<Parabs.pdf, id=2883, 505.89pt x 505.89pt>
+File: Parabs.pdf Graphic file (type pdf)
+ <use Parabs.pdf>
+Package pdftex.def Info: Parabs.pdf used on input line 21.
+(pdftex.def)             Requested size: 252.94499pt x 252.94437pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [69
+
+ <./Parabs.pdf>]
+
+LaTeX Font Warning: Command \large invalid in math mode on input line 55.
+
+
+LaTeX Font Warning: Command \large invalid in math mode on input line 55.
+
+LaTeX Font Info:    Calculating math sizes for size <> on input line 56.
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.7> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <0.5> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.7> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <0.5> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.7> not available
+(Font)              size <5> substituted on input line 56.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <0.5> not available
+(Font)              size <5> substituted on input line 56.
+
+[70] [71] [72] [73] [74] [75] [76]
+Missing character: There is no ã in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ‚ in font cmr10!
+ [77] [78] [79] [80]
+Underfull \vbox (badness 1400) has occurred while \output is active []
+
+ [81]
+[82] [83] [84] [85] [86] [87] [88]
+
+LaTeX Warning: Reference `marblepmf' on page 89 undefined on input line 1064.
+
+
+Underfull \vbox (badness 4120) has occurred while \output is active []
+
+ [89]
+[90] [91] [92]) (./PauseToReflect.tex [93] [94
+
+]
+Chapter 5.
+[95] [96]
+
+LaTeX Warning: Reference `totvar' on page 97 undefined on input line 184.
+
+[97]
+LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 239.
+ [98]) (./DisMarkovIntro.tex [99] [100
+
+]
+Chapter 6.
+
+LaTeX Warning: Reference `mar' on page 101 undefined on input line 9.
+
+[101] [102]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [103]
+[104]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 218.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\pi' on input line 218.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 218.
+
+[105]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 288.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\pi' on input line 288.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 288.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 296.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\pi' on input line 296.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 296.
+
+[106] [107] [108] [109] [110]
+Overfull \hbox (1.68352pt too wide) in paragraph at lines 546--549
+[]\OT1/cmr/m/n/10.95 The cen-tral point here is that the past his-tory of the s
+ystem---i.e. the val-ues of $\OML/cmm/m/it/10.95 X[]; X[]; X[]; []X[]$\OT1/cmr/
+m/n/10.95 ---
+ []
+
+[111] [112] [113] [114]
+Underfull \vbox (badness 1675) has occurred while \output is active []
+
+ [115])
+(./ContinProb.tex [116]
+Chapter 7.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [117
+
+]
+[118] <FD.pdf, id=3452, 433.62pt x 433.62pt>
+File: FD.pdf Graphic file (type pdf)
+ <use FD.pdf>
+Package pdftex.def Info: FD.pdf used on input line 151.
+(pdftex.def)             Requested size: 252.94499pt x 252.94879pt.
+ [119]
+<FZ.pdf, id=3467, 433.62pt x 433.62pt>
+File: FZ.pdf Graphic file (type pdf)
+ <use FZ.pdf>
+Package pdftex.def Info: FZ.pdf used on input line 187.
+(pdftex.def)             Requested size: 289.07999pt x 289.09473pt.
+ [120 <./FD.pdf>]
+Overfull \hbox (6.79999pt too wide) in paragraph at lines 220--221
+[] 
+ []
+
+
+Underfull \vbox (badness 1062) has occurred while \output is active []
+
+ [121 <./FZ.pdf>] [122] [123] <PlusMinusC.pdf, id=3511, 433.62pt x 433.62pt>
+File: PlusMinusC.pdf Graphic file (type pdf)
+
+<use PlusMinusC.pdf>
+Package pdftex.def Info: PlusMinusC.pdf used on input line 359.
+(pdftex.def)             Requested size: 289.07999pt x 289.09473pt.
+ [124] [125 <./PlusMinusC.pdf>] [126] [127] [128] [129]
+[130] [131] [132] [133] <Gamma.pdf, id=3630, 433.62pt x 433.62pt>
+File: Gamma.pdf Graphic file (type pdf)
+
+<use Gamma.pdf>
+Package pdftex.def Info: Gamma.pdf used on input line 874.
+(pdftex.def)             Requested size: 361.34999pt x 361.36676pt.
+ [134] [135 <./Gamma.pdf>]
+<Beta0202.pdf, id=3662, 505.89pt x 505.89pt>
+File: Beta0202.pdf Graphic file (type pdf)
+ <use Beta0202.pdf>
+Package pdftex.def Info: Beta0202.pdf used on input line 915.
+(pdftex.def)             Requested size: 289.07999pt x 289.08589pt.
+
+<Beta2030.pdf, id=3663, 505.89pt x 505.89pt>
+File: Beta2030.pdf Graphic file (type pdf)
+ <use Beta2030.pdf>
+Package pdftex.def Info: Beta2030.pdf used on input line 923.
+(pdftex.def)             Requested size: 289.07999pt x 289.08589pt.
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 962--963
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 963--964
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[136] [137 <./Beta0202.pdf>] [138 <./Beta2030.pdf>]
+
+LaTeX Warning: Reference `bayesian' on page 139 undefined on input line 981.
+
+
+LaTeX Warning: Reference `chap:mod' on page 139 undefined on input line 999.
+
+
+Underfull \vbox (badness 7116) has occurred while \output is active []
+
+ [139]
+[140] [141] [142] [143] [144] [145]) (./NormalFamily.tex [146] [147]
+
+LaTeX Warning: Reference `convolution' on page 148 undefined on input line 128.
+
+
+[148] [149] [150] [151]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [152]
+[153] [154] [155] [156] [157]
+Overfull \hbox (3.61862pt too wide) in paragraph at lines 678--682
+[]\OT1/cmr/m/n/10.95 There are many on-line sim-u-la-tions of this mu-seum demo
+n-stra-tion, such as []$\OT1/cmtt/m/n/10.95 http : / / www . mathsisfun .
+ []
+
+[158] [159] [160] [161] [162]) (./ExponDistr.tex [163] [164
+
+]
+Chapter 8.
+[165]
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
+
+ []
+
+[166] [167] [168]
+Overfull \hbox (79.00575pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 8.3.  EXAMPLE: MINIMA OF INDEPENDENT EXPONENTIALLY DISTRIBU
+TED RANDOM VARIABLES \OT1/cmr/m/n/10.95 169
+ []
+
+[169]
+
+LaTeX Warning: Reference `minunif' on page 170 undefined on input line 275.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--309
+
+ []
+
+[170]
+Overfull \hbox (79.00575pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 8.3.  EXAMPLE: MINIMA OF INDEPENDENT EXPONENTIALLY DISTRIBU
+TED RANDOM VARIABLES \OT1/cmr/m/n/10.95 171
+ []
+
+[171]
+Underfull \hbox (badness 10000) in paragraph at lines 372--373
+
+ []
+
+
+LaTeX Warning: Reference `conmarkov' on page 172 undefined on input line 381.
+
+
+LaTeX Warning: Reference `conmarkov' on page 172 undefined on input line 401.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [172]
+[173]
+Underfull \vbox (badness 1107) has occurred while \output is active []
+
+ [174]
+[175]) (./StopAndReview.tex [176]
+Chapter 9.
+[177
+
+] [178] [179] [180]) (./RandVecs.tex [181] [182
+
+]
+Chapter 10.
+
+Underfull \vbox (badness 1024) has occurred while \output is active []
+
+ [183]
+[184] [185] [186] [187] [188] [189] [190] [191] [192] [193] [194] [195]
+[196] [197] [198] [199]) (./MultVarDistr.tex [200]
+Chapter 11.
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 9.
+
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 17.
+
+[201
+
+] <Rho2.pdf, id=4401, 433.62pt x 433.62pt>
+File: Rho2.pdf Graphic file (type pdf)
+ <use Rho2.pdf>
+Package pdftex.def Info: Rho2.pdf used on input line 95.
+(pdftex.def)             Requested size: 289.07999pt x 289.09473pt.
+
+<Rho8.pdf, id=4403, 433.62pt x 433.62pt>
+File: Rho8.pdf Graphic file (type pdf)
+ <use Rho8.pdf>
+Package pdftex.def Info: Rho8.pdf used on input line 114.
+(pdftex.def)             Requested size: 289.07999pt x 289.09473pt.
+ [202] [203 <./Rho2.pdf>] [204 <./Rho8.pdf>] [205] [206]
+
+LaTeX Warning: Reference `multinomsumindic' on page 207 undefined on input line
+ 283.
+
+) (./StatPrologue.tex [207] [208
+
+]
+Chapter 12.
+[209] [210] [211]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 252.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\@@overline' on input line 252.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 252.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [212]
+[213]
+Overfull \hbox (6.02626pt too wide) in paragraph at lines 375--375
+[]\OT1/cmr/bx/n/14.4 Sample Means Are Ap-prox-i-mately Normal---No Mat-ter What
+
+ []
+
+[214]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 427.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `\sigma' on input line 427.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `superscript' on input line 427.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 427.
+
+
+Overfull \hbox (160.06139pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 12.3.  SAMPLE MEANS ARE APPROXIMATELY NORMAL---NO MATTER WH
+AT THE POPULATION DISTRIBUTION IS \OT1/cmr/m/n/10.95 215
+ []
+
+[215]
+
+LaTeX Warning: Reference `whynot' on page 216 undefined on input line 510.
+
+[216]
+
+LaTeX Warning: Reference `wearedifferent' on page 217 undefined on input line 5
+33.
+
+[217]) (./ConfInts.tex [218]
+Chapter 13.
+[219
+
+] [220]
+
+LaTeX Warning: Reference `slutsky' on page 221 undefined on input line 134.
+
+[221] [222] [223] [224] [225] [226]
+Underfull \vbox (badness 8038) has occurred while \output is active []
+
+ [227]
+[228]
+
+LaTeX Warning: Reference `delta' on page 229 undefined on input line 693.
+
+
+Overfull \hbox (127.7461pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 13.5.  GENERAL FORMATION OF CONFIDENCE INTERVALS FROM APPRO
+XIMATELY NORMAL ESTIMATORS \OT1/cmr/m/n/10.95 229
+ []
+
+[229] [230]
+Overfull \hbox (127.7461pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 13.5.  GENERAL FORMATION OF CONFIDENCE INTERVALS FROM APPRO
+XIMATELY NORMAL ESTIMATORS \OT1/cmr/m/n/10.95 231
+ []
+
+[231] [232] [233] [234]
+
+LaTeX Warning: Reference `propcov' on page 235 undefined on input line 1077.
+
+[235] [236] [237]
+Overfull \hbox (21.89581pt too wide) in paragraph at lines 1269--1275
+\OT1/cmr/m/n/10.95 base-ball play-ers, at []$\OT1/cmtt/m/n/10.95 http : / / wik
+i . stat . ucla . edu / socr / index . php / SOCR _ Data _ MLB _ HeightsWeights
+$[]\OT1/cmr/m/n/10.95 .
+ []
+
+
+Overfull \hbox (29.5702pt too wide) in paragraph at lines 1282--1283
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+ []
+
+[238] [239] [240] [241] [242] [243]) (./SigTests.tex [244]
+Chapter 14.
+[245
+
+] [246] [247] [248]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 287.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `subscript' on input line 287.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 287.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [249]
+[250]
+Overfull \hbox (0.60426pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 14.8.  WHAT'S WRONG WITH SIGNIFICANCE TESTING---AND WHAT TO
+ DO INSTEAD \OT1/cmr/m/n/10.95 251
+ []
+
+[251] [252]
+Overfull \hbox (0.60426pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 14.8.  WHAT'S WRONG WITH SIGNIFICANCE TESTING---AND WHAT TO
+ DO INSTEAD \OT1/cmr/m/n/10.95 253
+ []
+
+[253]
+
+LaTeX Warning: Reference `chap:mod' on page 254 undefined on input line 547.
+
+[254]) (./LinReg.tex
+Overfull \hbox (0.60426pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 14.8.  WHAT'S WRONG WITH SIGNIFICANCE TESTING---AND WHAT TO
+ DO INSTEAD \OT1/cmr/m/n/10.95 255
+ []
+
+[255] [256
+
+]
+Chapter 15.
+[257]
+Overfull \hbox (4.45274pt too wide) in paragraph at lines 81--81
+[]\OT1/cmr/bx/n/14.4 Example Ap-pli-ca-tions: Soft-ware En-gi-neer-ing, Net-wor
+ks, Text
+ []
+
+[258] [259]
+
+LaTeX Warning: Reference `marblepmf' on page 260 undefined on input line 219.
+
+[260]
+Underfull \vbox (badness 5446) has occurred while \output is active []
+
+ [261]
+
+LaTeX Warning: Reference `chap:nonparregclass' on page 262 undefined on input l
+ine 301.
+
+
+LaTeX Warning: Reference `dfd' on page 262 undefined on input line 305.
+
+[262] [263]
+
+LaTeX Warning: Reference `chap:nonpardens' on page 264 undefined on input line 
+431.
+
+
+LaTeX Warning: Reference `chap:nonpardens' on page 264 undefined on input line 
+444.
+
+[264]
+
+LaTeX Warning: Reference `chap:mod' on page 265 undefined on input line 451.
+
+[265]
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+
+Overfull \hbox (68.99062pt too wide) in paragraph at lines 495--497
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+[266] [267]
+
+LaTeX Warning: Reference `varsel' on page 268 undefined on input line 614.
+
+[268]
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+
+Overfull \hbox (68.99062pt too wide) in paragraph at lines 705--707
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+[269]
+
+LaTeX Warning: Reference `overfit' on page 270 undefined on input line 776.
+
+[270]
+
+LaTeX Warning: Reference `regmodsel' on page 271 undefined on input line 798.
+
+
+LaTeX Warning: Reference `genlinmodel' on page 271 undefined on input line 978.
+
+
+
+Underfull \vbox (badness 1603) has occurred while \output is active []
+
+ [271]
+[272] [273]
+
+LaTeX Warning: Reference `genlinmodel' on page 274 undefined on input line 1148
+.
+
+[274] [275]
+
+LaTeX Warning: Reference `chap:est' on page 276 undefined on input line 1560.
+
+
+Underfull \vbox (badness 1092) has occurred while \output is active []
+
+ [276]
+Underfull \vbox (badness 1147) has occurred while \output is active []
+
+ [277]
+[278]
+Overfull \hbox (36.14027pt too wide) in paragraph at lines 1728--1729
+[][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (29.5702pt too wide) in paragraph at lines 1736--1737
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (62.42055pt too wide) in paragraph at lines 1747--1749
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[279]
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+
+Overfull \hbox (68.99062pt too wide) in paragraph at lines 1766--1768
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+[280]
+
+LaTeX Warning: Reference `predabil' on page 281 undefined on input line 1828.
+
+[281]
+Overfull \hbox (36.14027pt too wide) in paragraph at lines 1890--1891
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1907--1908
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1909--1910
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1911--1912
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1913--1914
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1915--1916
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1917--1918
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+[282]
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 1919--1920
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][] 
+ []
+
+
+LaTeX Warning: Reference `predabil' on page 283 undefined on input line 1931.
+
+[283]
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+
+Overfull \hbox (68.99062pt too wide) in paragraph at lines 1985--1987
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+[284]
+
+LaTeX Warning: Reference `overfit' on page 285 undefined on input line 2055.
+
+[285] [286]) (./Class.tex [287] [288
+
+]
+Chapter 16.
+
+LaTeX Warning: Reference `multiclass' on page 289 undefined on input line 51.
+
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no “ in font cmr10!
+[289]
+
+LaTeX Warning: Reference `multiclass' on page 290 undefined on input line 136.
+
+
+LaTeX Warning: Reference `optimal2' on page 290 undefined on input line 139.
+
+[290]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (261.11981pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 16.2.  LOGISTIC REGRESSION: A COMMON PARAMETRIC MODEL FOR T
+HE REGRESSION FUNCTION IN CLASSIFICATION PROBLEMS \OT1/cmr/m/n/10.95 291
+ []
+
+[291] [292]
+
+LaTeX Warning: Reference `mle' on page 293 undefined on input line 278.
+
+
+LaTeX Warning: Reference `ymarg' on page 293 undefined on input line 294.
+
+
+Underfull \vbox (badness 7451) has occurred while \output is active []
+
+
+Overfull \hbox (261.11981pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10.95 16.2.  LOGISTIC REGRESSION: A COMMON PARAMETRIC MODEL FOR T
+HE REGRESSION FUNCTION IN CLASSIFICATION PROBLEMS \OT1/cmr/m/n/10.95 293
+ []
+
+[293]
+
+Package hyperref Warning: Difference (2) between bookmark levels is greater 
+(hyperref)                than one, level fixed on input line 299.
+
+
+LaTeX Warning: Reference `multiclass' on page 294 undefined on input line 302.
+
+[294]
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ˜ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ™ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ˜ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ™ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ˜ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ™ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ˜ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ™ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ˜ in font cmtt8!
+Missing character: There is no â in font cmtt8!
+Missing character: There is no € in font cmtt8!
+Missing character: There is no ™ in font cmtt8!
+ [295]) (./R5MinIntro.tex [296]
+Appendix A.
+
+Overfull \hbox (60.75967pt too wide) in paragraph at lines 15--34
+[] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [297
+
+]
+[298]
+Overfull \hbox (9.86pt too wide) in paragraph at lines 93--94
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [299]
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 145--146
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (9.86pt too wide) in paragraph at lines 148--149
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [300]
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 194--195
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 206--207
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[301]
+Underfull \vbox (badness 1831) has occurred while \output is active []
+
+ [302]
+[303] [304] [305]
+Overfull \hbox (16.43007pt too wide) in paragraph at lines 415--416
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[306] [307]
+Overfull \hbox (23.00014pt too wide) in paragraph at lines 521--522
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[308]
+Overfull \hbox (82.13075pt too wide) in paragraph at lines 578--579
+[][][][][][] 
+ []
+
+
+Overfull \hbox (82.13075pt too wide) in paragraph at lines 584--585
+[][][][][][] 
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [309]
+[310] [311]
+Overfull \hbox (9.86pt too wide) in paragraph at lines 718--719
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][] 
+ []
+
+
+Underfull \vbox (badness 5711) has occurred while \output is active []
+
+ [312]
+[313]
+Overfull \hbox (108.41103pt too wide) in paragraph at lines 811--812
+[][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ˜ in font cmr10!
+Missing character: There is no â in font cmr10!
+Missing character: There is no € in font cmr10!
+Missing character: There is no ™ in font cmr10!
+
+Underfull \vbox (badness 2790) has occurred while \output is active []
+
+ [314]
+Overfull \hbox (20.84862pt too wide) in paragraph at lines 861--865
+\OT1/cmr/m/n/10.95 ited to Linux, Mac and other Unix-family sys-tems. See \OT1/
+cmr/m/it/10.95 http://heather.cs.ucdavis.edu/debugR.html\OT1/cmr/m/n/10.95 . 
+ []
+
+[315]) (./MatrixReview.tex [316]
+Appendix B.
+[317
+
+] [318] [319] [320] [321] [322]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [323]
+[324]) (./GGPlot2Intro.tex [325] [326
+
+]
+Appendix C.
+[327] [328] <Lines1.pdf, id=6386, 505.89pt x 505.89pt>
+File: Lines1.pdf Graphic file (type pdf)
+ <use Lines1.pdf>
+Package pdftex.def Info: Lines1.pdf used on input line 171.
+(pdftex.def)             Requested size: 289.07999pt x 289.08589pt.
+
+[329]
+Overfull \hbox (3.28993pt too wide) in paragraph at lines 181--182
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+<Lines2.pdf, id=6399, 505.89pt x 505.89pt>
+File: Lines2.pdf Graphic file (type pdf)
+ <use Lines2.pdf>
+Package pdftex.def Info: Lines2.pdf used on input line 186.
+(pdftex.def)             Requested size: 289.07999pt x 289.08589pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [330 <./Lines1.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 216.
+
+<EdHist.pdf, id=6416, 505.89pt x 505.89pt>
+File: EdHist.pdf Graphic file (type pdf)
+ <use EdHist.pdf>
+Package pdftex.def Info: EdHist.pdf used on input line 216.
+(pdftex.def)             Requested size: 289.07999pt x 289.08661pt.
+
+Underfull \vbox (badness 1577) has occurred while \output is active []
+
+ [331 <./Lines2.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 243.
+
+<AgeInc.pdf, id=6430, 505.89pt x 505.89pt>
+File: AgeInc.pdf Graphic file (type pdf)
+ <use AgeInc.pdf>
+Package pdftex.def Info: AgeInc.pdf used on input line 243.
+(pdftex.def)             Requested size: 252.94499pt x 252.94499pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [332 <./EdHist.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 261.
+
+<AgeIncColor.pdf, id=6440, 505.89pt x 505.89pt>
+File: AgeIncColor.pdf Graphic file (type pdf)
+ <use AgeIncColor.pdf>
+Package pdftex.def Info: AgeIncColor.pdf used on input line 261.
+(pdftex.def)             Requested size: 252.94499pt x 252.94499pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [333 <./AgeInc.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 278.
+
+<AgeIncShape.pdf, id=6451, 505.89pt x 505.89pt>
+File: AgeIncShape.pdf Graphic file (type pdf)
+ <use AgeIncShape.pdf>
+Package pdftex.def Info: AgeIncShape.pdf used on input line 278.
+(pdftex.def)             Requested size: 325.215pt x 325.2205pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [334 <./AgeIncColor.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 291.
+
+<40AgeIncColor.pdf, id=6463, 505.89pt x 505.89pt>
+File: 40AgeIncColor.pdf Graphic file (type pdf)
+ <use 40AgeIncColor.pdf>
+Package pdftex.def Info: 40AgeIncColor.pdf used on input line 291.
+(pdftex.def)             Requested size: 325.215pt x 325.2205pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [335 <./AgeIncShape.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 313.
+
+<FacetVertAgeInc.pdf, id=6477, 505.89pt x 505.89pt>
+File: FacetVertAgeInc.pdf Graphic file (type pdf)
+ <use FacetVertAgeInc.pdf>
+Package pdftex.def Info: FacetVertAgeInc.pdf used on input line 313.
+(pdftex.def)             Requested size: 325.215pt x 325.2205pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [336 <./40AgeIncColor.pdf>]
+
+Package pdftex.def Warning: Option `bb' does not make sense,
+(pdftex.def)                using `viewport' instead on input line 317.
+
+<FacetHorizAgeInc.pdf, id=6490, 505.89pt x 505.89pt>
+File: FacetHorizAgeInc.pdf Graphic file (type pdf)
+
+<use FacetHorizAgeInc.pdf>
+Package pdftex.def Info: FacetHorizAgeInc.pdf used on input line 317.
+(pdftex.def)             Requested size: 325.215pt x 325.2205pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [337 <./FacetVertAgeInc.pdf>] [338 <./FacetHorizAgeInc.pdf>] [339]
+Overfull \hbox (9.86pt too wide) in paragraph at lines 397--398
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (9.86pt too wide) in paragraph at lines 436--437
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[340])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 43.
+ [341]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 43.
+ (./ProbStatBook.aux (./Preface.aux))
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 43.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 43.
+Package rerunfilecheck Info: File `ProbStatBook.out' has not changed.
+(rerunfilecheck)             Checksum: 37D4465FA6426CB09819FC670D10C222;33048.
+
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 4.5pt have occurred.
+
+
+LaTeX Warning: There were undefined references.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 43.
+ ) 
+Here is how much of TeX's memory you used:
+ 12542 strings out of 493085
+ 175929 string characters out of 6136917
+ 285295 words of memory out of 5000000
+ 13002 multiletter control sequences out of 15000+600000
+ 21709 words of font info for 77 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 33i,14n,42p,265b,1833s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy7.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/share/texlive/texmf-dist/font
+s/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/share/texlive/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmtt8.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmtt9.pfb>
+Output written on ProbStatBook.pdf (361 pages, 7566233 bytes).
+PDF statistics:
+ 7314 PDF objects out of 7423 (max. 8388607)
+ 6789 compressed objects within 68 object streams
+ 2838 named destinations out of 2984 (max. 500000)
+ 3328 words of extra memory for PDF output out of 10000 (max. 10000000)
+

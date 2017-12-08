@@ -1,0 +1,455 @@
+\chapter{Classification} 
+\label{chap:class}
+
+% \section{Nonlinear Parametric Regression Models}
+% \label{nonlin}
+% 
+% We pointed out in Section \ref{whatmeans} that the word {\it linear} in
+% {\it linear regression model} means linear in $\beta$, not in t.  This
+% is the most popular approach, as it is computationally easy, but
+% nonlinear models are often used.
+% 
+% The most famous of these is the {\bf logistic} model, for the case in
+% which $Y$ takes on only the values 0 and 1.  As we have seen before
+% (Section \ref{indicator}), in this case the expected value becomes a
+% probability.  The logistic model for a nonvector $X$ is then
+% 
+% \begin{equation}
+% \label{logit}
+% m_{Y;X}(t) = P(Y = 1 | X = t) = \frac{1}{1+e^{-(\beta_0+\beta_1 t})}
+% \end{equation}
+% 
+% It extends to the case of vector-valued $X$ in the obvious way. 
+% 
+% The logistic model is quite widely used in computer science, in medicine,
+% economics, psychology and so on.  We'll return to this model in Section
+% \ref{logitsec}.
+% 
+% Here is an example of a nonlinear model used in kinetics of chemical
+% reactions, with r = 3: \footnote{See 
+% \url{http://www.mathworks.com/access/helpdesk/help/toolbox/stats/rsmdemo.html}.}
+% 
+% \begin{equation}
+% m_{Y;X}(t) = \frac
+% {\beta_1 t^{(2)} - t^{(3)}/\beta_5}
+% {1+\beta_2 t^{(1)} + \beta_3 t^{(2)} + \beta_4 t^{(3)}}
+% \end{equation}
+% 
+% Here the X vector is (hydrogen, n-pentane, isopentane) and Y is the
+% reaction rate.
+% 
+% Unfortunately, in most cases, the least-squares estimates of the
+% parameters in nonlinear regression do not have closed-form solutions,
+% and numerical methods must be used.  But R does that for you, via the
+% {\bf nls()} function in general, and via {\bf glm()} for the logistic
+% and related models in particular.
+
+In prediction problems, in the special case in which Y is an indicator
+variable, with the value 1 if the object is in a class and 0 if not, the
+regression problem is called the {\bf classification
+problem}.\footnote{The case of c $>$ 2 classes will be treated in
+Section \ref{multiclass}.}
+
+We'll formalize this idea in Section \ref{meanisprob}, but first,
+here are some examples:
+
+\begin{itemize}
+
+\item A forest fire is now in progress.  Will the fire reach a certain
+populated neighborhood?  Here Y would be 1 if the fire reaches the
+neighborhood, 0 otherwise.  The predictors might be wind direction,
+distance of the fire from the neighborhood, air temperature and
+humidity, and so on.
+
+\item Is a patient likely to develop diabetes?  This problem has been
+studied by many researchers, e.g.  Using Neural Networks To Predict the
+Onset of Diabetes Mellitus, Murali S. Shanker {\it J. Chem. Inf. Comput.
+Sci.}, 1996, 36 (1), pp 35–41.  A famous data set involves Pima Indian
+women, with Y being 1 or 0, depending on whether the patient does
+ultimately develop diabetes, and the predictors being the number of
+times pregnant, plasma glucose concentration, diastolic blood pressure,
+triceps skin fold thickness, serum insulin level, body mass index,
+diabetes pedigree function and age. 
+
+\item Is a disk drive likely to fail soon?  This has been studied for
+example in Machine Learning Methods for Predicting Failures in Hard
+Drives: A Multiple-Instance Application, by Joseph F. Murray, Gordon F.
+Hughes, and Kenneth Kreutz-Delgado, {\it Journal of Machine Learning
+Research} 6 (2005) 783-816.  Y was 1 or 0, depending on whether the
+drive failed, and the predictors were temperature, number of read
+errors, and so on.
+
+\item An online service has many customers come and go.  It would like
+to predict who is about to leave, so as to offer them a special deal for
+staying with this firm.
+
+\item Of course, a big application is character recognition, based on
+pixel data.  This is different from the above examples, as there are
+more than two classes, many more.  We'll return to this point soon.
+
+\end{itemize}
+
+In electrical engineering the classification is called {\bf pattern
+recognition}, and the predictors are called {\bf features}.  In computer
+science the term {\bf machine learning} usually refers to classification
+problems.  Different terms, same concept.
+
+\section{Classification = Regression}
+\label{meanisprob}
+
+All of the many machine learning algorithms, despite their
+complexity, really boil down to regression at their core.  Here's why:
+
+\subsection{What Happens with Regression in the Case Y = 0,1?}
+
+As we have frequently noted the mean of any indicator random variable is
+the probability that the variable is equal to 1 (Section
+\ref{indicator}).  Thus in the case in which our response variable Y
+takes on only the values 0 and 1, i.e.  classification problems, the
+regression function reduces to
+
+\begin{equation}
+m_{Y;X}(t) = P(Y = 1 | X = t)
+\end{equation}
+
+(Remember that X and t are vector-valued.)
+
+As a simple but handy example, suppose Y is gender (1 for male, 0 for
+female), $X^{(1)}$ is height and $X^{(2)}$ is weight, i.e. we are
+predicting a person's gender from the person's height and weight.  Then
+for example, $m_{Y;X}(70,150)$ is the probability that a person of
+height 70 inches and weight 150 pounds is a man.  Note again that this
+probability is a population fraction, the fraction of men among all
+people of height 70 and weight 150 in our population.
+
+Make a mental note of the optimal prediction rule, if we know the
+population regression function:
+
+\begin{quote}
+Given X = t, the optimal prediction rule is to predict that Y = 1 if and
+only if $m_{Y;X}(t) > 0.5$.
+\end{quote}
+
+So, if we known a certain person is of height 70 and weight 150, our
+best guess for the person's gender is to predict the person is male
+if and only if $m_{Y;X}(70,150) > 0.5$.\footnote{Things change in the
+multiclass case, though, as will be seen in Section \ref{multiclass}.}
+
+The optimality makes intuitive sense, and is shown in Section
+\ref{optimal2}.   
+
+\section{Logistic Regression:  a Common Parametric Model for the
+Regression Function in Classification Problems}
+\label{logitsec}
+
+Remember, we often try a parametric model for our regression function
+first, as it means we are estimating a finite number of quantities,
+instead of an infinite number.  Probably the most commonly-used model is
+that of the {\bf logistic function} (often called ``logit'').  Its
+r-predictor form is 
+
+\begin{equation}
+\label{logit2}
+m_{Y;X}(t) = P(Y = 1 | X = t) = \frac{1}{1+e^{-(\beta_0+\beta_1
+t_1+...+\beta_r t_r)}}
+\end{equation}
+
+For instance, consider the patent example in Section \ref{examples}.
+Under the logistic model, the population proportion of all patents that
+are publicly funded, among those that contain the word ``NSF,'' do not
+contain ``NIH,'' and make five claims would have the value
+
+\begin{equation}
+\frac{1}{1+e^{-(\beta_0 + \beta_1 + 5\beta_3)}}
+\end{equation}
+
+\subsection{The Logistic Model:  Motivations}
+\label{logitmotivations}
+
+The logistic function itself, 
+
+\begin{equation}
+\frac{1}{1+e^{-u}}
+\end{equation}
+
+has values between 0 and 1, and is thus a good candidate for modeling a
+probability.  Also, it is monotonic in u, making it further attractive,
+as in many classification problems we believe that $m_{Y;X}(t)$ should
+be monotonic in the predictor variables.
+
+But there are additional reasons to use the logit model, as it includes
+many common parametric models for X.  To see this, note that we can
+write, for vector-valued discrete X and t,
+
+\begin{eqnarray}
+\label{oneonelogodds}
+P(Y = 1 | X = t) &=&  \frac{P(Y = 1 ~ \textrm{and} ~ X = t)}{P(X = t)} \\
+&=& \frac{P(Y = 1) P(X = t | Y = 1)}{P(X = t)} \\
+&=& \frac{P(Y = 1) P(X = t | Y = 1)}
+{P(Y = 1) P(X = t | Y = 1) + P(Y = 0) P(X = t | Y = 0)} \\
+\label{intermedone}
+&=& \frac{1}
+{1 + \frac{(1-q) P(X = t | Y = 0)}{q P(X = t | Y = 1)}}
+\label{finaloneone}
+\end{eqnarray}
+
+where $q = P(Y = 1)$ is the proportion of members of the population which
+have $Y = 1$.  (Keep in mind that this probability is unconditional!!!!
+In the patent example, for instance, if say $q = 0.12$, then 12\% of all
+patents in the patent population---without regard to words used, numbers
+of claims, etc.---are publicly funded.) 
+
+% \checkpoint
+
+If $X$ is a continuous random vector, then the analog of
+(\ref{finaloneone}) is
+
+\begin{equation}
+\label{oneonelogodds2}
+P(Y = 1 | X = t) = \frac{1}
+{1 + \frac{(1-q) f_{X|Y=0}(t)}{q f_{X|Y=1}(t)}}
+\end{equation}
+
+Now for simplicity, suppose $X$ is scalar, i.e. r = 1.  And suppose
+that, given Y, X has a normal distribution.  In other words, within each
+class, $Y$ is normally distributed.  Suppose also that the two
+within-class variances of X are equal, with common value $\sigma^2$, but
+with means $\mu_0$ and $\mu_1$.  Then
+
+\begin{equation}
+f_{X|Y=i}(t) = \frac{1}{\sqrt{2\pi\sigma}}
+\exp{\left [ -0.5 \left (\frac{t-\mu_i}{\sigma} \right )^2 \right ]}
+\end{equation}
+
+After doing some elementary but rather tedious algebra,
+(\ref{oneonelogodds2}) reduces to the logistic form
+
+\begin{equation}
+\label{logitform}
+\frac{1}{1+e^{-(\beta_0 + \beta_1 t)}}
+\end{equation}
+
+where 
+
+\begin{equation}
+\label{logitbeta0}
+\beta_0 = -\ln{\left ( \frac{1-q}{q} \right )} + 
+\frac{\mu^2_0 - \mu^2_1}{2\sigma^2},
+\end{equation}
+
+and
+
+\begin{equation}
+\label{logitbeta1}
+\beta_1 = \frac{\mu_1 - \mu_0}{\sigma^2},
+\end{equation} 
+
+{\bf In other words, if X is normally distributed in both classes, with
+the same variance but different means, then $m_{Y;X}()$ has the logistic
+form!} And the same is true if X is multivariate normal in each class,
+with different mean vectors but equal covariance matrices.  (The algebra
+is even more tedious here, but it does work out.)  Given the central
+importance of the multivariate normal family---the word {\it central}
+here is a pun, alluding to the (multivariate) Central Limit
+Theorem---this makes the logit model even more useful.
+
+If you retrace the derivation above, you will see that the logit model
+will hold for any within-class distributions for which 
+
+\begin{equation}
+\label{logitlogodds}
+\ln \left ( \frac{f_{X|Y=0}(t)}{f_{X|Y=1}(t)} \right )
+\end{equation}
+
+(or its discrete analog) is linear in t.  Well guess what---this
+condition is true for exponential distributions too!  Work it out for
+yourself.
+
+% \checkpoint
+
+In fact, a number of famous distributions imply the logit model.  So,
+logit is not only a good intuitive model, as discussed above, but in
+addition there are some good theoretical recommendations for it.
+
+\subsection{Esimation and Inference for Logit Coefficients}
+
+We fit a logit model in R using the {\bf glm()} function, with the
+argument {\bf family=binomial}.  The function finds Maximum Likelihood
+Estimates (Section \ref{mle}) of the $\beta_i$.\footnote{As in the case
+of linear regression, estimation and inference are done conditionally on
+the values of the predictor variables $X_i$.} 
+
+The output gives standard errors for the $\widehat{\beta}_i$ as in the
+linear model case.  This enables the formation of confidence intervals
+and significance tests on individual $\widehat{\beta}_i$.  For inference
+on linear combinations of the $\widehat{\beta}_i$, use the {\bf vcov()}
+function as in the linear model case.
+
+\section{Example:  Forest Cover Data}
+\label{forest}
+
+Let's look again at the forest cover data we saw in Section
+\ref{forestcover}.\footnote{There is a problem here, to be discussed in
+Section \ref{ymarg}, but which will not affect the contents of this
+section.} Recall that this application has the Prediction goal, rather
+than the Description goal;\footnote{Recall these concepts from Section
+\ref{goals}.} we wish to predict the type of forest cover.  There were
+seven classes of forest cover.  
+
+\subsubsection{R Code}
+
+For simplicity, I restricted my analysis to classes 1 and
+2.\footnote{This will be generalized in Section \ref{multiclass}.}  In
+my R analysis I had the class 1 and 2 data in objects {\bf cov1} and
+{\bf cov2}, respectively.  I combined them,
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> cov1and2 <- rbind(cov1,cov2)
+\end{Verbatim}
+
+and created a new variable to serve as Y, recoding the 1,2 class names
+to 1,0:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+cov1and2[,56] <- ifelse(cov1and2[,55] == 1,1,0)
+\end{Verbatim}
+
+Let's see how well we can predict a site's class from the variable HS12
+(hillside shade at noon) that we investigated in Chapter
+\ref{chap:sigtests}, using a logistic model.
+
+As noted earlier, in R we fit logistic models via the {\bf glm()}
+function, for generalized linear models.  The word {\it generalized}
+here refers to models in which some function of $m_{Y;X}(t)$ is linear
+in parameters $\beta_i$.  For the classification model, 
+
+\begin{equation}
+\ln \left (  m_{Y;X}(t) / [1-m_{Y;X}(t)] \right )
+= \beta_0 + \beta_1 t^{(1)} + ... + \beta_r t^{(r)}
+\end{equation}
+
+(Recall the discussion surrounding (\ref{logitlogodds}).)
+
+This kind of generalized linear model is specified in R by setting the
+named argument {\bf family} to {\bf binomial}.  Here is the call:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> g <- glm(cov1and2[,56] ~ cov1and2[,8],family=binomial)
+\end{Verbatim}
+
+The result was:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> summary(g)
+
+Call:
+glm(formula = cov1and2[, 56] ~ cov1and2[, 8], family = binomial)
+
+Deviance Residuals:
+   Min      1Q  Median      3Q     Max
+-1.165  -0.820  -0.775   1.504   1.741
+
+Coefficients:
+               Estimate Std. Error z value Pr(>|z|)
+(Intercept)    1.515820   1.148665   1.320   0.1870
+cov1and2[, 8] -0.010960   0.005103  -2.148   0.0317 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 959.72  on 810  degrees of freedom
+Residual deviance: 955.14  on 809  degrees of freedom
+AIC: 959.14
+
+Number of Fisher Scoring iterations: 4
+\end{Verbatim}
+
+\subsection{Analysis of the Results}
+
+You'll immediately notice the similarity to the output of {\bf lm()}.
+In particular, note the Coefficients section.  There we have the
+estimates of the population coefficients $\beta_i$, their standard
+errors, and p-values for the tests of $H_0: \beta_i = 0$.
+
+One difference from the linear case is that in that case, the tests of 
+
+\begin{equation}
+ H_0:  \beta_i = 0
+\end{equation}
+
+were ``exact,'' based on the Student-t distribution, rather than being
+approximate tests based on the Central Limit Theorem.  The assumption is
+that the conditional distribution of the response given the predictors
+is exactly normal.  As noted before, those tests can't possibly be
+exact, since the assumption cannot exactly hold.
+
+But in the logit case, no ``exact'' test is available anyway, so R does
+indeed do approximate tests based on the Central Limit Theorem.
+Accordingly, the test column in the output is labeled ``z value,''
+rather than ``t value'' as before.
+
+At any rate, we see that for example $\widehat{\beta}_1 = -0.01$.  This
+is tiny, reflecting our analysis of this data in Chapter
+\ref{chap:sigtests}.  There we found that the estimated mean values of
+HS12 for cover types 1 and 2 were 223.8 and 226.3, a difference of only
+2.5, minuscule in comparison to the estimated means themselves.  That
+difference in essence now gets multiplied by 0.01.  Let's see the effect
+on the regression function, i.e. the probability of cover type 1 given
+HS12.
+
+Note first, though, that things are a little more complicated than they
+were in the linear case.  Recall our first baseball data analysis, in
+Section \ref{baseball1}.  Our model for $m_{Y;X}()$ was
+
+\begin{equation}
+\textrm{mean weight = } 
+\beta_0 + \beta_1 \textrm{ height}
+\end{equation}
+
+After estimating the $\beta_i$ from the data, we had the estimated
+regression equation,
+
+\begin{lstlisting}
+mean weight = -155.092 + 4.841 height
+\end{lstlisting}
+
+In presenting these results to others, we can illustrate the above
+equation by noting, for instance, that a 3-inch difference in height
+corresponds to an estimated $3 \times 4.841 = 14.523$ difference in mean
+weight.  The key point, though, is that this difference is the same
+whether we are comparing 70-inch-tall players with 73-inch-tall ones, or
+comparing 72-inch-tall players with 75-inch-tall ones, etc.  
+
+In our nonlinear case, the logit, the different in regression value will
+NOT depend only on the difference between the predictor values, in this
+case HS12.  We cannot simply say something like ``If two forest sites
+differ in HS12 by 15, then the difference in probability of cover type 1
+differs by such-and-such an amount.''  
+
+Instead we'll have to choose two specific HS11 values for our
+illustration.  Let's use the estimated mean HS12 values for the two
+cover types, 223.8 and then 226.3, found earlier.  
+
+So, in (\ref{logit2}), let's plug in our estimates 1.52 and -0.01 from
+our R output above, twice, first with HS12 = 223.8 and then with HS12 =
+226.3   
+
+In other words, let's imagine two forest sites, with unknown cover type,
+but known HS12 values 223.8 and 226.8 that are right in the center of
+the HS12 distribution for the two cover types.  What would we predict
+for the cover types to be for those two sites?
+
+Plugging in to (\ref{logit2}), the results are 0.328 and 0.322,
+respectively.  Remember, these numbers are the estimated probabilities
+that we have cover type 1, given HS12.  So, our guess---predicting
+whether we have cover type 1 or 2---isn't being helped much by knowing
+HS12.
+
+In other words, HS12 isn't having much effect on the probability of
+cover type 1, and so it cannot be a good predictor of cover type.  
+
+{\bf And yet...} the R output says that $\beta_1$ is ``significantly''
+different from 0, with a p-value of 0.03.  Thus, we see once again that
+significance testing does not achieve our goal.  
+
