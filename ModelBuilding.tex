@@ -654,35 +654,3 @@ carefully---which you absolutely should do---there sometimes are some
 knotty problems of interpretation to think about.
 
 
-\startproblemset
-
-\oneproblem
-In our example in Section \ref{dfd}, assume $\mu_1 = 70, \mu_2= 66,
-\sigma = 4$ and the distribution of height is normal in the two
-populations.  Suppose we are predicting the height of a man who, unknown
-to us, has height 68.  We hope to guess within two inches.  Find $P(|T_1
-- 68|) < 2$ and $P(|T_2 - 68|) < 2$ for various values of n.
-
-\oneproblem
-In Chapter \ref{chap:simultaninfer} we discuss {\it simultaneous inference},
-the forming of confidence intervals whose joint confidence level was
-95\% or some other target value.  The Kolmogorov-Smirnov confidence band
-in Section \ref{kolsmi} allows us to computer infinitely many confidence
-intervals for $F_X(t)$ at different values of t, at a ``price'' of only
-1.358.  Still, if we are just estimating $F_X(t)$ at a single value of
-t, an individual confidence interval using (\ref{propci}) would be
-narrower than that given to us by Kolmogorov-Smirnov.  Compare the
-widths of these two intervals in a situation in which the true value of
-$F_X(t) = 0.4$.
-
-\oneproblem
-Say we have a random sample $X_1,...,X_n$ from a population
-with mean $\mu$ and variance $\sigma^2$.  The usual estimator of $\mu$
-is the sample mean $\bar{X}$, but here we will use what is called a {\it
-shrinkage estimator}:  Our estimate of $\mu$ will be $0.9 \bar{X}$.
-Find the mean squared error of this estimator, and give an inequality
-(you don't have to algebraically simplify it) that shows under what
-circumstances $0.9 \bar{X}$ is better than $\bar{X}$.  (Strong advice:
-Do NOT ``reinvent the wheel.''  Make use of what we have already
-derived.)
-
