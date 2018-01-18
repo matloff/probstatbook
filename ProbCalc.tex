@@ -98,7 +98,7 @@ Thus
 P(X_1 = 2) = p^2 + (1-p)^2 = 0.52
 \end{equation}
 
-\section{The Crucial Notion of a Repeatable Experiment}
+\section{A ``Notebook'' View: the Notion of a Repeatable Experiment}
 \label{repeatexpt}
 
 It's crucial to understand what that 0.52 figure really means in a
@@ -914,81 +914,95 @@ ideas until you find one that works.
 
 \end{itemize}
 
-\section{Example:  Divisibility of Random Integers}
-
-Suppose at step i we generate a random integer between 1 and 1000, and
-check whether it's evenly divisible by i, i = 5,4,3,2,1.  Let N denote
-the number of steps needed to reach an evenly divisible number.
-
-Let's find P(N = 2).  Let q(i) denote the fraction of numbers in
-1...,1000 that are evenly divisible by i, so that for instance q(5) =
-200/1000 = 1/5 while q(3) = 333/1000.  Let's label the steps 5,4,..., so
-that the first step is number 5.  Then since the random numbers are
-independent from step to step, we have
-
-\begin{eqnarray}
-\label{divis}
-P(N = 2) &=& P(\textrm{fail in step 5 and succeed in step 4}) ~~~~
-\textrm{(``How can it happen?'')}\\
-&=& P(\textrm{fail in step 5) ~ P(succeed in step 4 $|$ fail in step 5)} ~~~~
-((\ref{genand})) \\
-&=& [1-q(5)] q(4) \\
-&=& \frac{4}{5} \cdot \frac{1}{4} \\
-&=& \frac{1}{5}
-\end{eqnarray}
-
-But there's more.
-
-First, note that q(i) is either equal or approximately equal to 1/i.
-Then following the derivation in (\ref{divis}), you'll find that
-
-\begin{equation}
-P(N = j) \approx \frac{1}{5}
-\end{equation}
-
-for ALL j in 1,...,5.  
-
-That may seem counterintuitive.  Yet the example here is in essence the
-same as one found as an exercise in many textbooks on probability:
-
-\begin{quote}
-A man has five keys.  He knows one of them opens a given lock, but he
-doesn't know which.  So he tries the keys one at a time until he finds
-the right one.  Find P(N = j), j = 1,...,5, where N is the number of
-keys he tries until he succeeds. 
-\end{quote}
-
-Here too the answer is 1/5 for all j.  But this one makes intuitive
-sense:  Each of the keys has chance 1/5 of being the right key, so each
-of the values 1,...,5 is equally likely for N.
-
-This is then an example of the fact that sometimes we can gain insight
-into one problem by considering a mathematically equivalent problem in a
-quite different setting. 
-
+% \section{Example:  Divisibility of Random Integers}
+% 
+% Suppose at step i we generate a random integer between 1 and 1000, and
+% check whether it's evenly divisible by i, i = 5,4,3,2,1.  Let N denote
+% the number of steps needed to reach an evenly divisible number.
+% 
+% Let's find P(N = 2).  Let q(i) denote the fraction of numbers in
+% 1...,1000 that are evenly divisible by i, so that for instance q(5) =
+% 200/1000 = 1/5 while q(3) = 333/1000.  Let's label the steps 5,4,..., so
+% that the first step is number 5.  Then since the random numbers are
+% independent from step to step, we have
+% 
+% \begin{eqnarray}
+% \label{divis}
+% P(N = 2) &=& P(\textrm{fail in step 5 and succeed in step 4}) ~~~~
+% \textrm{(``How can it happen?'')}\\
+% &=& P(\textrm{fail in step 5) ~ P(succeed in step 4 $|$ fail in step 5)} ~~~~
+% ((\ref{genand})) \\
+% &=& [1-q(5)] q(4) \\
+% &=& \frac{4}{5} \cdot \frac{1}{4} \\
+% &=& \frac{1}{5}
+% \end{eqnarray}
+% 
+% But there's more.
+% 
+% First, note that q(i) is either equal or approximately equal to 1/i.
+% Then following the derivation in (\ref{divis}), you'll find that
+% 
+% \begin{equation}
+% P(N = j) \approx \frac{1}{5}
+% \end{equation}
+% 
+% for ALL j in 1,...,5.  
+% 
+% That may seem counterintuitive.  Yet the example here is in essence the
+% same as one found as an exercise in many textbooks on probability:
+% 
+% \begin{quote}
+% A man has five keys.  He knows one of them opens a given lock, but he
+% doesn't know which.  So he tries the keys one at a time until he finds
+% the right one.  Find P(N = j), j = 1,...,5, where N is the number of
+% keys he tries until he succeeds. 
+% \end{quote}
+% 
+% Here too the answer is 1/5 for all j.  But this one makes intuitive
+% sense:  Each of the keys has chance 1/5 of being the right key, so each
+% of the values 1,...,5 is equally likely for N.
+% 
+% This is then an example of the fact that sometimes we can gain insight
+% into one problem by considering a mathematically equivalent problem in a
+% quite different setting. 
+% 
 \section{Example:  A Simple Board Game} 
 \label{boardgame}
 
 Consider a board game, which for simplicity we'll assume consists of two
 squares per side, on four sides.  A player's token advances around the
-board.  The squares are numbered 0-7, and play begins at square 0.
+board.  The squares are numbered 0-7, and play begins at square 0.  In
+most problems like this, {\bf it is greatly helpful to first name the
+quantities or events involved}.  Toward that end, let R denote the
+player's first roll, and let B be his bonus if there is one, with B
+being set to 0 if there is no bonus.  A token advances according to the
+roll of a single die.  If a player lands on square 3, he/she gets a
+bonus turn.
 
-A token advances according to the roll of a single die.  If a player
-lands on square 3, he/she gets a bonus turn.  Let's find the probability
-that a player has yet to make a complete circuit of the board---i.e. has
-not yet reached or passed 0---after the first turn (including the bonus, if
-any).  Let R denote his first roll, and let B be his bonus if there is
-one, with B being set to 0 if there is no bonus.  Then (using commas as
-a shorthand notation for {\it and})
+In most problems like this, {\bf it is greatly helpful to first name the
+quantities or events involved}.  Toward that end, let R denote the
+player's first roll, and let B be his bonus if there is one, with B
+being set to 0 if there is no bonus.  
+
+Let's find the probability that a player has yet to make a complete
+circuit of the board---i.e. has not yet reached or passed 0---after the
+first turn (including the bonus, if any).
 
 \begin{eqnarray}
 P(\textrm{doesn't reach or pass 0}) &=& P(R+B \leq 7) \\ 
 &=& P(R \leq 6, R \neq 3 \textrm{ or } R = 3, B \leq 4) \\
 &=& P(R \leq 6, R \neq 3) + P(R = 3, B \leq 4) \\
-&=& P(R \leq 6, R \neq 3) + P(R = 3) ~ P(B \leq 4) \\
+&=& P(R \leq 6, R \neq 3) + P(R = 3) ~ P(B \leq 4 ~|~ R = 3) \\
 &=& \frac{5}{6} + \frac{1}{6} \cdot \frac{4}{6} \\
 &=& \frac{17}{18}
 \end{eqnarray}
+
+(Above we have written commas as a shorthand notation for {\it and}, a
+common abbreviation.)
+
+Note that we first had to ``translate'' the English specification of the
+problem (``doesn't reach or...'') to math symbols.  As mentioned, this
+is quite helpful.
 
 Now, here's a shorter way (there are always multiple ways to do a
 problem):
@@ -1068,10 +1082,10 @@ passengers can always get on.
 
 \end{itemize}
 
-Let $L_i$ denote the number of passengers on the bus as it {\it leaves}
-its i$^{th}$ stop, i = 1,2,3,...  
-Let $B_i$ denote the number of new passengers who board
-the bus at the i$^{th}$ stop.  
+Once again, {\bf it is greatly helpful to first name the quantities or
+events involved}.  Let $L_i$ denote the number of passengers on the bus
+as it {\it leaves} its i$^{th}$ stop, i = 1,2,3,...  Let $B_i$ denote
+the number of new passengers who board the bus at the i$^{th}$ stop.  
 
 First, let's find the probability that no passengers board the bus at
 the first three stops.  That's easy:
@@ -1080,7 +1094,9 @@ the first three stops.  That's easy:
 P(B_1 = 0 \textrm{ and } B_2 = 0 \textrm{ and } B_3 = 0) = 0.5^3
 \end{equation}
 
-Now let's compute $P(L_2 = 0)$.  
+Now let's compute the probability that the bus leaves the second stop
+empty.  Again, we must translate this to math first, $P(L_2 = 0)$.  Now
+as usual, ``break big events into small events'':
 
 \begin{eqnarray}
 P(L_2 = 0) &=& 
@@ -1286,23 +1302,14 @@ P(N_4 = 1)
 
 \section{Simulation}
 
-To simulate whether a simple event occurs or not, we typically use R
-function {\bf runif()}.  This function generates random numbers from the
-interval (0,1), with all the points inside being equally likely.  So for
-instance the probability that the function returns a value in (0,0.5) is
-0.5.  Thus here is code to simulate tossing a coin:
-
-\begin{Verbatim}[fontsize=\relsize{-2}]
-if (runif(1) < 0.5) heads <- TRUE else heads <- FALSE
-\end{Verbatim}
-
-The argument 1 means we wish to generate just one random number from the
-interval (0,1).
+Computer simulation essentially does in actual code what one does
+conceptually in our ``notebook'' view of probability (Section
+\ref{repeatexpt}). 
 
 \subsection{Example:  Rolling Dice}
 
 If we roll three dice, what is the probability that their total is 8?
-We count all the possibilities, or we could get an approximate answer
+We could count all the possibilities, or we could get an approximate answer
 via simulation:
 
 \begin{Verbatim}[fontsize=\relsize{-2},numbers=left]
@@ -1310,7 +1317,7 @@ via simulation:
 
 probtotk <- function(d,k,nreps) {
    count <- 0
-   # do the experiment nreps times
+   # do the experiment nreps times -- like doing nreps notebook lines
    for (rep in 1:nreps) {
       sum <- 0
       # roll d dice and find their sum
@@ -1434,6 +1441,7 @@ R's {\bf mean()} function will then average those values, resulting in
 the fraction of 1s!  That's exactly what we want.
 
 \subsection{Third Improvement}
+\label{thirdbetter}
 
 Even better:
 
@@ -1462,10 +1470,14 @@ the expense of using more memory.
 \subsection{Example: Dice Problem}
 
 Suppose three fair dice are rolled.  We wish to find the approximate
-probability that the first die shows fewer than 3 dots, given that the
+probability that the first die shows fewer than 3 dots, {\it given} that the
 total number of dots for the 3 dice is more than 8, using simulation.
 
-Here is the code:
+Again, simulation is writing code the implements our ``notebook'' view of
+probability.  In this case, we are working with a conditional
+probability, which our notebook view defined as follows.  $P(B ~|~ A)$
+is the long-run proportion of the time B occurs, {\it among those lines
+in which A occurs}.  Here is the code:
 
 \begin{lstlisting}[numbers=left]
 dicesim <- function(nreps) {
@@ -1473,7 +1485,7 @@ dicesim <- function(nreps) {
    count2 <- 0
    for (i in 1:nreps) {
       d <- sample(1:6,3,replace=T)
-      if (sum(d) > 8) {
+      if (sum(d) > 8) {  # "among those lines in which A occurs"
          count1 <- count1 + 1
          if (d[1] < 3) count2 <- count2 + 1
       }
@@ -1484,6 +1496,21 @@ dicesim <- function(nreps) {
 
 Note carefully that we did NOT use (\ref{condba}).  That would defeat
 the purpose of simulation, which is the model the actual process.
+
+\subsection{Use of runif() for Simulating Events}
+
+To simulate whether a simple event occurs or not, we typically use R
+function {\bf runif()}.  This function generates random numbers from the
+interval (0,1), with all the points inside being equally likely.  So for
+instance the probability that the function returns a value in (0,0.5) is
+0.5.  Thus here is code to simulate tossing a coin:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+if (runif(1) < 0.5) heads <- TRUE else heads <- FALSE
+\end{Verbatim}
+
+The argument 1 means we wish to generate just one random number from the
+interval (0,1).
 
 \subsection{Example: ALOHA Network (cont'd.)}
 \label{alohasim}
@@ -1955,4 +1982,36 @@ Thus the desired probability is
 }
 = 0.00264
 \end{equation}
+
+\section{Computational Complements}
+
+\subsection{More on the replicate() Function}
+
+The call form of {\bf replicate()} is
+
+\begin{lstlisting}
+replicate(numberOfReplications,codeBlock
+\end{lstlisting}
+
+In our example in Section \ref{thirdbetter},
+
+\begin{lstlisting}
+sums <- replicate(nreps,sum(roll(d)))
+\end{lstlisting}
+
+{\bf codeBlock} was just a single statement, a call to R's {\bf sum()}
+function.  If more than one statement is to be executed, it must be done
+so in a {\it block}, a set of statements enclosed by braces, such as
+
+\begin{lstlisting}
+f <- function() 
+{
+   replicate(3,
+      {
+         x <- sample(1:10,5,replace=TRUE)
+         c(mean(x),sd(x))
+      }
+    )
+}
+\end{lstlisting}
 

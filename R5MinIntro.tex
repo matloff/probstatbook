@@ -418,7 +418,7 @@ $s
 > oddcount
 function(x)  {
    x1 <- x[x %% 2 == 1]
-   return(list(odds=x1, numodds=length(x1)))
+   list(odds=x1, numodds=length(x1))  # last computed value auto-returned
 }
 > # R's list type can contain any type; components delineated by $
 > oddcount(y)
