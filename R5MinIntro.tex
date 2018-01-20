@@ -6,9 +6,9 @@ programming language.  Further learning resources are listed at
 \url{http://heather.cs.ucdavis.edu//r.html}.
 
 R syntax is similar to that of C. It is object-oriented (in the sense of
-encapsulation, polymorphism and everything being an object) and is a
-functional language (i.e. almost no side effects, every action is a
-function call, etc.).
+{\it encapsulation}, {\it polymorphism} and everything being an object)
+and is a functional language (i.e. almost no side effects, every action
+is a function call, etc.).
 
 \section{Correspondences}
 
@@ -69,7 +69,7 @@ oddcount <- function(x)  {
 
 By the way, we could have written that last statement as simply 
 
-\begin{lstlisting}[numbers=left]
+\begin{lstlisting}
    k
 \end{lstlisting}
 
@@ -79,7 +79,7 @@ automatically.  This is actually preferred style in the R community.
 The R session is shown below.  You may wish to type it yourself as you
 go along, trying little experiments of your own along the
 way.\footnote{The source code for this file is at
-\url{http://heather.cs.ucdavis.edu/~matloff/MiscPLN/R5MinIntro.tex}.
+\url{https://raw.githubusercontent.com/matloff/probstatbook/master/R5MinIntro.tex}
 You can download the file, and copy/paste the text from there.}
 
 \begin{lstlisting}[numbers=left]
@@ -153,9 +153,10 @@ function(x)  {
 [1] 1 3
 \end{lstlisting}
 
-Note that the function of the R function {\bf function()} is to produce
-functions! Thus assignment is used. For example, here is what {\bf
-odd.R} looked like at the end of the above session:
+Note that, as I like to say, ``the function of the R function {\bf
+function()} is to produce functions!'' Thus assignment is used. For
+example, here is what {\bf odd.R} looked like at the end of the above
+session:
 
 \begin{lstlisting}[numbers=left]
 oddcount <- function(x)  {
@@ -319,7 +320,7 @@ while {\bf vectorexpression3}, {\bf m2}, evaluated to itself.
 This time, we focus on vectors and matrices.
 
 \begin{lstlisting}
-> m <- rbind(1:3,c(5,12,13))  # "row bind," combine rows
+> m <- rbind(1:3,c(5,12,13))  
 > m
      [,1] [,2] [,3]
 [1,]    1    2    3
