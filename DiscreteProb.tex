@@ -177,7 +177,7 @@ variables.}
 The properties developed for {\it variance}, defined later in this
 chapter, also hold for both discrete and continuous random variables.
 
-\subsubsection{What Is It?}
+\subsubsection{Misnomer}
 \label{whatisit}
 
 The term ``expected value'' is one of the many misnomers one encounters
@@ -212,12 +212,10 @@ average of X is
 \lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n}
 \end{equation}
 
-Suppose for instance our experiment is to toss 10 coins.  Let X denote
-the number of heads we get out of 10.  We might get four heads in the
-first repetition of the experiment, i.e. $X_1 = 4$, seven heads in the
-second repetition, so $X_2 = 7$, and so on.  Intuitively, the long-run
-average value of X will be 5.  (This will be proven below.) Thus we say
-that the expected value of X is 5, and write E(X) = 5.
+To make this more explicit, look at the partial notebook example in
+Table \ref{dicenotebook2}.  Here we roll two dice, and let S denote
+their sum.  E(S) is then the long-run average of the values in the ``S''
+column.
 
 \subsection{Existence of the Expected Value}
 
@@ -233,10 +231,20 @@ exists.''
 
 \subsection{Computation and Properties of Expected Value}
 
-Continuing the coin toss example above, let $K_{in}$ be the number of
-times the value i occurs among $X_1,...,X_n$, i = 0,...,10, n =
-1,2,3,...  For instance, $K_{4,20}$ is the number of times we get four
-heads, in the first 20 repetitions of our experiment.  Then
+Here we will derive a handy computational formula for the expected value
+of a discrete random variable.
+
+Suppose for instance our experiment is to toss 10 coins.  Let X denote
+the number of heads we get out of 10.  We might get four heads in the
+first repetition of the experiment, i.e. $X_1 = 4$, seven heads in the
+second repetition, so $X_2 = 7$, and so on.  Intuitively, the long-run
+average value of X will be 5.  (This will be proven below.) Thus we say
+that the expected value of X is 5, and write E(X) = 5.
+
+Now let $K_{in}$ be the number of times the value i occurs among
+$X_1,...,X_n$, i = 0,...,10, n = 1,2,3,...  For instance, $K_{4,20}$ is
+the number of times we get four heads, in the first 20 repetitions of
+our experiment.  Then
 
 \begin{eqnarray}
 E(X) &=& \lim_{n \rightarrow \infty} \frac{X_1+...+X_n}{n} \\
@@ -438,6 +446,11 @@ a_1 EX_1 +...+ a_n EX_k
 E(b) = b
 \end{equation}
 
+This should make sense.  If the ``random'' variable X has the constant
+value 3, say, then the ``X'' column in the notebook will consist
+entirely of 3s.  Thus the long-run average value in that column will be
+3, so EX = 3.
+
 \end{itemize}
 
 For instance, say U is temperature in Celsius.  Then the temperature in
@@ -546,7 +559,9 @@ corresponding probabilities for {\bf X}, which are all $\frac{1}{6}$.
 Substituting into (\ref{egofx}), we find that
 
 \begin{equation}
-E(\sqrt{X}) = \frac{1}{6} \sum_{i=1}^6 \sqrt{i}
+E(\sqrt{X}) = 
+\sum_{i=1}^6 \sqrt{i} \cdot
+\frac{1}{6} 
 \end{equation}
 
 What about a function of several variables?  Say for instance 
@@ -655,7 +670,7 @@ mean is by definition a {\it total} (divided by the number of data
 points), the mean will be of direct interest to casinos etc.
 
 By contrast, in describing how wealthy people of a town are, the total
-height of all the residents is not relevant.  Similarly, in describing
+income of all the residents is not relevant.  Similarly, in describing
 how well students did on an exam, the sum of the scores of all the
 students doesn't tell us much.  (Unless the professor gets \$10 for each
 point in the exam scores of each of the students!) A better description
