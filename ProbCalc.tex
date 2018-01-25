@@ -661,6 +661,38 @@ yet from (\ref{px11}) we have
 P(X_1 = 1) = 0.48.
 \end{equation}
 
+\section{Example: Dice and Conditional Probability}
+
+Note in particular that $P(B | A)$ and $P(A | B)$ are completely
+different quantities.  The first restricts attention to lines of the
+notebook in which A occurs, while for the second we look a lines in
+which B occurs.
+
+Suppose two dice are rolled, resulting in the random variables X and Y.
+Let S be the sum X+Y, and let T denote the number of dice having an
+even number of dots, 0, 1 or 2.  Suppose we hear that S = 12, and we know
+nothing else.  Then we know that T must be 2.  In other words,
+
+\begin{equation}
+P(T = 2 ~|~ S = 12) = 1
+\end{equation}
+
+On the other hand, if we hear instead that T = 2, that does {\it not}
+imply that S is 12, i.e.
+
+\begin{equation}
+P(S = 12 ~|~ T = 2) < 1
+\end{equation}
+
+In other words
+
+\begin{equation}
+P(S = 12 ~|~ T = 2) \neq
+P(T = 2 ~|~ S = 12)
+\end{equation}
+
+(In fact the reader should show that $P(S = 12 ~|~ T = 2) = 1/18$.
+
 \section{Bayes' Rule}
 \label{bayesthm}
 
