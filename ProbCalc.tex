@@ -693,45 +693,6 @@ P(T = 2 ~|~ S = 12)
 
 (In fact the reader should show that $P(S = 12 ~|~ T = 2) = 1/18$.
 
-\section{Bayes' Rule}
-\label{bayesthm}
-
-(This section should not be confused with Section \ref{bayesian}.  The
-latter is highly controversial, while the material in this section is
-not controversial at all.)
-
-Following (\ref{x1givx2}) above, we noted that the ingredients had
-already been computed, in (\ref{x1x2}) and (\ref{x2}).  If we go back
-to the derivations in those two equations and substitute in
-(\ref{x1givx2}), we have
-
-\begin{eqnarray}
-P(X_1 = 1 | X_2 = 2) &=& 
-\frac
-{P(X_1 = 1 \textrm{ and } X_2 = 2)}
-{P(X_2 = 2)} \\
-&=& \frac
-{P(X_1 = 1 \textrm{ and } X_2 = 2)}
-{P(X_1 = 1 \textrm{ and } X_2 = 2) + P(X_1 = 2 \textrm{ and } X_2 = 2)} \\
-&=& \frac
-{P(X_1 = 1) P(X_2 = 2 | X_1 = 1)}
-{P(X_1 = 1) P(X_2 = 2 | X_1 = 1) + P(X_1 = 2) P(X_2 = 2 | X_1 = 2)} 
-\end{eqnarray}
-
-Looking at this in more generality, for events A and B we would find
-that
-
-\begin{equation}
-\label{thisisbayes}
-P(A|B) = \frac{P(A) P(B|A)}{P(A) P(B|A) + P(\textrm{not }A)
-P(B|\textrm{not } A)}
-\end{equation}
-
-This is known as {\bf Bayes' Theorem} or {\bf Bayes' Rule}.  It can be
-extended easily to cases with several terms in the denominator, arising
-from situations that need to be broken down into several subevents
-rather than just A and not-A.
-
 \section{ALOHA in the Notebook Context}
 
 Think of doing the ALOHA ``experiment'' many, many times.
@@ -1251,6 +1212,45 @@ P(L_1 = j \textrm{ and } A_2 = 0)} \\
 {0.4 \cdot 0.8}
 {0.5 \cdot 1 + 0.4 \cdot 0.8 + 0.1 \cdot 0.8^2}
 \end{eqnarray}
+
+\section{Bayes' Rule}
+\label{bayesthm}
+
+(This section should not be confused with Section \ref{bayesian}.  The
+latter is highly controversial, while the material in this section is
+not controversial at all.)
+
+Following (\ref{x1givx2}) above, we noted that the ingredients had
+already been computed, in (\ref{x1x2}) and (\ref{x2}).  If we go back
+to the derivations in those two equations and substitute in
+(\ref{x1givx2}), we have
+
+\begin{eqnarray}
+P(X_1 = 1 | X_2 = 2) &=& 
+\frac
+{P(X_1 = 1 \textrm{ and } X_2 = 2)}
+{P(X_2 = 2)} \\
+&=& \frac
+{P(X_1 = 1 \textrm{ and } X_2 = 2)}
+{P(X_1 = 1 \textrm{ and } X_2 = 2) + P(X_1 = 2 \textrm{ and } X_2 = 2)} \\
+&=& \frac
+{P(X_1 = 1) P(X_2 = 2 | X_1 = 1)}
+{P(X_1 = 1) P(X_2 = 2 | X_1 = 1) + P(X_1 = 2) P(X_2 = 2 | X_1 = 2)} 
+\end{eqnarray}
+
+Looking at this in more generality, for events A and B we would find
+that
+
+\begin{equation}
+\label{thisisbayes}
+P(A|B) = \frac{P(A) P(B|A)}{P(A) P(B|A) + P(\textrm{not }A)
+P(B|\textrm{not } A)}
+\end{equation}
+
+This is known as {\bf Bayes' Theorem} or {\bf Bayes' Rule}.  It can be
+extended easily to cases with several terms in the denominator, arising
+from situations that need to be broken down into several subevents
+rather than just A and not-A.
 
 \section{Random Graph Models}
 \label{randomgraph}
