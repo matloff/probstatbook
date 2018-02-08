@@ -99,19 +99,19 @@ right-hand side is simply the (i,j) element of $P^2$!
 
 As our first example of Markov chains, consider the following game.  One
 repeatedly rolls a die, keeping a running total.  Each time the total
-exceeds 10, we receive one dollar, and continue playing, resuming where
-we left off, mod 10.  Say for instance we have a total of 8, then roll a
-5.  We receive a dollar, and now our total is 3.
+exceeds 10 (not equals 10), we receive one dollar, and continue playing,
+resuming where we left off, mod 10.  Say for instance we have a total of
+8, then roll a 5.  We receive a dollar, and now our total is 3.
 
 It will simplify things if we assume that the player starts with one
 free point.
 
 This process clearly satisfies the Markov property, with our state being
-our current total.  If our current total is 6, for instance, then the
-probability that we next have a total of 9 is 1/6, {\it regardless of
-what happened our previous rolls}.  We have $p_{25}$, $p_{72}$ and so on
-all equal to 1/6, while for instance $p_{29} = 0$.  Here's the code to
-find the transition matrix P:
+our current total, 1, 2, ..., 10.  If our current total is 6, for
+instance, then the probability that we next have a total of 9 is 1/6,
+{\it regardless of what happened our previous rolls}.  We have $p_{25}$,
+$p_{72}$ and so on all equal to 1/6, while for instance $p_{29} = 0$.
+Here's the code to find the transition matrix P:
 
 \begin{lstlisting}[numbers=left]
 # 10 states, so 10x10 matrix
