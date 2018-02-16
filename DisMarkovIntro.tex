@@ -27,7 +27,7 @@ can be described as:
 
 \begin{quote}
 The probabilities of future states, given the present state and the past
-state, depends only on the present state; the past is irrelevant.
+states, depends only on the present state; the past is irrelevant.
 \end{quote}
 
 In formal terms:
@@ -148,8 +148,17 @@ In typical applications we have that
 \pi_{i}=\lim_{t\rightarrow \infty}\frac{N_{it}}{t} 
 \end{equation}
                  
-exists for each state i.  Under a couple more
-conditions,\footnote{Basically, we need the chain to not be {\bf
+exists for each state i, regardless of where we start.\footnote{A more
+mathematically rigorous statement of (\ref{limntcpy}) would include the
+qualifier ``with probability 1.''  What does does mean?
+
+The infinite sequeunce $X_1, X_2,...$ is called a {\bf sample path}.  In
+our notebook, we have a column for each $X_i$, so one row is one sample
+path.  So, what (\ref{ limntcpy}) says, with the phrase ``with
+probability 1'' added, is that the limit holds {\it for each row}. 
+} 
+Under a couple
+more conditions,\footnote{Basically, we need the chain to not be {\bf
 periodic}.  Consider a random walk, for instance:  We start at position
 0 on the number line, at time 0.  The states are the integers.  (So,
 this chain has an infinite state space.) At each time, we flip a coin to
