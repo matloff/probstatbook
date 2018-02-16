@@ -394,7 +394,7 @@ random variable:
 
 \begin{equation}
 \label{binmean}
-EX = E(B_1+...,+B_n) = EB_1 + ... + EB_n = np
+EX = E(B_1+...+B_n) = EB_1 + ... + EB_n = np
 \end{equation}
 
 and from (\ref{varsum}),
@@ -1171,6 +1171,10 @@ E(V) = \sum_c P(U = c) ~ E(V ~|~ U = c)
 
 where c ranges through the support of U.
 
+So, just as EX was a weighted average in (\ref{a}), with weights being
+probabilities, we see here that the unconditional mean is a weighted
+average of the conditional mean.
+
 In spite of its intimidating form, (\ref{adamsdiscrete}) makes good
 intuitive sense, as follows:  Suppose we want to find the average height
 of all students at a university.  Each department measures the heights
@@ -1216,6 +1220,8 @@ EW = \sum_{k=1}^\infty P(M = k) ~ 0.5 k
 \end{equation}
 
 from (\ref{a}).  And from (\ref{eofgeom}), we know EM = 6.  So, EW = 3.
+
+Note especially that we didn't need calculate P(M = k).
 
 \subsection{Example: Flipping Coins with Bonuses}
 

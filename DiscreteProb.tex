@@ -205,7 +205,8 @@ repeat the experiment indefinitely.
 
 In our notebook, there will be a column for X.  Let $X_i$ denote the
 value of X in the i$^{th}$ row of the notebook.  Then the long-run
-average of X is 
+average of X, i.e.\ the long-run average in the X column of the
+notebook, is 
 
 \begin{equation}
 \label{longrunavg}
@@ -282,12 +283,20 @@ E(X) = \sum_{c \in A} c ~ P(X = c)
 \end{equation}
 
 Note that (\ref{a}) is the formula we'll use.  The preceding equations
-were derivation, to motivate the formula.  Note too that (\ref{a}) is not
-the {\it definition} of expected value; that was in \ref{longrunavg}.
-It is quite important to distinguish between all of these, in terms of
-goals.\footnote{The matter is made a little more confusing by the fact
-that many books do in fact treat (\ref{a}) as the definition, with
-(\ref{longrunavg}) being the consequence.}
+were derivation, to motivate the formula.  Note too that (\ref{a}) is
+not the {\it definition} of expected value; that was in
+(\ref{longrunavg}).  It is quite important to distinguish between all of
+these, in terms of goals.\footnote{The matter is made a little more
+confusing by the fact that many books do in fact treat (\ref{a}) as the
+definition, with (\ref{longrunavg}) being the consequence.}
+
+So, we see that E(X) is a weighted average of the values in the support
+of X, with the weights being the probabilities of those values.  You
+might wonder how to reconcile this with the fact that (\ref{longrunavg})
+is an {\it unweighted} average.  But in fact it {\it is} weighted,
+because some values of X will appear more often than others in the X
+column of the notebook; indeed, the relative frequencies of those values
+will be given by P(X = c).
 
 By the way, note the word {\it discrete} above.  For the case of
 continuous random variables, the sum in (\ref{a}) will become an
