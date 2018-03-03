@@ -521,6 +521,7 @@ vectors, we now see that expected value carries over as before.  What
 about variance?  The proper extension is the following.
 
 \begin{definition}
+\label{covmatdef}
 The covariance matrix Cov(W) of $W = (W_1,...,W_k)'$
 is the k x k matrix whose $(i,j)^{th}$ element is $Cov(W_i,W_j)$.  
 \end{definition}
@@ -603,6 +604,16 @@ Var(Y) =  c'Cov(U) c
 \end{equation}
 
 \end{quote}
+
+Here are the details:  (\ref{quadform1}) is, in matrix terms, $AU$,
+where $A$ is the one-row matrix consisting of $c'$.  Thus
+(\ref{covawaprime}) gives us the right-hand side of (\ref{quadform1})
+What about the left-hand side?
+
+In this context, $Y$ is the one-element vector $(Y_1)$.  So, its
+covariance matrix is of size $1 \times 1$, and it sole element is,
+according to Definition \ref{covmatdef}, $Cov(Y_1,Y_1)$.  But that is
+$Cov(Y,Y) = Var(X)$.
 
 \subsection{Example: (X,S) Dice Example Again}
 
