@@ -500,6 +500,7 @@ For any scalar constants c and d, and any random vectors V and W, we
 have
 
 \begin{equation}
+\label{linranvec}
 E(cV+dW) = c EV + d EW
 \end{equation}
 
@@ -863,7 +864,7 @@ The see the latter property, note that
 
 \begin{eqnarray}
 Cov(I_i,I_j) &=& E(I_i I_j) - EI_i \cdot EI_j\\ 
-&=& 0 - p_i p_j ~~ \textrm{($I_i$ and $I_j$ cannot be simultanesously 1)} \\
+&=& 0 - p_i p_j ~~~ \textrm{($I_i$ and $I_j$ cannot be simultaneously 1)} \\
 &=& -p_i p_j
 \end{eqnarray}
 
@@ -871,6 +872,9 @@ Cov(I_i,I_j) &=& E(I_i I_j) - EI_i \cdot EI_j\\
 \label{dicegame}
 
 This example will really illustrate the value of using matrices.
+
+\subsection{Problem Statement}
+\label{bullets3}
 
 Suppose we roll a die 50 times.  Let X denote the number of rolls in
 which we get one dot, and let Y be the number of times we get either two
@@ -890,6 +894,8 @@ Let's find the approximate values of the following:
 
 \end{itemize}
 
+\subsection{Exact Distribution}
+
 First, the distribution of $(X,Y,Z)'$ belongs to yet another parametric
 family, the {\bf multinomial} family, a generalization of the binomial.
 Think about it:  The ``bi'' in ``binomial'' alludes to the fact that
@@ -897,45 +903,77 @@ each trial has two outcomes, e.g.\ heads or tails.  Here in the dice
 example, we have three outcomes --- one dot, two or three dots, and four
 or more dots.  So we have a {\it trinomial} distribution.  
 
-The pmf for the multinomial family is easy to derive (see Exercise
-\ref{multnom}), and thus the exact probabilities listed above could, in
-principle, be calculated.  But that would be cumbersome.  But we can get
-approximate answers by noting that the triple (X,Y,Z) has an approximate
-multivariate (trivariate) normal distribution.  
+The pmf for the multinomial family is easy to derive.  Recall the
+intuition behind (\ref{binompmf}),
 
-To see that, recall from (\ref{sumbern}) that a binomial random variable
-can be expressed as a sum of indicator random variables.  Similarly, a
-multnomial random {\it vector} such as $(X,Y,Z)'$ can be expressed as a
-sum or random indicator {\it vectors}.  And there is a multivariate
-version of the Central Limit Theorem.  Result:
+\begin{equation}
+p_X(k) = P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}  
+\end{equation}
+
+There are $\binom{n}{k}$ different ways to get $k$ successes out of $n$
+trials, with each such pattern having probability $p^k (1-p)^{n-k}$.
+In the multinomial case, the number of patterns is given in Section
+\ref{multnomcoeff}.  So, for an $m$-category multinomial random vector
+$(W_1,...,W_m)'$, we have for any set of $s_i$ summing to $n$, the
+number of trials,
+
+\begin{equation}
+P(W_1=s_1,...,W_m=s_m) =
+\frac{n!}{s_1!...s_m!} ~ p_1^{s_1} ... p_m^{s_m},
+~~~ s_1+...+s_m = n 
+\end{equation}
+
+Here in our die example, $m = 3$, and the $p_i$ are 1/6, 2/6 and 3/6.
+So for instance, 
+
+\begin{equation}
+P(X = 12, Y = 22, Z = 16) =
+\frac{50!}{12! 22! 16!} ~ 
+(\frac{1}{6})^{12}
+(\frac{2}{6})^{22}
+(\frac{3}{6})^{16}
+\end{equation}
+
+Thus the exact probabilities listed in Section \ref{bullets3} above could be calculated in this way.  But that would be cumbersome, too many possibilities.  But we can get approximate answers by noting that the triple (X,Y,Z) has an approximate multivariate (trivariate) normal distribution.  
+
+\subsection{Multinomial-Family Random Vectors Are Approximately
+Multivariate Normally Distributed}
+
+To see the connection, recall from (\ref{sumbern}) that a binomial
+random variable can be expressed as a sum of indicator random variables.
+Similarly, a multinomial random {\it vector} such as $(X,Y,Z)'$ can be
+expressed as a sum or random indicator {\it vectors}, as in Section
+\ref{indicvecs}.  And there is a multivariate version of the Central
+Limit Theorem, which says sums are approximately normal.  Result:
 
 \begin{quote}
-Multinomial random vectors are approximately multivariate normally
-distributed.
+
+The multinomial random vector $W$ is approximately multivariate normally
+distributed.  By (\ref{linranvec}), (\ref{vectorsumcov}) and Section
+\ref{indicvecs}, we have
+
+\begin{equation}
+\label{multnommean}
+EW = n(p_1,...,p_m)'
+\end{equation}
+
+\begin{equation}
+\label{multnomcov}
+[Cov(W)]_{ij} = 
+\begin{cases}
+np_i(1-p_i), & i = j, \\
+-np_i p_j, & i \neq j \\
+\end{cases} 
+\end{equation}
+
 \end{quote}
 
-Since a multivariate normal distribution is characterized by its mean
-vector and covariance matrix, what we need to do now is find those
-objects for our dice example.
+\subsection{Finding the Die Game Probabilities}
 
-
-This is shown in Section \ref{multnormal}, but it
-basically the derivation works like this:
-
-\begin{itemize}
-
-\item Write (X,Y,Z) as a sum of indicator vectors (Section
-\ref{indicvecs}), analogous to what we did in Section \ref{binom}.
-
-\item Invoke the multivariate CLT.
-
-\end{itemize}
-
-Since the parameters of the multivariate normal family are the mean
-vector and the covariance matrix, we'll of course need to know those for
-the random vector $(X,Y,Z)'$ when we call {\bf pmvnorm()}.  Once again,
-this will be shown later, but basically it follows from Section
-\ref{indicvecs} above.  Here are the results:
+Now that we know that $(X,Y,Z)'$ is approximately trivariate normal, we
+need merely call the R function {\bf pmvnorm()}.  It requires the mean
+vector and covariance matrix, which from (\ref{multnommean}) and
+(\ref{multnomcov}) we know to be
 
 \begin{equation}
 E[(X,Y,Z)] = (50/6, 50/3, 50/2)
@@ -952,14 +990,6 @@ Cov[(X,Y,Z)] =
 -1/12 & -1/6 & 1/4 
 \end{pmatrix}
 \end{equation}
-
-Here's a partial check:  X has a binomial distribution with 50 trials
-and success probability 1/6, so (\ref{binvar}) tells us that Var(X) =
-250/36, just as seen above.
-
-We can now use the R multivariate normal probability function mentioned
-in Section \ref{multnorm} to find $P(X \leq 12 \textrm{ and } Y \leq
-16)$.
 
 To account for the integer nature of X and Y, we call the function with
 upper limits of 12.5 and 16.5, rather than 12 and 16, which is often
@@ -980,7 +1010,7 @@ print(pmvnorm(upper=c(12.5,16.5),mean=meanvec,sigma=covarmat))
 (Note:  The above code is exact, not a simulation.\footnote{Granted, the
 function {\bf pmvnorm()} does numerical integration, and thus gives an
 approximate value, but it is not a simulation, which generates random
-numbers.}
+numbers.})
 
 We find that 
 
@@ -1097,39 +1127,39 @@ and then proceed as before to find $P(U > 0, V > 0)$.  Now we take
 {\bf lower} to be (0,0), and {\bf upper} to be the default values,
 $\infty$ in {\bf pmvnorm()}.
 
-\subsection{Correlation Matrices}
-
-The correlation matrix corresponding to a given covariance matrix is
-defined as follows.  Element (i,j) is the correlation between the
-i$^{th}$ and the j$^{th}$ elements of the given random vector.
-
-Here is R code to compute a correlation matrix from a covariance matrix:
-
-\begin{lstlisting}
-covtocorr <- function(covmat) {
-   n <- nrow(covmat)
-   stddev <- vector(length=n)
-   cormat <- matrix(nrow=n,ncol=n)
-   for (i in 1:n) {
-      stddev[i] <- sqrt(covmat[i,i])
-      cormat[i,i] <- 1.0
-   }
-   for (i in 1:(n-1)) {
-      for (j in (i+1):n) {
-         tmp <- covmat[i,j] / (stddev[i]*stddev[j])
-         cormat[i,j] <- tmp
-         cormat[j,i] <- tmp
-      }
-   }
-   return(cormat)
-}
-\end{lstlisting}
-
-\subsection{Further Reading}
-
-You can see some more examples of the multivariate normal distribution,
-covariance matrices etc. in a computer science context in my paper 
-A Modified Random Perturbation Method for Database Security (with
-Patrick Tendick). {\it ACM Transactions on Database Systems}, 1994, 19(1),
-47-63.  The application is database security.
+% \subsection{Correlation Matrices}
+% 
+% The correlation matrix corresponding to a given covariance matrix is
+% defined as follows.  Element (i,j) is the correlation between the
+% i$^{th}$ and the j$^{th}$ elements of the given random vector.
+% 
+% Here is R code to compute a correlation matrix from a covariance matrix:
+% 
+% \begin{lstlisting}
+% covtocorr <- function(covmat) {
+%    n <- nrow(covmat)
+%    stddev <- vector(length=n)
+%    cormat <- matrix(nrow=n,ncol=n)
+%    for (i in 1:n) {
+%       stddev[i] <- sqrt(covmat[i,i])
+%       cormat[i,i] <- 1.0
+%    }
+%    for (i in 1:(n-1)) {
+%       for (j in (i+1):n) {
+%          tmp <- covmat[i,j] / (stddev[i]*stddev[j])
+%          cormat[i,j] <- tmp
+%          cormat[j,i] <- tmp
+%       }
+%    }
+%    return(cormat)
+% }
+% \end{lstlisting}
+% 
+% \subsection{Further Reading}
+% 
+% You can see some more examples of the multivariate normal distribution,
+% covariance matrices etc. in a computer science context in my paper 
+% A Modified Random Perturbation Method for Database Security (with
+% Patrick Tendick). {\it ACM Transactions on Database Systems}, 1994, 19(1),
+% 47-63.  The application is database security.
 
