@@ -859,11 +859,18 @@ $i \neq j$, element (i,j) is $-p_i p_j$.
 
 \end{itemize}
 
+The see the latter property, note that
+
+\begin{eqnarray}
+Cov(I_i,I_j) &=& E(I_i I_j) - EI_i \cdot EI_j\\ 
+&=& 0 - p_i p_j ~~ \textrm{($I_i$ and $I_j$ cannot be simultanesously 1)} \\
+&=& -p_i p_j
+\end{eqnarray}
+
 \section{Example:  Dice Game}
 \label{dicegame}
 
-This example will be short on some details, but it will really
-illustrate the value of using matrices.
+This example will really illustrate the value of using matrices.
 
 Suppose we roll a die 50 times.  Let X denote the number of rolls in
 which we get one dot, and let Y be the number of times we get either two
@@ -883,10 +890,36 @@ Let's find the approximate values of the following:
 
 \end{itemize}
 
-The exact probabilities could, in principle, be calculated.  But that
-would be rather cumbersome.  But we can get approximate answers by
-noting that the triple (X,Y,Z) has an approximate multivariate normal
-distribution.  This is shown in Section \ref{multnormal}, but it
+First, the distribution of $(X,Y,Z)'$ belongs to yet another parametric
+family, the {\bf multinomial} family, a generalization of the binomial.
+Think about it:  The ``bi'' in ``binomial'' alludes to the fact that
+each trial has two outcomes, e.g.\ heads or tails.  Here in the dice
+example, we have three outcomes --- one dot, two or three dots, and four
+or more dots.  So we have a {\it trinomial} distribution.  
+
+The pmf for the multinomial family is easy to derive (see Exercise
+\ref{multnom}), and thus the exact probabilities listed above could, in
+principle, be calculated.  But that would be cumbersome.  But we can get
+approximate answers by noting that the triple (X,Y,Z) has an approximate
+multivariate (trivariate) normal distribution.  
+
+To see that, recall from (\ref{sumbern}) that a binomial random variable
+can be expressed as a sum of indicator random variables.  Similarly, a
+multnomial random {\it vector} such as $(X,Y,Z)'$ can be expressed as a
+sum or random indicator {\it vectors}.  And there is a multivariate
+version of the Central Limit Theorem.  Result:
+
+\begin{quote}
+Multinomial random vectors are approximately multivariate normally
+distributed.
+\end{quote}
+
+Since a multivariate normal distribution is characterized by its mean
+vector and covariance matrix, what we need to do now is find those
+objects for our dice example.
+
+
+This is shown in Section \ref{multnormal}, but it
 basically the derivation works like this:
 
 \begin{itemize}
@@ -943,6 +976,11 @@ covar123 <- -50*p1*p23
 covarmat <- matrix(c(var1,covar123,covar123,var23),nrow=2)
 print(pmvnorm(upper=c(12.5,16.5),mean=meanvec,sigma=covarmat))
 \end{Verbatim}
+
+(Note:  The above code is exact, not a simulation.\footnote{Granted, the
+function {\bf pmvnorm()} does numerical integration, and thus gives an
+approximate value, but it is not a simulation, which generates random
+numbers.}
 
 We find that 
 
