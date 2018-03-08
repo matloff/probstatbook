@@ -98,8 +98,11 @@ has that value, contradicting independence; if the $X_i$ were
 independent, knowledge of one should not give us knowledge concerning
 others.
 
-But we usually assume true random sampling, and will mean that unless
-explicitly stating otherwise.
+But we usually assume true random sampling, i.e.\ with replacement, and
+will mean that unless explicitly stating otherwise.  In most cases, the
+population is so large, even infinite, that there is no practical
+distinction, as we are extremely unlikely to sample the same person (or
+other unit) twice.
 
 Keep this very important point in mind:
 
@@ -203,10 +206,10 @@ population mean.
 \subsection{Toy Population Example}
 \label{threeyahn}
 
-Let's illustrate it with a tiny example.  Suppose we
-have a population of three people, with heights 69, 72 and 70, and we
-draw a random sample of size 2.  Here $\overline{X}$ can take on six
-values:
+Let's illustrate it with a tiny example.  Suppose we have a population
+of three people, with heights 69, 72 and 70, and we draw a random sample
+of size 2.  As noted, $\overline{X}$ is a random variable.  Its support
+consists of six values:
 
 \begin{equation}
 \frac{69+69}{2} = 69,
@@ -217,8 +220,8 @@ values:
 \frac{72+72}{2} = 72
 \end{equation}
 
-The probabilities of these values are 1/9, 2/9, 2/9, 1/9, 2/9 and 1/9,
-respectively.  So,
+So $\overline{X}$ is a discrete random variable, and its pmf is given by
+1/9, 2/9, 2/9, 1/9, 2/9 and 1/9, respectively.  So,
 
 \begin{equation}
 \label{pmfxbar}
@@ -289,6 +292,10 @@ Var(\overline{X}) &=& Var \left [ \frac{1}{n} \sum_{i=1}^n X_i \right ] \\
 &=& \frac{1}{n} \sigma^2
 \label{oneovernpopvar}
 \end{eqnarray}
+
+{\it This derivation plays a crucial role in statistics}, and you in
+turn can see that the independence of the $X_i$ played a crucial role in
+the derivation.  This is why we assume sampling with replacement
 
 \subsection{Toy Population Example Again}
 
@@ -370,6 +377,30 @@ population mean $\mu$.  (You may wish to view this in terms of Section
 ``Is the variance of our estimator small enough?''  You'll see this in
 the coming chapters.
 
+\subsection{Simple Random Sample Case}
+
+What if we sample without replacement?  The reader should make sure to
+understand that (\ref{barmean}) still holds completely.b2  The additivity
+of E() holds even if the summands are not independent.  And the
+distribution of the $X_i$ is still the population distribution as in the
+with-replacement case.  (The reader may recall the similar issue in
+Section \ref{combex}.)
+
+What does change is the derivation (\ref{oneovernpopvar}).  The summands
+are no longer independent, so variance is no longer additive.  That
+means that covariance terms must be brought in, as in 
+(\ref{genvarxplusy}), and though one might proceed as before in a
+somewhat messier set of equations, for general statistical procedures
+this is not possible.  So, the independence assumption is ubiquitous.
+
+Actually, simple random sampling does yield smaller variances for
+$\overline{X}$.  This is good, and makes intuitive sense --- we
+potentially sample a greater number of different people.  So in our toy
+example above, the variance will be smaller than the 14/9 value obtained
+there.  The reader should verify this.
+
+The reader should 
+
 \section{Sample Means Are Approximately Normal---No Matter What the
 Population Distribution Is}
 \label{xbarclt}
@@ -392,6 +423,13 @@ Z = \frac{\overline{X}-\mu}{\sigma/\sqrt{n}}
 has an approximately N(0,1) distribution, where $\sigma^2$ is the
 population variance.
 \end{quote}
+
+Remember, we don't know either $\mu$ or $\sigma$; the whole point of
+taking the random sample is to estimate them.  Nevertheless, their
+values do exist, and thus the fraction $Z$ does exist.  And by the CLT,
+$Z$ will have an approximate N(0,1) distribution.  This simple
+observation is at the core of statistics.  The theorem is not called
+Central for nothing!
 
 Make sure you understand why it is the ``N'' that is approximate here, not
 the 0 or 1.  
