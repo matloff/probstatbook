@@ -798,14 +798,14 @@ Now evaluate the right-hand side:
 
 How do normal random number generators such as {\bf rnorm()} work?
 While in principle Section \ref{genrannumgen} could be used, the lack of
-a closed-form expression for $\Phi^{-1()}$ makes that approach
+a closed-form expression for $\Phi^{-1}()$ makes that approach
 infeasible.  Instead, we can exploit the relation between the normal
 family and exponential distribution, as follows.
 
 Let $Z_1$ and $Z_2$ be two independent N(0,1) random variables, and define
 $W = Z_1^2 + Z_2^2$.  By definition, $W$ has a chi-squared distribution with
 2 degrees of freedom, and from Section \ref{chisqfam}, we know that $W$
-has a gamma distribution with $k = 1$ and $\lambda = 0.5$.
+has a gamma distribution with $r = 1$ and $\lambda = 0.5$.
 
 In turn, we know from Section \ref{gammafam} that that distribution is
 actually just an exponential distribution with the same value of
@@ -823,14 +823,14 @@ And there's more.  Think of plotting the pair $(Z_1,Z_2)$ in the X-Y
 plane, and define
 
 \begin{equation}
-\theta = \tan^{-1}(\frac{Y}{X})
+\theta = \tan^{-1}(\frac{Z_2}{Z_1})
 \end{equation}
 
 One can show that $\theta$ has a uniform distribution on
 $(0,2\pi)$.  Also, 
 
 \begin{equation}
-X = W\cos(\theta), ~~~ Y = W\sin(\theta)
+Z_1 = W\cos(\theta), ~~~ Z_1 = W\sin(\theta)
 \end{equation}
 
 Putting all this together, we can generate a pair of independent N(0,1)
@@ -838,7 +838,7 @@ random variates via the code
 
 \begin{lstlisting}
 function genn01() {
-   theta <- runif(1,0,pi)
+   theta <- runif(1,0,2*pi)
    w <- -log(1 - runif(1))
    c(w*cos(theta),w*sin(theta))
 }

@@ -317,10 +317,10 @@ NOT say NA.}
 \end{itemize}
 
 {\bf A hugely common mistake is to confuse P(A and B) and P(A $|$ B).}
-This is where the notebook view becomes so important.  Compare the
-quantities $P(X = 1 {\rm ~and~} S = 6) = \frac{1}{36}$ and $P(X = 1 | S
-= 6) = \frac{1}{5}$, where S = X+Y:\footnote{Think of adding an S column
-to the notebook too}
+This is where the notebook view becomes so important.  In the dice
+example, compare the quantities $P(X = 1 {\rm ~and~} S = 6) =
+\frac{1}{36}$ and $P(X = 1 | S = 6) = \frac{1}{5}$, where S =
+X+Y:\footnote{Think of adding an S column to the notebook too}
 
 \begin{itemize}
 
@@ -498,6 +498,9 @@ start out active.
 
 \end{itemize}
 
+Let's say the two nodes consist of terminals, at which John and Mary are
+typing.  Call the nodes Node John and Node Mary.
+
 Now, in Equation (\ref{x12}) we found that 
 
 \begin{equation}
@@ -569,9 +572,9 @@ P(X_1 = 1 {\rm ~and~} X_2 = 2) = P(X_1 = 1) P(X_2 = 2 | X_1 = 1)
 \end{equation}
 
 To calculate $P(X_1 = 1)$, we use the same kind of reasoning as in
-Equation (\ref{x12}).  For the event in question to occur, either node A
-would send and B wouldn't, or A would refrain from sending and B would
-send.  Thus
+Equation (\ref{x12}).  For the event in question to occur, either Node
+John would send and Node B wouldn't, or John would refrain from sending
+and Node B would send.  Thus
 
 \begin{equation}
 \label{px11}
@@ -988,6 +991,14 @@ P(\textrm{doesn't reach or pass 0}) &=& P(R+B \leq 7) \\
 
 (Above we have written commas as a shorthand notation for {\it and}, a
 common abbreviation.)
+
+Now here is a very subtle issue.  The events $R+B = 3$ and $B \leq 4$
+are \textit{not} independent.  At first it would seem that they're
+independent, as we are rolling the die twice, and successful rolls are
+independent.  That's true, they are independent, but remember, $B$ can
+be 0 (no bonus), and the event $B \leq 4$ includes that 0 case.  And if
+we know $R = 3$, then we know for sure that $B$ cannot be 0, so we see
+the two events are not independent.
 
 Note that we first had to ``translate'' the English specification of the
 problem (``doesn't reach or...'') to math symbols.  As mentioned, this
