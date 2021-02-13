@@ -719,7 +719,7 @@ becomes
 \begin{equation}
 E(W^2) 
 = \int_{0}^{\infty} g^2(t) ~ f_W (t) dt
-= \int_{0}^{1} t^2 1.5 t ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt +
+= \int_{0}^{1} (1.5 t)^2 ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt +
   \int_{1}^{\infty} (t+0.5)^2 ~ \frac{1}{1.5} e^{-\frac{1}{1.5}t} dt
 \end{equation}
 
@@ -1015,13 +1015,13 @@ $1 < t < 16$,
 f_Y(t) &=& \frac{d}{dt} F_Y(t) ~~ \textrm{(def. of density)}\\ 
 &=& \frac{d}{dt} P(Y \leq t) ~~ \textrm{(def. of cdf)} \\
 &=& \frac{d}{dt} P(X \leq \sqrt{t}) ~~ \textrm{(def. of Y)} \\
-&=& \frac{d}{dt} F_X(\sqrt{t}) ~~ \textrm{(def. of cdf)} \\
-&=& f_X(\sqrt{t}) ~ \frac{d}{d} \sqrt{t} ~~ \textrm{(Chain Rule)} \\
+&=& \frac{d}{dt} F_X[(\sqrt{t}-1)/3] ~~ \textrm{(def. of cdf)} \\
+&=& \frac{1}{3} f_X(\sqrt{t}) ~ \frac{d}{d} \sqrt{t} ~~ \textrm{(Chain Rule)} \\
 &=& \frac{1}{3} \cdot \frac{1}{2} t^{-0.5} \\
 &=& \frac{1}{6} t^{-0.5}
 \end{eqnarray}
 
-Other such settings can be handeled similarly.  Note, though, that the
+Other such settings can be handled similarly.  Note, though, that the
 above derivation relied on the fact that $X > 0$.  Suppose X has a
 uniform distribution on (-1,1).  Then the above derivation would become,
 for $0 < t < 1$,
