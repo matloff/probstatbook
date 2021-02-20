@@ -24,7 +24,7 @@ T_r = X_1+...+X_r
 denote the time of the $r^{th}$ replacement.  Also, let N(t) denote the
 number of replacements up to and including time t.  Then it can be shown
 that if the common distribution of the $X_i$ is exponentially
-distributed, the N(t) has a Poisson distribution with mean $\lambda t$.
+distributed, the N(t) has a Poisson distribution with mean $\eta t$.
 And the converse is true too:  If the $X_i$ are independent and
 identically distributed and N(t) is Poisson, then the $X_i$ must have
 exponential distributions.  In summary:
@@ -43,9 +43,9 @@ and
 N(t) = \max\{k: T_k \leq t\}
 \end{equation}
 
-Then the distribution of N(t) is Poisson with parameter $\lambda t$ for
+Then the distribution of N(t) is Poisson with parameter $\eta t$ for
 all t if and only if the $X_i$ have an exponential distribution with
-parameter $\lambda$.
+parameter $\eta$.
 
 \end{theorem}
 
@@ -63,15 +63,15 @@ count of burnouts at time t is 0, and vice versa.  Then
 \begin{eqnarray}
 \label{onlyif}
 P(X_1 > t) &=& P[N(t) = 0] ~~ \textrm{(see above equiv.) } \\
-&=& \frac{(\lambda t)^0}{0!} \cdot e^{-\lambda t} ~~ ((\ref{poispmf})\\
-&=& e^{-\lambda t} 
+&=& \frac{(\eta t)^0}{0!} \cdot e^{-\eta t} ~~ ((\ref{poispmf})\\
+&=& e^{-\eta t} 
 \end{eqnarray}
 
 Then
 
 \begin{equation} 
-f_{X_1}(t) = \frac{d}{dt} (1 - e^{-\lambda t}) =
-\lambda e^{-\lambda t} 
+f_{X_1}(t) = \frac{d}{dt} (1 - e^{-\eta t}) =
+\eta e^{-\eta t} 
 \end{equation}
 
 That shows that $X_1$ has an exponential distribution, and since the
@@ -80,11 +80,11 @@ $X_i$ are i.i.d., that implies that all of them have that distribution.
 {\it ``If'' part:}
 
 We need to show that if the $X_i$ are exponentially distributed with
-parameter $\lambda$, then for u nonnegative and each positive integer k,
+parameter $\eta$, then for u nonnegative and each positive integer k,
 
 \begin{equation}
 \label{poispmfcopy}
-P[N(u) = k] = \frac{(\lambda u)^k e^{-\lambda u}}{k!}
+P[N(u) = k] = \frac{(\eta u)^k e^{-\eta u}}{k!}
 \end{equation}
 
 The proof for the case k = 0 just reverses (\ref{onlyif}) above.  The
@@ -101,13 +101,13 @@ Poisson process}.
 
 % \begin{equation}
 % \label{ntmean}
-% E[N(t)] = \lambda t
+% E[N(t)] = \eta t
 % \end{equation}
 
-The relation $E[N(t)] = \lambda t$ says that replacements are occurring
-at an average rate of $\lambda$ per unit time.  Thus $\lambda$ is called
+The relation $E[N(t)] = \eta t$ says that replacements are occurring
+at an average rate of $\eta$ per unit time.  Thus $\eta$ is called
 the {\bf intensity parameter} of the process.  It is this ``rate''
-interpretation that makes $\lambda$ a natural indexing parameter in
+interpretation that makes $\eta$ a natural indexing parameter in
 (\ref{expdens}).
 
 \section{Memoryless Property of Exponential Distributions}
