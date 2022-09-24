@@ -30,10 +30,16 @@ E(c_1 X + c_2 Y) = c_1 EX + c_2 EY
 By induction,
 
 \begin{equation}
-E(a_1 U_1 + ... + a_k U_k) = a_1 EX_1 + ... + a_k EX_k
+E(a_1 X_1 + ... + a_k X_k) = a_1 EX_1 + ... + a_k EX_k
 \end{equation}
 
 for random variables $U_i$ and constants $a_i$.
+
+If $X$ and $Y$ are independent, then expected value factors,
+
+\begin{equation}
+E(XY) = EX EY
+\end{equation}
 
 \item {\bf variance} (Section \ref{variance}):
 
@@ -125,7 +131,7 @@ discrete:
    Number of i.i.d. trials until first success.  For success probability p: 
 
    \begin{equation}
-   p_N(k) = (1-p)^k p
+   p_N(k) = (1-p)^{k-1} p
    \end{equation}
 
    \begin{equation}

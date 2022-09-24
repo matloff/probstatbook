@@ -477,7 +477,7 @@ player data introduced in Section \ref{baseball0}.
 I ran R's {\bf lm()} (``linear model'') function to perform the
 regression analysis:
 
-\begin{lstlisting}
+\begin{verbatim}
 > summary(lm(players$Weight ~ players$Height))
 
 Call:
@@ -498,7 +498,7 @@ Residual standard error: 17.78 on 1031 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared: 0.2829,	Adjusted R-squared: 0.2822 
 F-statistic: 406.7 on 1 and 1031 DF,  p-value: < 2.2e-16 
-\end{lstlisting}
+\end{verbatim}
 
 \label{asterisksexample}
 
@@ -686,7 +686,7 @@ later.)
 
 So, let's regress weight against height and age:
 
-\begin{lstlisting}
+\begin{verbatim}
 > summary(lm(players$Weight ~ players$Height + players$Age))
 
 Call:
@@ -708,7 +708,7 @@ Residual standard error: 17.3 on 1030 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared: 0.3221,	Adjusted R-squared: 0.3208 
 F-statistic: 244.8 on 2 and 1030 DF,  p-value: < 2.2e-16 
-\end{lstlisting}
+\end{verbatim}
 
 So, our regression function coefficient estimates are
 $\hat{\beta}_0 = -192.6564$,
@@ -1743,7 +1743,7 @@ being 0.
 
 So, let's run the regression:
 
-\begin{lstlisting}
+\begin{verbatim}
 > summary(lm(nondh$Weight ~ nondh$Height + nondh$Age + infld + outfld + pitcher))
 
 Call:
@@ -1769,7 +1769,7 @@ Residual standard error: 17.1 on 1009 degrees of freedom
   (1 observation deleted due to missingness)
 Multiple R-squared: 0.3286,	Adjusted R-squared: 0.3253 
 F-statistic: 98.76 on 5 and 1009 DF,  p-value: < 2.2e-16 
-\end{lstlisting}
+\end{verbatim}
 
 The estimated coefficients for the position variables are all negative.
 For example, for a given height and age, pitchers are on average about
@@ -2496,7 +2496,7 @@ instructor.  Let's predict the outcome of Q9 from the other variables,
 in order to understand what makes a popular teacher in Turkey.  Here is
 part of the output:
 
-\begin{lstlisting}
+\begin{verbatim}
 > lmout <- lm(turk[train,9] ~ .,data=turk[train,c(1:8,10:29)])
 > summary(lmout)
 ...
@@ -2537,7 +2537,7 @@ Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’
 Residual standard error: 0.556 on 4627 degrees of freedom
 Multiple R-squared:  0.8061,    Adjusted R-squared:  0.8049 
 F-statistic: 686.8 on 28 and 4627 DF,  p-value: < 2.2e-16
-\end{lstlisting}
+\end{verbatim}
 
 Questions 10 (``Q10:  My initial expectations about the course were met
 at the end of the period or year'') had the largest coefficient by far,
