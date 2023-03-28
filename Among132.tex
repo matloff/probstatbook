@@ -1,0 +1,303 @@
+\chapter{Relations \underline{Among} Variables}
+\label{chap:among} 
+
+{\it It is a very sad thing that nowadays there is so little useless
+information}---Oscar Wilde, famous 19th century writer
+
+Unlike the case of regression analysis, where the response/dependent
+variable plays a central role, we are now interested in symmetric
+relations among several variables.  Often our goal is {\bf dimension
+reduction}, meaning compressing our data into just a few important
+variables.
+
+Dimension reduction ties in to the Oscar Wilde quote above, which is a
+complaint that there is too {\it much} information of the use{\it ful}
+variety.  We are concerned here with reducing the complexity of that
+information to a more manageable, simple set of variables.
+
+Here we cover two of the most widely-used methods, {\bf principal
+components analysis} for continuous variables, and the {\bf log-linear
+model} for the discrete case.  We also introduce {\bf clustering}.
+
+\section{Principal Components Analysis (PCA)}
+\label{pca}
+
+Consider a random vector $X = (X_1,X_2)'$.  Suppose the two
+components of X are highly correlated with each other.  
+Then for some constants c and d,
+
+\begin{equation}
+\label{onedim}
+X_2 \approx c + d X_1
+\end{equation}
+
+Then in a sense there is really just one random variable here, as the
+second is nearly equal to some linear combination of the first.  The
+second provides us with almost no new information, once we have the
+first.
+
+In other words, even though the vector X roams in two-dimensional space,
+it usually sticks close to a one-dimensional object, namely the line
+(\ref{onedim}).  We saw a graph illustrating this in our chapter on
+multivariate distributions, page \pageref{rho2}.
+
+In general, consider a k-component random vector 
+
+\begin{equation}
+X = (X_1,...,X_k)'
+\end{equation}
+
+We again wish to investigate whether just a few, say w, of the $X_i$ tell
+almost the whole story, i.e. whether most $X_j$ can be expressed
+approximately as linear combinations of these few $X_i$.  In other
+words, even though X is k-dimensional, it tends to stick close to some
+w-dimensional subspace.
+
+Note that although (\ref{onedim}) is phrased in prediction terms, we are
+not (or more accurately, not necessarily) interested in prediction here.
+We have not designated one of the $X^{(i)}$ to be a response variable
+and the rest to be predictors.
+
+Once again, the Principle of Parsimony is key.  If we have, say, 20 or
+30 variables, it would be nice if we could reduce that to, for example,
+three or four.  This may be easier to understand and work with, albeit
+with the complication that our new variables would be linear
+combinations of the old ones.
+
+\subsection{How to Calculate Them}
+
+Here's how it works.  Let $\Sigma$ denote the covariance matrix of X.
+The theory of linear algebra says that since $\Sigma$ is a symmetric
+matrix, it is diagonalizable, i.e. there is a real matrix Q for which 
+
+\begin{equation}
+\label{qsigq}
+Q' \Sigma Q = D
+\end{equation}
+
+where D is a diagonal matrix.  (A related approach is {\bf singular
+value decomposition}.) The columns $C_i$ of Q are the eigenvectors of
+$\Sigma$, and it turns out that they are orthogonal to each other, i.e.
+their dot product is 0.
+
+Let 
+
+\begin{equation}
+W_i = C_i'X, ~ i = 1,...,k
+\end{equation}
+
+so that the $W_i$ are scalar random variables, and set 
+
+\begin{equation}
+W = (W_1,...,W_k)'
+\end{equation}
+
+Then
+
+\begin{equation}
+W = Q' X
+\end{equation}
+
+Now, use the material on covariance matrices from our chapter on
+random vectors, page \pageref{covawaprime},
+
+\begin{equation}
+Cov(W) = Cov(Q'X) = Q' Cov(X) Q = D ~~ \textrm{(from (\ref{qsigq}))}
+\end{equation}
+
+Note too that if X has a multivariate normal distribution (which we are
+not assuming), then W does too.
+
+Let's recap:
+
+\begin{itemize}
+
+\item We have created new random variables $W_i$ as linear combinations
+of our original $X_j$.
+
+\item The $W_i$ are uncorrelated.  Thus if in addition X has a
+multivariate normal distribution, so that W does too, then the $W_i$
+will be independent.
+
+\item The variance of $W_i$ is given by the i$^{th}$ diagonal element of
+D.
+
+\end{itemize}
+
+The $W_i$ are called the {\bf principal components} of the distribution
+of X.
+
+It is customary to relabel the $W_i$ so that $W_1$ has the largest
+variance, $W_2$ has the second-largest, and so on.  We then choose those
+$W_i$ that have the larger variances, and discard the others, because
+the latter, having small variances, are close to constant and thus carry
+no information.  
+
+Note that an alternate definition of the first principal component is a
+value of $u$ that maximizes $u'X$ subject to $u$ having length 1.  The
+second principal component maximizes  $u'X$ subject to $u$ having length
+1 and subject to the second component being orthogonal to the first, and
+so on.
+
+All this will become clearer in the example below.
+
+\subsection{Example:  Forest Cover Data}
+
+Let's try using principal component analysis on the forest cover data
+set we've looked at before.  There are 10 continuous
+variables.\footnote{There are also many discrete ones.}
+
+In my R run, the data set (not restricted to just two forest cover
+types, but consisting only of the first 1000 observations) was in the
+object {\bf f}.  Here are the call and the results:
+
+\begin{Verbatim}[fontsize=\relsize{-2}]
+> prc <- prcomp(f[,1:10])
+> summary(prc)
+Importance of components:
+                            PC1      PC2      PC3      PC4      PC5 PC6
+Standard deviation     1812.394 1613.287 1.89e+02 1.10e+02 96.93455 30.16789
+Proportion of Variance    0.552    0.438 6.01e-03 2.04e-03  0.00158 0.00015
+Cumulative Proportion     0.552    0.990 9.96e-01 9.98e-01  0.99968 0.99984
+                            PC7      PC8 PC9  PC10
+Standard deviation     25.95478 16.78595 4.2 0.783
+Proportion of Variance  0.00011  0.00005 0.0 0.000
+Cumulative Proportion   0.99995  1.00000 1.0 1.000
+\end{Verbatim}
+
+You can see from the variance values here that R has scaled the $W_i$ so
+that their variances sum to 1.0.  (It has not done so for the standard
+deviations, which are for the nonscaled variables.) This is fine, as we
+are only interested in the variances relative to each other, i.e. saving
+the principal components with the larger variances.
+
+What we see here is that eight of the 10 principal components have very
+small variances, i.e. are close to constant.  In other words, though we
+have 10 variables $X_1,...,X_{10}$, there is really only two
+variables' worth of information carried in them.  
+
+So for example if we wish to predict forest cover type from these 10
+variables, we should only use two of them.  We could use $W_1$ and
+$W_2$, but for the sake of interpretability we stick to the original X
+vector.  We can use any two of the $X_i$, though typically it would be
+two that have large coefficients in the top two principal components..
+
+The coefficients of the linear combinations which produce W from X, i.e.
+the Q matrix, are available via {\bf prc\$rotation}.
+
+
+\subsection{Scaling}
+
+If your original variables range quite a bit in variance, you should
+have {\bf prcomp()} scale them first, so they all have standard
+deviation 1.\footnote{And mean 0, though this is irrelevant, as $\Sigma$
+is all that matter.}  The argument name is {\bf scale}, of course.
+
+Without scaling, the proportion-of-total-variance type of analysis
+discussed above may be misleading, as large-variance variables may
+dominate.
+
+\subsection{Scope of Application}
+
+PCA makes no assumptions about the data.  It is strictly an
+exploratory/descriptive tool.
+
+However, it should be noted that the motivation we presented for PCA at
+the beginning of this chapter involved correlations among our original
+variables.  This is further highlighted by the fact that the PCs are
+calculated based on the covariance matrix of the data, which except for
+scale is the same as the correlation matrix.
+
+This in turn implies that each variable is at least {\it ordinal} in
+nature, i.e. that it makes sense to speak of the impact of larger or
+smaller values of a variable.  
+
+Note, though, that an indicator random variable is inherently ordinal!
+So, if you have a {\it categorical} variable, i.e. one that simply codes
+what category an individual falls into (such as Democratic, Republican,
+independent), then you can convert it to a set of indicator variables,
+and potentially get some insight into the relation between this variable
+and others.  
+
+This can be especially valuable if, as is often the case, your data
+consists of a mixture of ordinal and categorical variables.
+
+\subsection{Example:  Turkish Teaching Evaluation Data}
+
+This data, again from the UCI Machine Learning Repository, was
+introduced in Section \ref{turk0}.  Let's try PCA on it:
+
+\begin{lstlisting}
+> tpca <- prcomp(turk,scale=T)
+> summary(tpca)
+Importance of components:
+                          PC1    PC2     PC3     PC4     PC5     PC6
+PC7
+Standard deviation     4.8008 1.1296 0.98827 0.62725 0.59837 0.53828 0.50587
+Proportion of Variance 0.7947 0.0440 0.03368 0.01357 0.01235 0.00999 0.00882
+Cumulative Proportion  0.7947 0.8387 0.87242 0.88598 0.89833 0.90832 0.91714
+                           PC8     PC9    PC10    PC11    PC12    PC13
+PC14
+Standard deviation     0.45182 0.42784 0.41517 0.37736 0.37161 0.36957 0.3450
+Proportion of Variance 0.00704 0.00631 0.00594 0.00491 0.00476 0.00471 0.0041
+Cumulative Proportion  0.92418 0.93050 0.93644 0.94135 0.94611 0.95082 0.9549
+                          PC15    PC16    PC17    PC18    PC19    PC20
+PC21
+Standard deviation     0.34114 0.33792 0.33110 0.32507 0.31687 0.30867 0.3046
+Proportion of Variance 0.00401 0.00394 0.00378 0.00364 0.00346 0.00329 0.0032
+Cumulative Proportion  0.95894 0.96288 0.96666 0.97030 0.97376 0.97705 0.9802
+                          PC22    PC23    PC24    PC25    PC26    PC27
+PC28
+Standard deviation     0.29083 0.29035 0.28363 0.27815 0.26602 0.26023 0.23621
+Proportion of Variance 0.00292 0.00291 0.00277 0.00267 0.00244 0.00234 0.00192
+Cumulative Proportion  0.98316 0.98607 0.98884 0.99151 0.99395 0.99629 0.99821
+                          PC29
+Standard deviation     0.22773
+Proportion of Variance 0.00179
+Cumulative Proportion  1.00000
+\end{lstlisting}
+
+This is remarkable---the first PC accounts for 79\% of the variance of
+the set of 29 variables.  In other words, in spite of the survey asking
+supposedly 29 different aspects of the course, they can be summarized
+largely in just one variable.  Let's see what that variable is:
+
+\begin{lstlisting}
+> tpca$rotation[,1]
+         Q1          Q2          Q3          Q4          Q5          Q6 
+-0.16974120 -0.18551431 -0.18553930 -0.18283025 -0.18973563 -0.18635256 
+         Q7          Q8          Q9         Q10         Q11         Q12 
+-0.18730028 -0.18559928 -0.18344211 -0.19241585 -0.18388873 -0.18184118 
+        Q13         Q14         Q15         Q16         Q17         Q18 
+-0.19430111 -0.19462822 -0.19401115 -0.19457451 -0.18249389 -0.19320936 
+        Q19         Q20         Q21         Q22         Q23         Q24 
+-0.19412781 -0.19335127 -0.19232101 -0.19232914 -0.19554282 -0.19328500 
+        Q25         Q26         Q27         Q28  difficulty 
+-0.19203359 -0.19186433 -0.18751777 -0.18855570 -0.01712709 
+\end{lstlisting}
+
+This is even more remarkable.  Except for the ``difficulty'' variable,
+all the Qi have about the same coefficients (the same {\bf loadings}).
+In other words, just one question would have been enough, and it
+wouldn't matter mcuh which one were used.
+
+The second PC, though only accounting for 4\% of the total variation, is
+still worth a look:
+
+\begin{lstlisting}
+> tpca$rotation[,2]
+         Q1          Q2          Q3          Q4          Q5          Q6 
+ 0.32009850  0.22046468  0.11432028  0.23340347  0.20236372  0.19890471 
+         Q7          Q8          Q9         Q10         Q11         Q12 
+ 0.24025046  0.24477543  0.13198060  0.19239207  0.11064523  0.20881773 
+        Q13         Q14         Q15         Q16         Q17         Q18 
+-0.09943140 -0.15193169 -0.15089563 -0.03494282 -0.26163096 -0.11646066 
+        Q19         Q20         Q21         Q22         Q23         Q24 
+-0.14424468 -0.18729978 -0.21208705 -0.21650494 -0.09349599 -0.05372049 
+        Q25         Q26         Q27         Q28  difficulty 
+-0.20342350 -0.10790888 -0.05928032 -0.20370705 -0.27672177 
+\end{lstlisting}
+
+Here the ``difficulty'' variable now shows up, and some of the Qi become
+unimportant.
+
